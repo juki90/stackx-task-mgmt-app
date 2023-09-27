@@ -1,2 +1,3 @@
-# stackx-todo-app
-A todo app with multistack backends and frontends
+# stackx-task-mgmt-app
+
+A task mgmt app with multistack backends and frontends
