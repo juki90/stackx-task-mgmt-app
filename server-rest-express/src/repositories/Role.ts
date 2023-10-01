@@ -2,17 +2,15 @@ import { injectable } from 'inversify';
 
 import { AbstractRepository } from '@/repositories/Abstract';
 
-import type { IRoleRepository, Role } from '@/types';
-import type { ModelCtor, Repository } from 'sequelize-typescript';
+import type { ModelStatic } from 'sequelize';
+import type { Role, IRoleRepository } from '@/types';
 
 @injectable()
 export class RoleRepository
-    extends AbstractRepository
+    extends AbstractRepository<Role>
     implements IRoleRepository
 {
-    get repository(): Repository<Role> {
-        const { Role } = this.db.models;
-
-        return this.db.getRepository(Role as ModelCtor<Role>);
+    get model(): ModelStatic<Role> {
+        return this.db.models.Role as ModelStatic<Role>;
     }
 }

@@ -13,11 +13,16 @@ import {
 
 import User from '@/models/User';
 
+import type { InferAttributes, InferCreationAttributes } from 'sequelize';
+
 @Table({
     tableName: 'Roles',
     timestamps: true
 })
-export default class Role extends Model<Role> {
+export default class Role extends Model<
+    InferAttributes<Role>,
+    InferCreationAttributes<Role>
+> {
     @Unique
     @IsUUID(4)
     @PrimaryKey

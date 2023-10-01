@@ -7,26 +7,37 @@ import {
     Length,
     IsUUID,
     IsEmail,
-    BelongsToMany,
     Default,
     DataType,
     BelongsTo,
     AllowNull,
     PrimaryKey,
-    ForeignKey
+    ForeignKey,
+    DefaultScope,
+    BelongsToMany
 } from 'sequelize-typescript';
 
 import Role from '@/models/Role';
 import Task from '@/models/Task';
 import UserTask from '@/models/UserTask';
 
-import type { BelongsToSetAssociationMixin } from 'sequelize';
+import type {
+    InferAttributes,
+    InferCreationAttributes,
+    BelongsToSetAssociationMixin
+} from 'sequelize';
 
+@DefaultScope(() => ({
+    attributes: { exclude: ['password'] }
+}))
 @Table({
     tableName: 'Users',
     timestamps: true
 })
-export default class User extends Model<User> {
+export default class User extends Model<
+    InferAttributes<User>,
+    InferCreationAttributes<User>
+> {
     @Unique
     @IsUUID(4)
     @PrimaryKey

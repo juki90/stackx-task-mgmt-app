@@ -1,28 +1,39 @@
 import { inject, injectable } from 'inversify';
 
-import type { Repository } from 'sequelize-typescript';
-import type { FindOptions, Attributes } from 'sequelize';
-import type { TModel, Sequelize, IAbstractRepository } from '@/types';
+import type { Sequelize, IAbstractRepository } from '@/types';
+import type { MakeNullishOptional } from 'sequelize/types/utils';
+import type {
+    Model,
+    ModelStatic,
+    FindOptions,
+    InferAttributes,
+    InferCreationAttributes
+} from 'sequelize';
 
 @injectable()
-export abstract class AbstractRepository
-    implements IAbstractRepository<TModel>
+export abstract class AbstractRepository<
+    T extends Model<InferAttributes<T>, InferCreationAttributes<T>>
+> implements IAbstractRepository<T>
 {
-    constructor(@inject('sequelize') readonly db: Sequelize) {
+    constructor(@inject('services.sequelize') readonly db: Sequelize) {
         this.db = db;
     }
 
-    abstract get repository(): Repository<TModel>;
+    abstract get model(): ModelStatic<T>;
 
-    create(data: Omit<TModel, 'id'>): Promise<Attributes<TModel>> {
-        return this.repository.create(data);
+    create(data: MakeNullishOptional<T>): Promise<T> {
+        return this.model.create(data);
     }
 
-    findAll(filter: FindOptions<TModel>): Promise<Attributes<TModel>[]> {
-        return this.repository.findAll(filter);
+    findAll(options: FindOptions<T> = {}): Promise<T[]> {
+        return this.model.findAll(options);
     }
 
-    findOne(filter: FindOptions<TModel>): Promise<Attributes<TModel> | null> {
-        return this.repository.findOne(filter);
+    findOne(options: FindOptions<T>): Promise<T | null> {
+        return this.model.findOne(options);
+    }
+
+    findById(id: string, options: FindOptions<T>): Promise<T | null> {
+        return this.model.findByPk(id, options);
     }
 }

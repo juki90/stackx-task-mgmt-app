@@ -1,20 +1,22 @@
 import 'reflect-metadata';
-import express, { type Express } from 'express';
+import express, { type IRouter, type Express } from 'express';
 
 import initDi from '@/di';
+import getRoutes from '@/routes';
 import useCors from '@/plugins/useCors';
 
-import type { Sequelize } from '@/types';
 import type { Container } from 'inversify';
 
 const createApp = async (): Promise<Express> => {
     const app: Express = express();
     const di: Container = await initDi();
+    const routes: IRouter = await getRoutes(di);
 
     useCors(app);
     app.use(express.json({ limit: '1mb' }));
-
-    const sequelizeDb: Sequelize = await di.getAsync('sequelize');
+    app.use(express.urlencoded({ extended: true }));
+    app.set('di', di);
+    app.use('/api', routes);
 
     return app;
 };

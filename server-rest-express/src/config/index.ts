@@ -36,6 +36,10 @@ const envConfig = {
             idle: 10000,
             acquire: 30000
         }
+    },
+    jwt: {
+        expiresIn: 4 * 60 * 60,
+        secret: readEnv('JWT_SECRET', 'xyx123')
     }
 };
 

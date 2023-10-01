@@ -1,4 +1,9 @@
-import { Op, type HasManyGetAssociationsMixin } from 'sequelize';
+import {
+    Op,
+    type HasManyGetAssociationsMixin,
+    type InferAttributes,
+    type InferCreationAttributes
+} from 'sequelize';
 import {
     Model,
     Table,
@@ -24,7 +29,10 @@ import { TaskStatus, TaskUsersStatus, TaskUsersStatusWithUsers } from '@/types';
     tableName: 'Tasks',
     timestamps: true
 })
-export default class Task extends Model {
+export default class Task extends Model<
+    InferAttributes<Task>,
+    InferCreationAttributes<Task>
+> {
     @Unique
     @IsUUID(4)
     @PrimaryKey

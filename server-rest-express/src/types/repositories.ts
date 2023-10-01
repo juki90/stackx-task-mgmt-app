@@ -1,21 +1,34 @@
-import type { FindOptions } from 'sequelize';
 import type { User, Role, Sequelize } from '@/types';
-import type { Repository } from 'sequelize-typescript';
+import type { MakeNullishOptional } from 'sequelize/types/utils';
+import type {
+    Model,
+    FindOptions,
+    ModelStatic,
+    InferAttributes,
+    InferCreationAttributes
+} from 'sequelize';
 
-interface IAbstractRepository<T> {
+interface IAbstractRepository<
+    T extends Model<InferAttributes<T>, InferCreationAttributes<T>>
+> {
     readonly db: Sequelize;
-    get repository(): Repository<T>;
-    create(data: Omit<T, 'id'>): Promise<T>;
-    findAll(filter: FindOptions<T>): Promise<T[]>;
-    findOne(filter: FindOptions<T>): Promise<T | null>;
+    get model(): ModelStatic<T>;
+    create(data: MakeNullishOptional<T>): Promise<T>;
+    findAll(options?: FindOptions<T>): Promise<T[]>;
+    findOne(options: FindOptions<T>): Promise<T | null>;
+    findById(id: string, options: FindOptions<T>): Promise<T | null>;
 }
 
 interface IRoleRepository extends IAbstractRepository<Role> {
-    get repository(): Repository<Role>;
+    get model(): ModelStatic<Role>;
 }
 
 interface IUserRepository extends IAbstractRepository<User> {
-    get repository(): Repository<User>;
+    get model(): ModelStatic<User>;
+    findByEmail(
+        email: string,
+        options?: FindOptions<User>
+    ): Promise<User | null>;
 }
 
 export type { IRoleRepository, IUserRepository, IAbstractRepository };

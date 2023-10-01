@@ -1,6 +1,6 @@
-import type { RoleModel, TaskModel, UserModel } from '@/types';
+import type { Role, Task, User } from '@/types';
 
-type TModel = RoleModel | TaskModel | UserModel;
+type TModel = Role | Task | User;
 
 export { TModel };
 

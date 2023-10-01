@@ -18,11 +18,13 @@
         "./**/*.ts",
         "src/migrations/20230910175044-create-role-table.ts",
         "src/migrations/20230910175040-create-task-table.ts",
-        "src/migrations/20230910175035-create-user-task-table.ts",
-        "src/migrations/20230910175026-create-user-table.ts"
-, "src/migrations/index.js"    ],
+        "src/migrations/20230910175058-create-user-task-table.ts",
+        "src/migrations/20230910175026-create-user-table.ts",
+        "src/migrations/index.js"
+    ],
     "exclude": ["node_modules", "dist"],
     "ts-node": {
         "require": ["tsconfig-paths/register"]
-    }
+    },
+    "typeRoots": ["./node_module/@types", "./src/types/npm.express.d.ts"]
 }

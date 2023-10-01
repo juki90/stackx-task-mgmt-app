@@ -1,9 +1,17 @@
 import path from 'path';
+import bcrypt from 'bcryptjs';
 import { promises as fs } from 'fs';
+import jsonwebtoken from 'jsonwebtoken';
 import * as sequelizeTypescript from 'sequelize-typescript';
 import { Container, ContainerModule } from 'inversify';
 
-import type { PlatformFs, PlatformPath, SequelizeTypescript } from '@/types';
+import type {
+    Bcrypt,
+    PlatformFs,
+    PlatformPath,
+    JsonWebToken,
+    SequelizeTypescript
+} from '@/types';
 
 export default async () => {
     const container: Container = new Container({
@@ -11,7 +19,9 @@ export default async () => {
     });
     const coreModules = new ContainerModule(bind => {
         bind<PlatformFs>('%fs').toConstantValue(fs);
+        bind<Bcrypt>('%bcrypt').toConstantValue(bcrypt);
         bind<PlatformPath>('%path').toConstantValue(path);
+        bind<JsonWebToken>('%jsonwebtoken').toConstantValue(jsonwebtoken);
     });
     const thirdPartyModules = new ContainerModule(bind => {
         bind<SequelizeTypescript>('%sequelize-typescript').toConstantValue(
@@ -56,7 +66,7 @@ export default async () => {
     await loadApplicationModules();
 
     // Preload of this dependency helps with getting repositories without async and solves issues with tests
-    await container.getAsync('sequelize');
+    await container.getAsync('services.sequelize');
 
     return container;
 };
