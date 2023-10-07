@@ -1,3 +1,4 @@
+import bcrypt from 'bcryptjs';
 import {
     Model,
     Index,
@@ -11,20 +12,23 @@ import {
     DataType,
     BelongsTo,
     AllowNull,
+    BeforeSave,
     PrimaryKey,
     ForeignKey,
     DefaultScope,
     BelongsToMany
 } from 'sequelize-typescript';
 
-import Role from '@/models/Role';
 import Task from '@/models/Task';
 import UserTask from '@/models/UserTask';
+import Role, { ROLE_NAMES } from '@/models/Role';
 
 import type {
     InferAttributes,
     InferCreationAttributes,
-    BelongsToSetAssociationMixin
+    BelongsToSetAssociationMixin,
+    BelongsToGetAssociationMixin,
+    BelongsToManyRemoveAssociationMixin
 } from 'sequelize';
 
 @DefaultScope(() => ({
@@ -46,7 +50,7 @@ export default class User extends Model<
     @Column
     id!: string;
 
-    @Length({ min: 2, max: 64 })
+    @Length({ min: 2, max: 32 })
     @AllowNull(false)
     @Column
     firstName!: string;
@@ -95,7 +99,74 @@ export default class User extends Model<
     @BelongsToMany(() => Task, () => UserTask)
     tasks: Task[];
 
+    @BeforeSave
+    static hashPasswordBeforeSave(
+        user: User,
+        options: { fields?: string[] }
+    ): void {
+        if (options?.fields?.includes('password')) {
+            user.dataValues.password = bcrypt.hashSync(
+                user.dataValues.password,
+                12
+            );
+        }
+    }
+
     setRole: BelongsToSetAssociationMixin<Role, string>;
 
+    getRole: BelongsToGetAssociationMixin<Role>;
+
+    removeRole: BelongsToManyRemoveAssociationMixin<Role, string>;
+
     setCreatedBy: BelongsToSetAssociationMixin<User, string>;
+
+    getCreatedBy: BelongsToGetAssociationMixin<User>;
+
+    async isAdmin(): Promise<boolean> {
+        if (this.role?.name) {
+            return this.role.name === ROLE_NAMES.ADMIN;
+        }
+
+        const role = await this.getRole();
+
+        return role.name === ROLE_NAMES.ADMIN;
+    }
 }
+
+export const USER_UPDATABLE_FIELDS:
+    | (
+          | 'firstName'
+          | 'lastName'
+          | 'email'
+          | 'password'
+          | 'id'
+          | 'createdAt'
+          | 'updatedAt'
+          | 'deletedAt'
+          | 'version'
+          | 'fullName'
+          | 'createdById'
+          | 'createdBy'
+          | 'roleId'
+          | 'role'
+          | 'tasks'
+      )[] = ['firstName', 'lastName', 'email', 'password'];
+
+export const USER_UPDATABLE_FIELDS_NO_PASSWORD:
+    | (
+          | 'firstName'
+          | 'lastName'
+          | 'email'
+          | 'password'
+          | 'id'
+          | 'createdAt'
+          | 'updatedAt'
+          | 'deletedAt'
+          | 'version'
+          | 'fullName'
+          | 'createdById'
+          | 'createdBy'
+          | 'roleId'
+          | 'role'
+          | 'tasks'
+      )[] = ['firstName', 'lastName', 'email'];

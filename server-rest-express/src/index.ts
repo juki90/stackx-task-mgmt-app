@@ -1,9 +1,11 @@
 import 'reflect-metadata';
 import express, { type IRouter, type Express } from 'express';
+import 'express-async-errors';
 
 import initDi from '@/di';
 import getRoutes from '@/routes';
 import useCors from '@/plugins/useCors';
+import useErrorHandler from '@/plugins/useErrorHandler';
 
 import type { Container } from 'inversify';
 
@@ -17,6 +19,7 @@ const createApp = async (): Promise<Express> => {
     app.use(express.urlencoded({ extended: true }));
     app.set('di', di);
     app.use('/api', routes);
+    useErrorHandler(app);
 
     return app;
 };

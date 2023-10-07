@@ -16,9 +16,7 @@ export class UserRepository
     }
 
     findByEmail(email: string, options: FindOptions<User> = {}) {
-        const emailOption = { where: { email } };
-
-        const finalOptions = deepMerge(emailOption, options);
+        const finalOptions = deepMerge(options, { where: { email } });
 
         return this.model.findOne(finalOptions);
     }

@@ -1,11 +1,15 @@
+import deepMerge from 'deepmerge';
 import { inject, injectable } from 'inversify';
 
 import type { Sequelize, IAbstractRepository } from '@/types';
 import type { MakeNullishOptional } from 'sequelize/types/utils';
 import type {
     Model,
+    Attributes,
     ModelStatic,
     FindOptions,
+    CreateOptions,
+    UpdateOptions,
     InferAttributes,
     InferCreationAttributes
 } from 'sequelize';
@@ -21,8 +25,21 @@ export abstract class AbstractRepository<
 
     abstract get model(): ModelStatic<T>;
 
-    create(data: MakeNullishOptional<T>): Promise<T> {
-        return this.model.create(data);
+    create(
+        data: MakeNullishOptional<T>,
+        options: CreateOptions<Attributes<T>> = {}
+    ): Promise<T> {
+        return this.model.create(data, options);
+    }
+
+    updateById(
+        id: string,
+        data: MakeNullishOptional<T>,
+        options: UpdateOptions<Attributes<T>> = { where: {} }
+    ): Promise<[affectedCount: number]> {
+        const finalOptions = deepMerge(options, { where: { id } });
+
+        return this.model.update(data, finalOptions);
     }
 
     findAll(options: FindOptions<T> = {}): Promise<T[]> {

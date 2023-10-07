@@ -1,3 +1,4 @@
+import qs from 'qs';
 import path from 'path';
 import bcrypt from 'bcryptjs';
 import { promises as fs } from 'fs';
@@ -15,8 +16,11 @@ type SequelizeTypescript = typeof sequelizeTypescript;
 
 type JsonWebToken = typeof jsonwebtoken;
 
+type ParsedQs = qs.ParsedQs;
+
 export type {
     Bcrypt,
+    ParsedQs,
     Sequelize,
     PlatformFs,
     JsonWebToken,

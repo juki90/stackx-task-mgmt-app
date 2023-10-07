@@ -19,7 +19,7 @@ import type {
     ILoginController
 } from '@/types';
 
-@controller('/auth/login')
+@controller('/auth')
 export class LoginController implements ILoginController {
     constructor(
         @inject('%bcrypt')
@@ -35,7 +35,7 @@ export class LoginController implements ILoginController {
         public logger: ILogger
     ) {}
 
-    @httpPost('/')
+    @httpPost('/login')
     async invoke(
         @request() req: Request,
         @response() res: Response

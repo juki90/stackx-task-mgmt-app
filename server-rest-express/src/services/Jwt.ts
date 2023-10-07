@@ -38,31 +38,29 @@ export class Jwt implements IJwt {
 
     async verify(
         authHeader: string
-    ): Promise<{ refreshedToken: string; role: string } | null> {
+    ): Promise<{ refreshedToken: string; loggedUser: User } | null> {
         try {
-            const [token] = authHeader.match(/Bearer (\S+)/g);
+            const tokenMatch = /Bearer (\S+)/g.exec(authHeader);
 
-            if (!token) {
+            if (!tokenMatch || tokenMatch.length < 1) {
                 return null;
             }
 
+            const [, token] = tokenMatch;
+
             const decodedToken = this.jwt.verify(token, this.jwtSecret) as User;
 
-            const verifiedUser = await this.userRepository.findByEmail(
-                decodedToken.email
+            const verifiedUser = await this.userRepository.findById(
+                decodedToken.id
             );
 
             if (!verifiedUser) {
                 return null;
             }
 
-            const {
-                role: { name: verifiedUserRole }
-            } = verifiedUser;
-
             return {
-                refreshedToken: this.sign(verifiedUser),
-                role: verifiedUserRole
+                loggedUser: verifiedUser,
+                refreshedToken: this.sign(verifiedUser)
             };
         } catch (error) {
             return null;

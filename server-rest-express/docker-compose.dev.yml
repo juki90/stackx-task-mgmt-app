@@ -30,8 +30,8 @@ services:
         restart: unless-stopped
         env_file: .env
         environment:
-            - 'PGADMIN_DEFAULT_EMAIL=example@example.com'
-            - 'PGADMIN_DEFAULT_PASSWORD=xyz123'
+            - 'PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL}'
+            - 'PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}'
         ports:
             - '5433:80'
         volumes:

@@ -1,5 +1,6 @@
-import { Sequelize } from 'sequelize';
+import path from 'path';
 import { Umzug, SequelizeStorage } from 'umzug';
+import { Sequelize } from 'sequelize-typescript';
 
 import { envConfig } from '@/config';
 
@@ -7,7 +8,10 @@ const {
     postgres: { url, pool }
 } = envConfig;
 
-const sequelize = new Sequelize(url, { pool });
+const sequelize = new Sequelize(url, {
+    pool,
+    models: [path.join(__dirname, '..', 'models')]
+});
 
 export const umzug = new Umzug({
     migrations: { glob: 'src/seeders/!(*index).ts' },

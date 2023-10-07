@@ -12,7 +12,7 @@ interface IJwt {
     sign(user: User): string;
     verify(
         authHeader: string
-    ): Promise<{ refreshedToken: string; role: string } | null>;
+    ): Promise<{ refreshedToken: string; loggedUser: User } | null>;
 }
 
 export type { IJwt, ILogger };
