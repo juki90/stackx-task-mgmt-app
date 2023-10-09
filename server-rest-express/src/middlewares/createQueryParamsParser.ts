@@ -1,10 +1,11 @@
 import { Op } from 'sequelize';
 
 import { USER_UPDATABLE_FIELDS_NO_PASSWORD } from '@/models/User';
+import { TASK_UPDATABLE_FIELDS_NO_USERSSTATUS } from '@/models/Task';
 
 import type { Request, Response, NextFunction } from 'express';
 
-export default (basicRouteName: 'users') =>
+export default (basicRouteName: 'users' | 'tasks') =>
     (req: Request, res: Response, next: NextFunction) => {
         const { query } = req;
         const queryParams: {
@@ -38,7 +39,8 @@ export default (basicRouteName: 'users') =>
 
             if (param === 'filter') {
                 const fields: { [x: string]: string[] } = {
-                    users: USER_UPDATABLE_FIELDS_NO_PASSWORD
+                    users: USER_UPDATABLE_FIELDS_NO_PASSWORD,
+                    tasks: TASK_UPDATABLE_FIELDS_NO_USERSSTATUS
                 };
 
                 const orParams: {

@@ -1,5 +1,4 @@
-import { Router, IRouter } from 'express';
-import { Request, Response } from 'express';
+import { Router, type IRouter } from 'express';
 
 import checkJwt from '@/middlewares/checkJwt';
 import validate from '@/middlewares/validate';
@@ -8,6 +7,7 @@ import checkAdminRole from '@/middlewares/checkAdminRole';
 import createQueryParamsParser from '@/middlewares/createQueryParamsParser';
 
 import type { Container } from 'inversify';
+import type { Request, Response } from 'express';
 import type {
     IUserFetchController,
     IUserCreateController,
@@ -45,7 +45,7 @@ export default async (di: Container): Promise<IRouter> => {
 
     router.post(
         '/',
-        usersValidator.save,
+        usersValidator.create,
         validate,
         checkJwt,
         checkAdminRole,
@@ -54,7 +54,7 @@ export default async (di: Container): Promise<IRouter> => {
 
     router.put(
         '/:id',
-        usersValidator.save,
+        usersValidator.update,
         validate,
         checkJwt,
         checkAdminRole,
@@ -63,6 +63,8 @@ export default async (di: Container): Promise<IRouter> => {
 
     router.delete(
         '/:id',
+        usersValidator.remove,
+        validate,
         checkJwt,
         checkAdminRole,
         (req: Request, res: Response) => userDeleteController.invoke(req, res)

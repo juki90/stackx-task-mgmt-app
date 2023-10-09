@@ -20,7 +20,7 @@ interface IUserDeleteController {
 
 interface IUserFetchController {
     userRepository: IUserRepository;
-    invoke(req: Request, res: Response): Promise<Response<string>>;
+    invoke(req: Request, res: Response): Promise<Response<User[]>>;
 }
 
 export {

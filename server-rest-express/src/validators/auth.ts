@@ -26,7 +26,7 @@ const login = [
         .withMessage(messages.validators.shared.fieldShouldNotBeEmpty)
         .bail()
         .isLength({ min: 8, max: 32 })
-        .withMessage(messages.validators.auth.passwordWithIncorrectLength)
+        .withMessage(messages.validators.shared.incorrectPasswordLength)
 ];
 
 export default { login };

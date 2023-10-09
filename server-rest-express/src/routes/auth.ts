@@ -1,11 +1,11 @@
-import { Router, IRouter } from 'express';
-import { Request, Response } from 'express';
+import { Router, type IRouter } from 'express';
 
 import validate from '@/middlewares/validate';
 import authValidator from '@/validators/auth';
 
 import type { Container } from 'inversify';
 import type { ILoginController } from '@/types';
+import type { Request, Response } from 'express';
 
 const router: IRouter = Router();
 

@@ -1,8 +1,9 @@
-import { body, query } from 'express-validator';
+import { body, query, param } from 'express-validator';
 
 import { en as messages } from '@/locales';
 import isEmail from '@/validators/utilities/isEmail';
 import sanitizeQueryObject from '@/validators/utilities/sanitizeQueryObject';
+import { validatePageSizeAndIndex } from '@/validators/utilities/customQueryValidator';
 
 const fetch = [
     query('page')
@@ -11,50 +12,17 @@ const fetch = [
         .isObject()
         .withMessage(messages.validators.shared.fetchParamShouldBeObject)
         .bail()
-        .custom(({ size, index }) => {
-            if (!size && size !== 0) {
-                throw new Error(
-                    messages.validators.shared.pageSizeShouldNotBeEmpty
-                );
-            }
+        .custom(validatePageSizeAndIndex),
 
-            if (isNaN(parseInt(size))) {
-                throw new Error(
-                    messages.validators.shared.pageSizeShouldBeInteger
-                );
-            }
-
-            if (size < 1 && size > 50) {
-                throw new Error(
-                    messages.validators.shared.pageSizeShouldBeCorrectRange
-                );
-            }
-
-            if (!index && index !== 0) {
-                throw new Error(
-                    messages.validators.shared.pageIndexShouldNotBeEmpty
-                );
-            }
-
-            if (isNaN(parseInt(index))) {
-                throw new Error(
-                    messages.validators.shared.pageIndexShouldBeInteger
-                );
-            }
-
-            if (index < 0) {
-                throw new Error(
-                    messages.validators.shared.pageIndexShouldBeCorrectRange
-                );
-            }
-
-            return true;
-        }),
-
-    query('filter').optional()
+    query('filter')
+        .optional()
+        .trim()
+        .not()
+        .isEmpty()
+        .withMessage(messages.validators.shared.fieldShouldNotBeEmpty)
 ];
 
-const save = [
+const create = [
     body('firstName')
         .isString()
         .withMessage(messages.validators.shared.fieldShouldBeString)
@@ -101,6 +69,8 @@ const save = [
                     messages.validators.users.userWithThisEmailExists
                 );
             }
+
+            return true;
         }),
 
     body('password')
@@ -111,11 +81,19 @@ const save = [
         .withMessage(messages.validators.shared.fieldShouldBeString)
         .bail()
         .isLength({ min: 8, max: 32 })
-        .withMessage(messages.validators.users.incorrectPasswordLength),
+        .withMessage(messages.validators.shared.incorrectPasswordLength),
 
     body('isAdmin')
         .isBoolean()
         .withMessage(messages.validators.shared.fieldShuoldBeBoolean)
 ];
 
-export default { save, fetch };
+const remove = [
+    param('id')
+        .isUUID()
+        .withMessage(messages.validators.shared.fieldShouldBeUuid)
+];
+
+const update = [...create, ...remove];
+
+export default { create, update, fetch, remove };

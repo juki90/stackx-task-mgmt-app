@@ -6,7 +6,8 @@ import Task from '@/models/Task';
 import type { InferAttributes, InferCreationAttributes } from 'sequelize';
 
 @Table({
-    tableName: 'UserTask'
+    tableName: 'UserTasks',
+    timestamps: true
 })
 export default class UserTask extends Model<
     InferAttributes<UserTask>,

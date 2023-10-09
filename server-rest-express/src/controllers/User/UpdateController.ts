@@ -17,6 +17,7 @@ import {
 import type { Request, Response } from 'express';
 import type {
     User,
+    Sequelize,
     IUserRepository,
     IRoleRepository,
     IUserUpdateController
@@ -25,6 +26,9 @@ import type {
 @controller('/users')
 export class UserUpdateController implements IUserUpdateController {
     constructor(
+        @inject('services.sequelize')
+        public sequelize: Sequelize,
+
         @inject('repositories.user')
         public userRepository: IUserRepository,
 
@@ -66,22 +70,30 @@ export class UserUpdateController implements IUserUpdateController {
                 .send(messages.validators.users.notUpdatableUserByYou);
         }
 
-        await userToUpdate.update(userPayload, {
-            fields: password
-                ? USER_UPDATABLE_FIELDS
-                : USER_UPDATABLE_FIELDS_NO_PASSWORD
-        });
+        const t = await this.sequelize.transaction();
 
-        if (
-            isAdmin
-                ? adminRole.id !== userToUpdate.id
-                : userRole.id !== userToUpdate.id
-        ) {
-            await userToUpdate.setRole(isAdmin ? adminRole : userRole);
+        try {
+            await userToUpdate.update(userPayload, {
+                fields: password
+                    ? USER_UPDATABLE_FIELDS
+                    : USER_UPDATABLE_FIELDS_NO_PASSWORD
+            });
+
+            if (
+                isAdmin
+                    ? adminRole.id !== userToUpdate.id
+                    : userRole.id !== userToUpdate.id
+            ) {
+                await userToUpdate.setRole(isAdmin ? adminRole : userRole);
+            }
+        } catch (error) {
+            await t.rollback();
+
+            throw error;
         }
 
         const userToSend = await this.userRepository.findById(userToUpdate.id);
 
-        return res.status(StatusCodes.CREATED).json(userToSend);
+        return res.json(userToSend);
     }
 }

@@ -87,9 +87,10 @@ export default class User extends Model<
     createdById?: string;
 
     @BelongsTo(() => User, 'createdById')
-    createdBy: User;
+    createdBy?: User;
 
     @ForeignKey(() => Role)
+    @IsUUID(4)
     @Column
     roleId!: string;
 
@@ -133,40 +134,32 @@ export default class User extends Model<
     }
 }
 
-export const USER_UPDATABLE_FIELDS:
-    | (
-          | 'firstName'
-          | 'lastName'
-          | 'email'
-          | 'password'
-          | 'id'
-          | 'createdAt'
-          | 'updatedAt'
-          | 'deletedAt'
-          | 'version'
-          | 'fullName'
-          | 'createdById'
-          | 'createdBy'
-          | 'roleId'
-          | 'role'
-          | 'tasks'
-      )[] = ['firstName', 'lastName', 'email', 'password'];
+type ModelFields =
+    | 'firstName'
+    | 'lastName'
+    | 'email'
+    | 'password'
+    | 'id'
+    | 'createdAt'
+    | 'updatedAt'
+    | 'deletedAt'
+    | 'version'
+    | 'fullName'
+    | 'createdById'
+    | 'createdBy'
+    | 'roleId'
+    | 'role'
+    | 'tasks';
 
-export const USER_UPDATABLE_FIELDS_NO_PASSWORD:
-    | (
-          | 'firstName'
-          | 'lastName'
-          | 'email'
-          | 'password'
-          | 'id'
-          | 'createdAt'
-          | 'updatedAt'
-          | 'deletedAt'
-          | 'version'
-          | 'fullName'
-          | 'createdById'
-          | 'createdBy'
-          | 'roleId'
-          | 'role'
-          | 'tasks'
-      )[] = ['firstName', 'lastName', 'email'];
+export const USER_UPDATABLE_FIELDS: ModelFields[] = [
+    'firstName',
+    'lastName',
+    'email',
+    'password'
+];
+
+export const USER_UPDATABLE_FIELDS_NO_PASSWORD: ModelFields[] = [
+    'firstName',
+    'lastName',
+    'email'
+];

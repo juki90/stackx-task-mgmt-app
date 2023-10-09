@@ -20,7 +20,7 @@ export class UserFetchController implements IUserFetchController {
     async invoke(
         @request() req: Request,
         @response() res: Response
-    ): Promise<Response<User | string>> {
+    ): Promise<Response<User[]>> {
         const { queryParams } = req;
 
         const users = await this.userRepository.findAll(queryParams);

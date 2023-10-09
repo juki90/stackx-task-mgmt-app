@@ -11,9 +11,9 @@ enum TaskStatus {
     CANCELLED = -1
 }
 
-type TaskUsersStatus = { userId: string; doneAt?: Date }[];
+type TaskUsersStatus = { userId: string; doneAt?: Date | null }[];
 
-type TaskUsersStatusWithUsers = { user: UserModel; doneAt: Date }[];
+type TaskUsersStatusWithUsers = { user: UserModel; doneAt?: Date }[];
 
 export type {
     Task,

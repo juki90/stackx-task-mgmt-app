@@ -33,7 +33,7 @@ export const up: Migration = ({
             },
             createdById: {
                 type: Sequelize.UUID,
-                allowNull: false,
+                allowNull: true,
                 validate: {
                     notEmpty: true,
                     isUUID: 4

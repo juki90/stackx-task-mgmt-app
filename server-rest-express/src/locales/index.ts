@@ -9,6 +9,8 @@ export const en = {
             fieldShouldBeAnEmail: 'Field should be a valid email',
             fieldShuoldBeBoolean: 'Field should be boolean',
             fieldShouldBeInteger: 'Field should be integer',
+            fieldShouldBeArray: 'Field should be array',
+            fieldShouldBeUuid: 'Field should be in correct UUID format',
             fetchPageIndexIncorrectNumber: 'Param should be at least 0',
             pageSizeShouldNotBeEmpty: "Page 'size' value should not be empty",
             pageSizeShouldBeInteger: "Page 'size' value should not be integer",
@@ -19,6 +21,7 @@ export const en = {
                 "Page 'index' value should not be integer",
             pageIndexShouldBeCorrectRange:
                 "Page 'index' value should be between at least 0",
+            incorrectPasswordLength: 'Password should contain 8-32 characters',
             fetchParamShouldBeObject: 'Query param should be object',
             filterShouldBeString: "Field inside 'filter' should be a string",
             filterFieldShouldNotBeEmpty:
@@ -27,17 +30,23 @@ export const en = {
                 "Only one field inside 'filter' should be present"
         },
         auth: {
-            passwordWithIncorrectLength:
-                'Password should have between 8 and 32 characters',
             incorrectEmailOrPassword: 'Incorrect email or password'
         },
         users: {
             nameIncorrectLength: 'Field should contain 2-32 characters',
-            incorrectPasswordLength: 'Password should contain 8-32 characters',
             userWithThisEmailExists: 'User with this email already exists',
             notUpdatableUserByYou: "This user can't be updated by you",
             notDeletableUserByYou: "This user can't be deleted by you",
             unableToDeleteYourself: "You can't delete yourself"
+        },
+        tasks: {
+            descriptionIncorrectLength:
+                'This field should have at most 3000 characters',
+            titleIncorrectLength: 'This field should have 2-128 characters',
+            userIdsIncorrectAmount:
+                'This field should be array with 1-50 items',
+            notAllUsersFromArrayExist:
+                "Some users from list don't exist anymore"
         }
     }
 };

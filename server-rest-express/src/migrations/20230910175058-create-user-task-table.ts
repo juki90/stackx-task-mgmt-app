@@ -14,14 +14,28 @@ export const up: Migration = ({
             userId: {
                 type: Sequelize.UUID,
                 primaryKey: true,
-                defaultValue: Sequelize.UUIDV4
+                defaultValue: Sequelize.UUIDV4,
+                references: {
+                    model: 'Users',
+                    key: 'id'
+                },
+                onDelete: 'cascade'
             },
             taskId: {
                 type: Sequelize.UUID,
                 primaryKey: true,
-                defaultValue: Sequelize.UUIDV4
+                defaultValue: Sequelize.UUIDV4,
+                references: {
+                    model: 'Tasks',
+                    key: 'id'
+                },
+                onDelete: 'cascade'
             },
             createdAt: {
+                type: Sequelize.DATE,
+                defaultValue: Sequelize.fn('NOW')
+            },
+            updatedAt: {
                 type: Sequelize.DATE,
                 defaultValue: Sequelize.fn('NOW')
             }

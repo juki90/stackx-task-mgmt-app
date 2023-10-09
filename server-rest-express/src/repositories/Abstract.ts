@@ -8,6 +8,7 @@ import type {
     Attributes,
     ModelStatic,
     FindOptions,
+    CountOptions,
     CreateOptions,
     UpdateOptions,
     InferAttributes,
@@ -52,5 +53,9 @@ export abstract class AbstractRepository<
 
     findById(id: string, options: FindOptions<T>): Promise<T | null> {
         return this.model.findByPk(id, options);
+    }
+
+    count(options: CountOptions = {}) {
+        return this.model.count(options);
     }
 }

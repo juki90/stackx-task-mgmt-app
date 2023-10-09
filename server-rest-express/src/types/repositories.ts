@@ -1,4 +1,4 @@
-import type { User, Role, Sequelize } from '@/types';
+import type { User, Role, Sequelize, Task } from '@/types';
 import type { MakeNullishOptional } from 'sequelize/types/utils';
 import type {
     Model,
@@ -42,4 +42,13 @@ interface IUserRepository extends IAbstractRepository<User> {
     ): Promise<User | null>;
 }
 
-export type { IRoleRepository, IUserRepository, IAbstractRepository };
+interface ITaskRepository extends IAbstractRepository<Task> {
+    get model(): ModelStatic<Task>;
+}
+
+export type {
+    IRoleRepository,
+    IUserRepository,
+    ITaskRepository,
+    IAbstractRepository
+};
