@@ -70,6 +70,12 @@ export class UserUpdateController implements IUserUpdateController {
                 .send(messages.validators.users.notUpdatableUserByYou);
         }
 
+        if (!loggedUserCreatedBy && !isAdmin) {
+            return res
+                .status(StatusCodes.FORBIDDEN)
+                .send(messages.validators.users.cantRemoveAdminRole);
+        }
+
         const t = await this.sequelize.transaction();
 
         try {

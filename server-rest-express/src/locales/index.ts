@@ -37,7 +37,8 @@ export const en = {
             userWithThisEmailExists: 'User with this email already exists',
             notUpdatableUserByYou: "This user can't be updated by you",
             notDeletableUserByYou: "This user can't be deleted by you",
-            unableToDeleteYourself: "You can't delete yourself"
+            unableToDeleteYourself: "You can't delete yourself",
+            cantRemoveAdminRole: "You can't remove your admin role"
         },
         tasks: {
             descriptionIncorrectLength:
@@ -46,7 +47,14 @@ export const en = {
             userIdsIncorrectAmount:
                 'This field should be array with 1-50 items',
             notAllUsersFromArrayExist:
-                "Some users from list don't exist anymore"
+                "Some users from list don't exist anymore",
+            notAllowedTaskStatus: 'Not allowed status. Should be -1 or 1',
+            alreadyCancelled: 'Task is already cancelled',
+            youDontBelongToThisTask:
+                "You don't belong to this task, hence you can't change its status",
+            onlyAdminCanCancelTask: 'Only administrators can cancel tasks',
+            unsupportedStatusChange: 'Unsupported status change',
+            alreadyDone: 'This task is already done'
         }
     }
 };

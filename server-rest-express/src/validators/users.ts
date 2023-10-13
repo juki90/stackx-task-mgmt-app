@@ -96,4 +96,6 @@ const remove = [
 
 const update = [...create, ...remove];
 
-export default { create, update, fetch, remove };
+const show = remove;
+
+export default { create, update, fetch, remove, show };

@@ -1,13 +1,25 @@
 import type { Request, Response } from 'express';
-import type { IUserRepository, IRoleRepository, User } from '@/types';
+import type {
+    User,
+    Sequelize,
+    IUserRepository,
+    IRoleRepository
+} from '@/types';
 
 interface IUserCreateController {
+    sequelize: Sequelize;
     userRepository: IUserRepository;
     roleRepository: IRoleRepository;
     invoke(req: Request, res: Response): Promise<Response<User | string>>;
 }
 
+interface IUserShowController {
+    userRepository: IUserRepository;
+    invoke(req: Request, res: Response): Promise<Response<User | string>>;
+}
+
 interface IUserUpdateController {
+    sequelize: Sequelize;
     userRepository: IUserRepository;
     roleRepository: IRoleRepository;
     invoke(req: Request, res: Response): Promise<Response<User | string>>;
@@ -24,8 +36,9 @@ interface IUserFetchController {
 }
 
 export {
+    IUserShowController,
+    IUserFetchController,
     IUserCreateController,
-    IUserUpdateController,
     IUserDeleteController,
-    IUserFetchController
+    IUserUpdateController
 };

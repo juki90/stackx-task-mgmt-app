@@ -116,3 +116,10 @@ export const TASK_UPDATABLE_FIELDS_NO_USERSSTATUS: ModelFields[] = [
     'title',
     'description'
 ];
+
+export const TASK_STATUSES = {
+    CANCELLED: -1,
+    PENDING: 0,
+    DONE: 1,
+    VALUES: [-1, 0, 1]
+};

@@ -1,6 +1,7 @@
 import { body, param, query } from 'express-validator';
 
 import { en as messages } from '@/locales';
+import { TASK_STATUSES } from '@/models/Task';
 import sanitizeQueryObject from '@/validators/utilities/sanitizeQueryObject';
 import { validatePageSizeAndIndex } from '@/validators/utilities/customQueryValidator';
 
@@ -65,6 +66,19 @@ const remove = [
         .withMessage(messages.validators.shared.fieldShouldBeUuid)
 ];
 
+const changeStatus = [
+    ...remove,
+
+    body('status')
+        .isInt()
+        .withMessage(messages.validators.shared.fieldShouldBeInteger)
+        .bail()
+        .isIn([TASK_STATUSES.CANCELLED, TASK_STATUSES.DONE])
+        .withMessage(messages.validators.tasks.notAllowedTaskStatus)
+];
+
+const show = remove;
+
 const update = [...create, ...remove];
 
-export default { create, update, remove, fetch };
+export default { create, update, remove, fetch, show, changeStatus };

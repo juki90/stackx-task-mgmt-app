@@ -9,6 +9,7 @@ import createQueryParamsParser from '@/middlewares/createQueryParamsParser';
 import type { Container } from 'inversify';
 import type { Request, Response } from 'express';
 import type {
+    IUserShowController,
     IUserFetchController,
     IUserCreateController,
     IUserUpdateController,
@@ -22,6 +23,9 @@ const parseQueryParams = createQueryParamsParser('users');
 export default async (di: Container): Promise<IRouter> => {
     const userFetchController = di.get<IUserFetchController>(
         'controllers.users.fetch'
+    );
+    const userShowController = di.get<IUserShowController>(
+        'controllers.users.show'
     );
     const userCreateController = di.get<IUserCreateController>(
         'controllers.users.create'
@@ -41,6 +45,15 @@ export default async (di: Container): Promise<IRouter> => {
         checkAdminRole,
         parseQueryParams,
         (req: Request, res: Response) => userFetchController.invoke(req, res)
+    );
+
+    router.get(
+        '/:id',
+        usersValidator.show,
+        validate,
+        checkJwt,
+        checkAdminRole,
+        (req: Request, res: Response) => userShowController.invoke(req, res)
     );
 
     router.post(

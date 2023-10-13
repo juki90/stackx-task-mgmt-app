@@ -9,4 +9,9 @@ interface ILoginController {
     invoke(req: Request, res: Response): Promise<Response<User | string>>;
 }
 
-export { ILoginController };
+interface IMeController {
+    userRepository: IUserRepository;
+    invoke(req: Request, res: Response): Promise<Response<User | string>>;
+}
+
+export { IMeController, ILoginController };
