@@ -9,7 +9,6 @@ import {
 } from 'inversify-express-utils';
 
 import { en as messages } from '@/locales';
-import { TASK_UPDATABLE_FIELDS } from '@/models/Task';
 
 import type { Request, Response } from 'express';
 import type {
@@ -40,7 +39,9 @@ export class TaskCreateController implements ITaskCreateController {
         @response() res: Response
     ): Promise<
         Response<
-            Task | { message: string; field: string; data: string[] }[] | string
+            | Task
+            | { message: string; field: string; data?: string[] }[]
+            | string
         >
     > {
         const { loggedUser, body: taskPayload } = req;
@@ -64,25 +65,26 @@ export class TaskCreateController implements ITaskCreateController {
                 (userId: string) => !userIds.includes(userId)
             );
 
-            return res.status(StatusCodes.BAD_REQUEST).send([
-                {
-                    message:
-                        messages.validators.tasks.notAllUsersFromArrayExist,
-                    field: 'general',
-                    data: missingUserIds
-                }
-            ]);
+            return res.status(StatusCodes.BAD_REQUEST).send({
+                errors: [
+                    {
+                        message:
+                            messages.validators.tasks.notAllUsersFromArrayExist,
+                        field: 'general',
+                        data: missingUserIds
+                    }
+                ]
+            });
         }
 
         const t = await this.sequelize.transaction();
 
         try {
-            const createdTask = await this.taskRepository.create(
-                { ...taskPayload, status: 0, usersStatus },
-                {
-                    fields: TASK_UPDATABLE_FIELDS
-                }
-            );
+            const createdTask = await this.taskRepository.create({
+                ...taskPayload,
+                status: 0,
+                usersStatus
+            });
 
             await Promise.all([
                 createdTask.setCreatedBy(loggedUser),

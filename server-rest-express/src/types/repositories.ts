@@ -18,7 +18,7 @@ interface IAbstractRepository<
     get model(): ModelStatic<T>;
     create(
         data: MakeNullishOptional<T>,
-        options: CreateOptions<Attributes<T>>
+        options?: CreateOptions<Attributes<T>>
     ): Promise<T>;
     updateById(
         id: string,

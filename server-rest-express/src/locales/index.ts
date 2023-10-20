@@ -7,7 +7,7 @@ export const en = {
             fieldShouldBeString: 'Field should be of type string',
             fieldShouldNotBeEmpty: 'Field should not be empty',
             fieldShouldBeAnEmail: 'Field should be a valid email',
-            fieldShuoldBeBoolean: 'Field should be boolean',
+            fieldShouldBeBoolean: 'Field should be boolean',
             fieldShouldBeInteger: 'Field should be integer',
             fieldShouldBeArray: 'Field should be array',
             fieldShouldBeUuid: 'Field should be in correct UUID format',
@@ -20,7 +20,7 @@ export const en = {
             pageIndexShouldBeInteger:
                 "Page 'index' value should not be integer",
             pageIndexShouldBeCorrectRange:
-                "Page 'index' value should be between at least 0",
+                "Page 'index' value should be at least 0",
             incorrectPasswordLength: 'Password should contain 8-32 characters',
             fetchParamShouldBeObject: 'Query param should be object',
             filterShouldBeString: "Field inside 'filter' should be a string",

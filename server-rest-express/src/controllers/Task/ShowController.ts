@@ -17,7 +17,7 @@ export class TaskShowController implements ITaskShowController {
         public taskRepository: ITaskRepository
     ) {}
 
-    @httpGet('/')
+    @httpGet('/:id')
     async invoke(
         @request() req: Request,
         @response() res: Response

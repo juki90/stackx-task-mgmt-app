@@ -60,7 +60,6 @@ export default class User extends Model<
     @Column
     lastName!: string;
 
-    @AllowNull(false)
     @Column(DataType.VIRTUAL)
     get fullName(): string {
         return `${this.getDataValue('firstName')} ${this.getDataValue(
@@ -123,7 +122,7 @@ export default class User extends Model<
 
     getCreatedBy: BelongsToGetAssociationMixin<User>;
 
-    async isAdmin(): Promise<boolean> {
+    async checkAdminRole(): Promise<boolean> {
         if (this.role?.name) {
             return this.role.name === ROLE_NAMES.ADMIN;
         }

@@ -86,7 +86,7 @@ export class TaskChangeStatusController implements ITaskChangeStatusController {
             return res.sendStatus(StatusCodes.OK);
         }
 
-        const isLoggedUserAdmin = await loggedUser.isAdmin();
+        const isLoggedUserAdmin = await loggedUser.checkAdminRole();
 
         if (!isLoggedUserAdmin && status === TASK_STATUSES.CANCELLED) {
             return res

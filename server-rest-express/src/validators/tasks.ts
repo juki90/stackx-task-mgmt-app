@@ -7,7 +7,9 @@ import { validatePageSizeAndIndex } from '@/validators/utilities/customQueryVali
 
 const fetch = [
     query('page')
-        .optional()
+        .not()
+        .isEmpty()
+        .withMessage(messages.validators.shared.fieldShouldNotBeEmpty)
         .customSanitizer(sanitizeQueryObject)
         .isObject()
         .withMessage(messages.validators.shared.fetchParamShouldBeObject)
@@ -70,6 +72,10 @@ const changeStatus = [
     ...remove,
 
     body('status')
+        .not()
+        .isEmpty()
+        .withMessage(messages.validators.shared.fieldShouldNotBeEmpty)
+        .bail()
         .isInt()
         .withMessage(messages.validators.shared.fieldShouldBeInteger)
         .bail()

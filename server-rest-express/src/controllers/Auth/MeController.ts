@@ -16,7 +16,7 @@ export class MeController implements IMeController {
         public userRepository: IUserRepository
     ) {}
 
-    @httpGet('/')
+    @httpGet('/me')
     async invoke(
         @request() req: Request,
         @response() res: Response

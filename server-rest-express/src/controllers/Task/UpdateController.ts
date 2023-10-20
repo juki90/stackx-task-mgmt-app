@@ -40,7 +40,9 @@ export class TaskUpdateController implements ITaskUpdateController {
         @response() res: Response
     ): Promise<
         Response<
-            Task | { message: string; field: string; data: string[] }[] | string
+            | Task
+            | { message: string; field: string; data?: string[] }[]
+            | string
         >
     > {
         const {
@@ -102,14 +104,16 @@ export class TaskUpdateController implements ITaskUpdateController {
                 (userId: string) => !userIds.includes(userId)
             );
 
-            return res.status(StatusCodes.BAD_REQUEST).send([
-                {
-                    message:
-                        messages.validators.tasks.notAllUsersFromArrayExist,
-                    field: 'general',
-                    data: missingUserIds
-                }
-            ]);
+            return res.status(StatusCodes.BAD_REQUEST).send({
+                errors: [
+                    {
+                        message:
+                            messages.validators.tasks.notAllUsersFromArrayExist,
+                        field: 'general',
+                        data: missingUserIds
+                    }
+                ]
+            });
         }
 
         const t = await this.sequelize.transaction();

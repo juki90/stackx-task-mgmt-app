@@ -49,7 +49,7 @@ export default class Task extends Model<
     title!: string;
 
     @Length({ max: 3000 })
-    @Column
+    @Column(DataType.TEXT)
     description?: string;
 
     @ForeignKey(() => User)

@@ -7,7 +7,10 @@ import { validatePageSizeAndIndex } from '@/validators/utilities/customQueryVali
 
 const fetch = [
     query('page')
-        .optional()
+        .not()
+        .isEmpty()
+        .withMessage(messages.validators.shared.fieldShouldNotBeEmpty)
+        .bail()
         .customSanitizer(sanitizeQueryObject)
         .isObject()
         .withMessage(messages.validators.shared.fetchParamShouldBeObject)
@@ -74,18 +77,28 @@ const create = [
         }),
 
     body('password')
-        .custom((password, { req }) => req.method === 'PUT' || password)
-        .withMessage(messages.validators.shared.fieldShouldNotBeEmpty)
-        .bail()
+        .if(
+            (password, { req }) =>
+                req.method === 'POST' || (req.method === 'PUT' && password)
+        )
         .isString()
         .withMessage(messages.validators.shared.fieldShouldBeString)
+        .bail()
+        .trim()
+        .not()
+        .isEmpty()
+        .withMessage(messages.validators.shared.fieldShouldNotBeEmpty)
         .bail()
         .isLength({ min: 8, max: 32 })
         .withMessage(messages.validators.shared.incorrectPasswordLength),
 
     body('isAdmin')
-        .isBoolean()
-        .withMessage(messages.validators.shared.fieldShuoldBeBoolean)
+        .not()
+        .isEmpty()
+        .withMessage(messages.validators.shared.fieldShouldNotBeEmpty)
+        .bail()
+        .isBoolean({ strict: true })
+        .withMessage(messages.validators.shared.fieldShouldBeBoolean)
 ];
 
 const remove = [

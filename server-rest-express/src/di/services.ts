@@ -6,9 +6,9 @@ import type { Container } from 'inversify';
 import type {
     IJwt,
     ILogger,
+    EnvConfig,
     Sequelize,
     PlatformPath,
-    EnvConfigPostgres,
     SequelizeTypescript
 } from '@/types';
 
@@ -22,7 +22,7 @@ export const useConfig: (container: Container) => void = container => {
                 container.get<PlatformPath>('%path'),
                 container.get<SequelizeTypescript>('%sequelize-typescript'),
                 container.get<ILogger>('services.logger'),
-                container.get<EnvConfigPostgres>('%config.postgres%')
+                container.get<EnvConfig>('%config%')
             )
         );
 };

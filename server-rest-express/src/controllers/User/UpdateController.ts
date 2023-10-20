@@ -70,7 +70,11 @@ export class UserUpdateController implements IUserUpdateController {
                 .send(messages.validators.users.notUpdatableUserByYou);
         }
 
-        if (!loggedUserCreatedBy && !isAdmin) {
+        if (
+            !loggedUserCreatedBy &&
+            !isAdmin &&
+            loggedUser.id === userToUpdate.id
+        ) {
             return res
                 .status(StatusCodes.FORBIDDEN)
                 .send(messages.validators.users.cantRemoveAdminRole);

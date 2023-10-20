@@ -50,13 +50,16 @@ export class LoginController implements ILoginController {
             });
 
             if (!userToCheck) {
-                return res.status(StatusCodes.UNAUTHORIZED).json([
-                    {
-                        message:
-                            messages.validators.auth.incorrectEmailOrPassword,
-                        field: 'general'
-                    }
-                ]);
+                return res.status(StatusCodes.UNAUTHORIZED).json({
+                    errors: [
+                        {
+                            message:
+                                messages.validators.auth
+                                    .incorrectEmailOrPassword,
+                            field: 'general'
+                        }
+                    ]
+                });
             }
 
             const isValid = await this.bcrypt.compare(
@@ -65,13 +68,16 @@ export class LoginController implements ILoginController {
             );
 
             if (!isValid) {
-                return res.status(StatusCodes.UNAUTHORIZED).json([
-                    {
-                        message:
-                            messages.validators.auth.incorrectEmailOrPassword,
-                        field: 'general'
-                    }
-                ]);
+                return res.status(StatusCodes.UNAUTHORIZED).json({
+                    errors: [
+                        {
+                            message:
+                                messages.validators.auth
+                                    .incorrectEmailOrPassword,
+                            field: 'general'
+                        }
+                    ]
+                });
             }
 
             const userToSend = await this.userRepository.findByEmail(email, {

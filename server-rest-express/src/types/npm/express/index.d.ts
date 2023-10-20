@@ -1,4 +1,4 @@
-import type { User, ParsedQs } from '@/types';
+import type { User } from '@/types';
 
 export {};
 
@@ -17,16 +17,12 @@ declare global {
                     }[];
                 };
             };
-            query:
-                | string
-                | string[]
-                | ParsedQs
-                | ParsedQs[]
-                | {
-                      [x: string]: {
-                          [y: string]: string | number;
-                      };
-                  };
+            query: {
+                page?: {
+                    size: number;
+                    index: number;
+                };
+            };
         }
     }
 }
