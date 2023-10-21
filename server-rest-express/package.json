@@ -7,13 +7,18 @@
     "scripts": {
         "dev": "nodemon",
         "start": "node dist/bin/server.js",
-        "build": "tsc --build",
+        "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
         "clean": "tsc --build --clean",
         "db:migrate:dev": "npx ts-node --files src/migrations/index.ts up",
         "db:migrate:undo:all:dev": "npx ts-node --files src/migrations/index.ts down --to 0",
         "db:seed:dev": "npx ts-node --files src/seeders/index.ts up",
         "db:destroy:dev": "npm run db:migrate:undo:all:dev && npx ts-node --files src/seeders/index.ts down --to 0",
         "db:recreate:dev": "npm run db:destroy:dev && npm run db:migrate:dev && npm run db:seed:dev",
+        "db:migrate:prod": "node dist/migrations/index.js up",
+        "db:migrate:undo:all:prod": "node dist/migrations/index.js down --to 0",
+        "db:seed:prod": "node dist/seeders/index.js up",
+        "db:destroy:prod": "npm run db:migrate:undo:all:prod && node dist/seeders/index.js down --to 0",
+        "db:recreate:prod": "npm run db:destroy:prod && npm run db:migrate:prod && npm run db:seed:prod",
         "test": "cross-env NODE_ENV=test jest --verbose --detectOpenHandles --runInBand --forceExit"
     },
     "author": "",
@@ -45,6 +50,7 @@
         "ts-node": "~10.9.1",
         "ts-node-dev": "~2.0.0",
         "tsconfig-paths": "~4.2.0",
+        "tscpaths": "^0.0.9",
         "typescript": "~5.1.6"
     },
     "dependencies": {
