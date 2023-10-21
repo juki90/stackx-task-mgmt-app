@@ -1,0 +1,32 @@
+const path = require('path');
+const dotenv = require('dotenv');
+
+const nodeEnv = process.env.NODE_ENV;
+
+dotenv.config({
+    path:
+        nodeEnv === 'test'
+            ? `${path.resolve(__dirname, '.env.test')}`
+            : `${path.resolve(__dirname, '.env')}`
+});
+
+const {
+    env: {
+        POSTGRES_HOST: host,
+        POSTGRES_PORT: port,
+        POSTGRES_USER: user,
+        POSTGRES_PASSWORD: password,
+        POSTGRES_DB: dbName
+    }
+} = process;
+
+module.exports = {
+    url: `postgres://${user}:${encodeURIComponent(
+        password
+    )}@${host}:${port}/${dbName}?${
+        nodeEnv === 'prod' ? 'sslmode=require' : ''
+    }`,
+    'models-path': path.resolve(__dirname, 'src', 'models'),
+    'seeders-path': path.resolve(__dirname, 'src', 'seeders'),
+    'migrations-path': path.resolve(__dirname, 'src', 'migrations')
+};
