@@ -1,0 +1,43 @@
+version: '3.8'
+
+name: '${COMPOSE_PROJECT_NAME}'
+
+volumes:
+    stackx_task_mgmt_dev_postgres:
+    stackx_task_mgmt_dev_pgadmin:
+
+services:
+    postgres:
+        platform: linux/x86_64
+        image: postgres:latest
+        restart: unless-stopped
+        env_file: .env
+        environment:
+            - 'POSTGRES_USER=${POSTGRES_USER}'
+            - 'POSTGRES_PASSWORD=${POSTGRES_PASSWORD}'
+            - 'POSTGRES_DB=${POSTGRES_DB}'
+
+        ports:
+            - '${POSTGRES_PORT}:5432'
+        volumes:
+            - stackx_task_mgmt_dev_postgres:/var/lib/postgresql
+        networks:
+            - stackx-task-mgmt-dev
+    pgadmin:
+        image: dpage/pgadmin4
+        depends_on:
+            - postgres
+        restart: unless-stopped
+        env_file: .env
+        environment:
+            - 'PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL}'
+            - 'PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}'
+        ports:
+            - '5433:80'
+        volumes:
+            - stackx_task_mgmt_dev_pgadmin:/var/lib/pgadmin
+        networks:
+            - stackx-task-mgmt-dev
+
+networks:
+    stackx-task-mgmt-dev:

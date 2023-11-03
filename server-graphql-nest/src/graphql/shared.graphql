@@ -1,0 +1,4 @@
+input PageArg {
+    size: Int!
+    index: Int!
+}

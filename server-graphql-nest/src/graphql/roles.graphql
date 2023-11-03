@@ -1,0 +1,11 @@
+scalar Date
+
+"""
+Role model
+"""
+type Role {
+    id: ID!
+    name: String!
+    createdAt: Date
+    updatedAt: Date
+}
