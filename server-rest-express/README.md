@@ -36,13 +36,17 @@ JWT_SECRET=abc123
 
 ### 2. Setting up DB with Docker Compose
 
-To set up Postgres amd Postgres Admin dashboard, use following command in different terminal window:
+To set up Postgres and Postgres Admin dashboard, use following command in different terminal window:
 
 `docker compose -f docker-compose.dev.yml  up`
 
 (and `docker compose -f docker-compose.dev.yml down` to stop it)
 
 ### 3. Running server
+
+Install dependencies:
+
+`npm install`
 
 Run this command only for the first time:
 
@@ -79,7 +83,7 @@ JWT_SECRET=jwt123
 
 ### 2. Setting up DB with Docker Compose
 
-To set up Postgres amd Postgres Admin dashboard, use following command in different terminal window:
+To set up Postgres and Postgres Admin dashboard, use following command in different terminal window:
 
 `docker compose -f docker-compose.test.yml --env-file .env.test  up`
 
