@@ -1,0 +1,44 @@
+scalar Date
+
+"""
+User model
+"""
+type User {
+    id: ID!
+    firstName: String!
+    lastName: String!
+    fullName: String!
+    email: String!
+    createdBy: User
+    role: Role
+    tasks: [Task!]
+    createdAt: Date
+    updatedAt: Date
+}
+
+input CreateUserInput {
+    firstName: String!
+    lastName: String!
+    email: String!
+    password: String!
+    isAdmin: Boolean!
+}
+
+input UpdateUserInput {
+    firstName: String!
+    lastName: String!
+    email: String!
+    password: String
+    isAdmin: Boolean!
+}
+
+type Query {
+    users(page: PageArg, filter: String): [User]!
+    user(id: ID!): User
+}
+
+type Mutation {
+    createUser(createUserInput: CreateUserInput!): User!
+    updateUser(id: ID!, updateUserInput: UpdateUserInput!): User
+    deleteUser(id: ID!): User
+}

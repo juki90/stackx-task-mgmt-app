@@ -1,0 +1,53 @@
+scalar Date
+
+"""
+Task model
+"""
+type Task {
+    id: ID!
+    title: String!
+    description: String
+    status: Int!
+    usersStatus: [UsersStatus!]
+    createdBy: User!
+    updatedBy: User
+    users: [User!]
+    createdAt: Date
+    updatedAt: Date
+}
+
+type UsersStatus {
+    userId: ID!
+    doneAt: Date
+}
+
+input CreateTaskInput {
+    title: String!
+    description: String!
+    userIds: [ID!]!
+}
+
+input UpdateTaskInput {
+    title: String!
+    description: String!
+    userIds: [ID!]!
+}
+
+input ChangeTaskStatusInput {
+    status: Int!
+}
+
+type Query {
+    tasks(page: PageArg, filter: String): [Task]!
+    task(id: ID!): Task
+}
+
+type Mutation {
+    createTask(createTaskInput: CreateTaskInput!): Task!
+    updateTask(id: ID!, updateTaskInput: UpdateTaskInput!): Task
+    changeTaskStatus(
+        id: ID!
+        changeTaskStatusInput: ChangeTaskStatusInput!
+    ): Task
+    deleteTask(id: ID!): Task
+}

@@ -219,7 +219,7 @@ describe('TASKS UpdateController PUT /api/tasks/:id', () => {
         );
     });
 
-    it('returns BAD_REQUEST when user tries to mark as done cancelled task', async () => {
+    it('returns BAD_REQUEST when user tries to mark as pending cancelled task', async () => {
         const {
             headers: { 'x-auth-token': jwt }
         } = await loginAs(request, ROLE_NAMES.USER);

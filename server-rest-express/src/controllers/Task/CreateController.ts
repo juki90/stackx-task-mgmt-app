@@ -47,14 +47,13 @@ export class TaskCreateController implements ITaskCreateController {
         const { loggedUser, body: taskPayload } = req;
 
         taskPayload.userIds = Array.from(new Set(taskPayload.userIds));
-        const { userIds: taskPayloadUserIds } = taskPayload;
 
+        const { userIds: taskPayloadUserIds } = taskPayload;
         const usersStatus: TaskUsersStatus = taskPayloadUserIds.map(
             (userId: string) => ({
                 userId
             })
         );
-
         const users = await this.userRepository.findAll({
             where: { id: { [Op.in]: taskPayloadUserIds } }
         });
