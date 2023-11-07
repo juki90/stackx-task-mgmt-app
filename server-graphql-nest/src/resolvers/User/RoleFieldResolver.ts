@@ -9,7 +9,7 @@ export class UserRoleFieldResolver {
     constructor(private readonly roleRepository: RoleRepository) {}
 
     @ResolveField('role')
-    async fetchRoleOfUser(@Parent() user: User): Promise<Role> {
+    fetchRoleOfUser(@Parent() user: User): Promise<Role> {
         return this.roleRepository
             .createQueryBuilder('role')
             .innerJoin('role.users', 'users', 'users.id = :userId', {

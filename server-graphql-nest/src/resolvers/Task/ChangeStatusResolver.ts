@@ -16,7 +16,7 @@ export class TaskChangeStatusResolver {
 
     @Mutation('changeTaskStatus')
     @UseGuards(JwtGuard)
-    create(
+    changeStatus(
         @Args('id') id: string,
 
         @Args('changeTaskStatusInput')

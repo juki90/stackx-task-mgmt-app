@@ -76,7 +76,7 @@ export class TasksUpdateService {
 
             throw new UserInputError(
                 messages.validators.tasks.notAllUsersFromArrayExist,
-                { data: missingUserIds }
+                { field: 'general', data: missingUserIds }
             );
         }
 

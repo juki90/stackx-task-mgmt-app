@@ -5,7 +5,6 @@ name: '${COMPOSE_PROJECT_NAME}'
 volumes:
     stackx_task_mgmt_dev_postgres:
     stackx_task_mgmt_dev_pgadmin:
-
 services:
     postgres:
         platform: linux/x86_64

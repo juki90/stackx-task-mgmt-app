@@ -1,0 +1,22 @@
+version: '3.8'
+
+name: '${COMPOSE_PROJECT_NAME}'
+
+services:
+    postgres:
+        platform: linux/x86_64
+        image: postgres:latest
+        restart: unless-stopped
+        env_file: .env.test
+        environment:
+            - 'POSTGRES_USER=${POSTGRES_USER}'
+            - 'POSTGRES_PASSWORD=${POSTGRES_PASSWORD}'
+            - 'POSTGRES_DB=${POSTGRES_DB}'
+
+        ports:
+            - '${POSTGRES_PORT}:5432'
+        networks:
+            - stackx-task-mgmt-test
+
+networks:
+    stackx-task-mgmt-test:

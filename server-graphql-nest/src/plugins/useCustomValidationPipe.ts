@@ -7,8 +7,15 @@ import {
 export default app => {
     app.useGlobalPipes(
         new ValidationPipe({
-            stopAtFirstError: false,
-            exceptionFactory: (validationErrors: ValidationError[] = []) => {
+            skipUndefinedProperties: false,
+            skipMissingProperties: false,
+            skipNullProperties: false,
+            disableErrorMessages: false,
+            forbidUnknownValues: false,
+            validationError: { target: true, value: false },
+            dismissDefaultMessages: true,
+
+            exceptionFactory(validationErrors: ValidationError[] = []) {
                 const validationObjects = validationErrors.map(
                     ({ property, constraints }) => ({
                         field: property,

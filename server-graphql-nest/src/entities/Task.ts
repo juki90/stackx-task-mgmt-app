@@ -1,12 +1,12 @@
 import {
     Column,
     Entity,
-    OneToOne,
     ManyToMany,
     JoinColumn,
     CreateDateColumn,
     UpdateDateColumn,
-    PrimaryGeneratedColumn
+    PrimaryGeneratedColumn,
+    ManyToOne
 } from 'typeorm';
 
 import { User } from '@/entities/User';
@@ -21,21 +21,15 @@ export class Task implements GraphQlTypes.Task {
     @Column()
     title: string;
 
-    @Column()
+    @Column({ nullable: true })
     description?: string;
 
-    @OneToOne(() => User)
-    @JoinColumn({
-        name: 'createdById',
-        referencedColumnName: 'id'
-    })
+    @ManyToOne(() => User, { nullable: true })
+    @JoinColumn()
     createdBy: User;
 
-    @OneToOne(() => User)
-    @JoinColumn({
-        name: 'updatedById',
-        referencedColumnName: 'id'
-    })
+    @ManyToOne(() => User, { nullable: true })
+    @JoinColumn()
     updatedBy?: User;
 
     @ManyToMany(() => User, user => user.tasks, { onDelete: 'CASCADE' })

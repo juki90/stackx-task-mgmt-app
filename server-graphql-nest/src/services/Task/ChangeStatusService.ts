@@ -1,23 +1,17 @@
 import { UserInputError } from 'apollo-server-express';
-import { Inject, forwardRef, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { en as messages } from '@/locales';
 import { ROLE_NAMES } from '@/entities/Role';
 import { TASK_STATUSES } from '@/entities/Task';
 import { TaskRepository } from '@/repositories/Task';
-import { UserRepository } from '@/repositories/User';
 import { ChangeTaskStatusInputDto } from '@/dto/Task/ChangeStatusDto';
 
 import type { Task, User } from '@/graphql';
 
 @Injectable()
 export class TaskChangeStatusService {
-    constructor(
-        private taskRepository: TaskRepository,
-
-        @Inject(forwardRef(() => UserRepository))
-        private userRepository: UserRepository
-    ) {}
+    constructor(private taskRepository: TaskRepository) {}
 
     async changeStatus(
         id: string,

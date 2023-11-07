@@ -14,7 +14,7 @@ export class UserDeleteResolver {
 
     @Mutation('deleteUser')
     @UseGuards(JwtGuard, AdminGuard)
-    async delete(
+    delete(
         @Args('id') id: string,
 
         @Context() ctx: { req: Request }

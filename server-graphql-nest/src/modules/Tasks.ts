@@ -18,6 +18,8 @@ import { TaskCreateResolver } from '@/resolvers/Task/CreateResolver';
 import { TaskUpdateResolver } from '@/resolvers/Task/UpdateResolver';
 import { TaskDeleteResolver } from '@/resolvers/Task/DeleteResolver';
 import { TaskUsersFieldResolver } from '@/resolvers/Task/UsersFieldResolver';
+import { TaskChangeStatusService } from '@/services/Task/ChangeStatusService';
+import { TaskChangeStatusResolver } from '@/resolvers/Task/ChangeStatusResolver';
 import { TaskCreatedByFieldResolver } from '@/resolvers/Task/CreatedByFieldResolver';
 import { TaskUpdatedByFieldResolver } from '@/resolvers/Task/UpdatedByFieldResolver';
 
@@ -42,6 +44,8 @@ import { TaskUpdatedByFieldResolver } from '@/resolvers/Task/UpdatedByFieldResol
         TaskUpdateResolver,
         TaskDeleteResolver,
         TaskUsersFieldResolver,
+        TaskChangeStatusService,
+        TaskChangeStatusResolver,
         TaskCreatedByFieldResolver,
         TaskUpdatedByFieldResolver
     ],

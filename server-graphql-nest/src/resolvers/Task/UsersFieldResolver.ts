@@ -9,7 +9,7 @@ export class TaskUsersFieldResolver {
     constructor(private readonly userRepository: UserRepository) {}
 
     @ResolveField('users')
-    async fetchUsersOfTask(@Parent() task: Task): Promise<User[]> {
+    fetchUsersOfTask(@Parent() task: Task): Promise<User[]> {
         return this.userRepository
             .createQueryBuilder('user')
             .innerJoin('user.tasks', 'tasks', 'tasks.id = :taskId', {

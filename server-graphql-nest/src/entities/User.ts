@@ -1,8 +1,8 @@
 import {
+    Index,
     Entity,
-    Unique,
     Column,
-    OneToOne,
+    Unique,
     ManyToOne,
     JoinTable,
     ManyToMany,
@@ -20,8 +20,8 @@ import { Task } from '@/entities/Task';
 
 import type * as GraphQlTypes from '@/graphql';
 
+@Unique(['id', 'email'])
 @Entity('Users')
-@Unique(['email'])
 export class User implements GraphQlTypes.User {
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -36,15 +36,16 @@ export class User implements GraphQlTypes.User {
         return `${this.firstName} ${this.lastName}`;
     }
 
+    @Index({ unique: true })
     @Column()
     email: string;
 
     @Column({ select: false })
     password: string;
 
-    @OneToOne(() => User)
+    @ManyToOne(() => User, { nullable: true })
     @JoinColumn()
-    createdBy: User;
+    createdBy?: User;
 
     @ManyToMany(() => Task, task => task.users, {
         onDelete: 'CASCADE'

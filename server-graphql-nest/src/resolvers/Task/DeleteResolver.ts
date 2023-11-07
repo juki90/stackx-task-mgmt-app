@@ -13,7 +13,7 @@ export class TaskDeleteResolver {
 
     @Mutation('deleteTask')
     @UseGuards(JwtGuard, AdminGuard)
-    async delete(@Args('id') id: string): Promise<Task> {
+    delete(@Args('id') id: string): Promise<Task> {
         return this.tasksDeleteService.delete(id);
     }
 }

@@ -11,10 +11,10 @@ export class LoginResolver {
     constructor(private readonly loginService: LoginService) {}
 
     @Mutation('login')
-    create(
-        @Context() ctx: { req: Request },
+    login(
+        @Args('loginInput') loginInput: LoginInputDto,
 
-        @Args('loginInput') loginInput: LoginInputDto
+        @Context() ctx: { req: Request }
     ): Promise<GraphQlTypes.User> {
         return this.loginService.login(loginInput, ctx.req.res);
     }

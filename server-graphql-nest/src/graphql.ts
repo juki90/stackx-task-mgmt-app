@@ -80,6 +80,7 @@ export class Task {
     id: string;
     title: string;
     description?: Nullable<string>;
+    status: number;
     usersStatus?: Nullable<UsersStatus[]>;
     createdBy: User;
     updatedBy?: Nullable<User>;

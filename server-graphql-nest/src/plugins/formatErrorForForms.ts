@@ -9,25 +9,36 @@ export default (formattedError: GraphQLFormattedError) => {
 
     if (formErrors) {
         return {
+            message: null,
             formErrors
-        } as unknown as GraphQLFormattedError;
+        };
     }
 
     if (formattedError?.extensions?.field) {
         return {
+            message: null,
             formErrors: [
                 {
                     field: formattedError?.extensions?.field,
                     message: formattedError?.message
                 }
             ]
-        } as unknown as GraphQLFormattedError;
+        };
     }
 
-    const singleError = {
+    const singleError: {
+        field: unknown;
+        message: string;
+        code?: unknown;
+    } = {
         field: formattedError?.extensions?.field,
         message: formattedError?.message
     };
+    const code = formattedError?.extensions?.code;
+
+    if (code) {
+        singleError.code = code;
+    }
 
     return singleError;
 };

@@ -16,6 +16,7 @@ export class MeService {
             where: { id },
             relations: {
                 tasks: true,
+                createdBy: true,
                 role: true
             }
         });
