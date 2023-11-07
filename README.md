@@ -24,9 +24,10 @@ Apart from that, directory names in this repository have explicit structure: <br
 
 ### Server technologies table
 
-| Server              | API Design | Framework  | Test types | Databases | Auth |
-| ------------------- | ---------- | ---------- | ---------- | --------- | ---- |
-| server-rest-express | REST API   | Express.js | Functional | Postgres  | JWT  |
+| Server              | API Design             | Framework  | Test types | Databases | ORM/ODM   |
+| ------------------- | ---------------------- | ---------- | ---------- | --------- | --------- |
+| server-rest-express | REST API               | Express.js | Functional | Postgres  | Sequelize |
+| server-graphql-nest | GraphQL (Schema first) | Nest.js    | Functional | Postgres  | TypeORM   |
 
 ## Installation, deploying and running tests
 
