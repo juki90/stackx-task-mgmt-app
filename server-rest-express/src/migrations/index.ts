@@ -15,7 +15,9 @@ const fileExtension = path.extname(__filename);
 
 export const umzug = new Umzug({
     migrations: {
-        glob: `${fileExtension === '.ts' ? 'src' : 'dist'}/seeders/!(*index).*`
+        glob: `${
+            fileExtension === '.ts' ? 'src' : 'dist'
+        }/migrations/!(*index).*`
     },
     context: sequelize.getQueryInterface(),
     storage: new SequelizeStorage({ sequelize }),
