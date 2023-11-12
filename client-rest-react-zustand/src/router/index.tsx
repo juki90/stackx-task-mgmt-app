@@ -17,7 +17,7 @@ const loadOrRedirect = (role: string) => () => {
 
     if (role === 'guest') {
         if (loggedUser) {
-            return redirect(routes.root);
+            return redirect(routes.dashboard);
         }
 
         return null;
@@ -27,8 +27,8 @@ const loadOrRedirect = (role: string) => () => {
         return null;
     }
 
-    if (loggedUser && !loggedUser.roles.includes(role)) {
-        return redirect(routes.login);
+    if (loggedUser?.role?.name !== role) {
+        return redirect(routes.dashboard);
     }
 
     if (!loggedUser) {
@@ -62,7 +62,7 @@ export const router = createBrowserRouter([
             {
                 index: true,
                 element: <div>DefaultPAGE</div>,
-                loader: loadOrRedirect('guest')
+                loader: loadOrRedirect('authenticated')
             }
         ]
     },

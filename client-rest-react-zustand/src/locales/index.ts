@@ -3,6 +3,7 @@ export const en = {
     internalServerError: 'An unknown errors occured on our sever',
     loginSessionExpired: 'Login session expired, logging out',
     fixFormErrors: 'Fix forms errors',
+    loggedOut: 'You are logged out',
     successfullyLoggedIn: 'Successfully logged in',
     validators: {
         shared: {

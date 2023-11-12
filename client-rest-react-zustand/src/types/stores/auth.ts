@@ -5,7 +5,6 @@ interface AuthSlice {
     me: User | null;
     'loggedUser/set': (user: User) => void;
     'me/set': (user: User) => void;
-    'auth/reset': () => void;
 }
 
 export type { AuthSlice };

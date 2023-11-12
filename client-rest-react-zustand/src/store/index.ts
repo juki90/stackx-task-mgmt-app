@@ -4,27 +4,16 @@ import { createAuthSlice } from '@/store/auth';
 
 import type { TSlice, TState } from '@/types';
 
-const sliceCreators: { [s: string]: TState } = {
-    auth: createAuthSlice
-};
+const resetSlicesFns: (() => void)[] = [];
 
-const useBoundStore = create<TSlice>()((...args) => ({
-    ...createAuthSlice(...args)
+const useBoundStore = create<TSlice>((...args) => ({
+    ...createAuthSlice(resetSlicesFns)(...args)
 }));
 
-const resetAllSlices = () => {
-    for (const sliceName in Object.keys(sliceCreators)) {
-        const resetSlice = useBoundStore(
-            state => state[`${sliceName}/reset` as keyof TSlice]
-        );
-
-        if (resetSlice) {
-            (resetSlice as () => void)();
-        }
-    }
+const selectFromStore = (property: string) => {
+    return useBoundStore(state => state[property as keyof TSlice]);
 };
 
-const useStore = (property: string) =>
-    useBoundStore(state => state[property as keyof TSlice]);
+const resetAllSlices = () => resetSlicesFns.forEach(fn => fn());
 
-export { useStore, resetAllSlices };
+export { selectFromStore, resetAllSlices };

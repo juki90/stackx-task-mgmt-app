@@ -9,9 +9,15 @@ import { routes } from '@/router';
 import { authLogin } from '@/api/auth';
 import { en as messages } from '@/locales';
 import handleFormErrors from '@/helpers/handleFormErrors';
+import { selectFromStore } from '@/store';
 import { loginValidationSchema } from '@/validations/auth/login';
 
-import type { AuthLoginRequest, AuthLoginResponse } from '@/types';
+import type {
+    AuthLoginRequest,
+    AuthLoginResponse,
+    AuthSlice,
+    User
+} from '@/types';
 import toast from 'react-hot-toast';
 
 export const useLogin = () => {
@@ -97,6 +103,10 @@ export const useLogin = () => {
         loginButtonAttributes.backgroundColor = theme.palette.success.light;
     }
 
+    const setLoggedUser = selectFromStore(
+        'loggedUser/set'
+    ) as AuthSlice['loggedUser/set'];
+
     useEffect(() => {
         if (formErrors.general) {
             clearErrors('general');
@@ -106,6 +116,7 @@ export const useLogin = () => {
 
     useEffect(() => {
         if (loginResponseData && loginResponseSuccess && !generalErrorMessage) {
+            setLoggedUser(loginResponseData as User);
             toast.success(messages.successfullyLoggedIn);
             setTimeout(() => navigate(routes.dashboard), 1000);
         }
