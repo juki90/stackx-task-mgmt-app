@@ -1,10 +1,15 @@
 export const en = {
     serverStartedOnPort: 'Server started on port',
-    internalServerError: 'An unknown errors occured on our sever',
+    internalServerError: 'An unknown error occured on our sever',
     loginSessionExpired: 'Login session expired, logging out',
     fixFormErrors: 'Fix forms errors',
     loggedOut: 'You are logged out',
     successfullyLoggedIn: 'Successfully logged in',
+    ourServerIsDown: 'Our server is down, please try later',
+    yourAreOffline: 'Please check if you are online',
+    successfullyRefetchedData: 'Successfully refetched data',
+    failedToRefetchedData: 'Failed to refetch data',
+    invalidAccessToken: 'Invalid access token',
     validators: {
         shared: {
             fieldShouldBeString: 'Field should be of type string',

@@ -23,7 +23,8 @@ const useCors = (app: Express) => {
                 callback(new Error('Not allowed by CORS'));
             }
         },
-        credentials: true
+        credentials: true,
+        exposedHeaders: ['x-auth-token', 'authorization']
     };
 
     app.use(cors(corsOptions));

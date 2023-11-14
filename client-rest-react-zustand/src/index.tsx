@@ -1,32 +1,57 @@
-import React, { type FC } from 'react';
+import React from 'react';
+import { AxiosError } from 'axios';
 import ReactDOM from 'react-dom/client';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import { RouterProvider } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@mui/material/styles';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+    QueryClient,
+    QueryCache,
+    QueryClientProvider
+} from '@tanstack/react-query';
 
-import { router } from '@/router';
+import { router, routes } from '@/router';
+import { en as messages } from '@/locales';
+import { REACT_QUERY } from '@/config/constants';
+import { resetAllSlices } from './store';
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
-const queryClient = new QueryClient();
-const theme = createTheme();
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            ...REACT_QUERY
+        }
+    },
+    queryCache: new QueryCache({
+        onError: error => {
+            if (
+                error instanceof AxiosError &&
+                error?.response?.status === 401
+            ) {
+                toast.error(messages.loginSessionExpired);
+                queryClient.clear();
+                resetAllSlices();
+                localStorage.clear();
+                router.navigate(routes.login);
+            }
+        }
+    })
+});
 
-const App: FC = () => (
-    <ThemeProvider theme={theme}>
-        <QueryClientProvider client={queryClient}>
-            <RouterProvider router={router} />
-        </QueryClientProvider>
-        <Toaster position="bottom-right" />
-    </ThemeProvider>
-);
+const theme = createTheme();
 
 root.render(
     <React.StrictMode>
         <CssBaseline />
-        <App />
+        <ThemeProvider theme={theme}>
+            <QueryClientProvider client={queryClient}>
+                <RouterProvider router={router} />
+            </QueryClientProvider>
+        </ThemeProvider>
+        <Toaster position="bottom-right" />
     </React.StrictMode>
 );

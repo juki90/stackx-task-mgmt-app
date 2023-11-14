@@ -2,7 +2,7 @@ import { create } from 'zustand';
 
 import { createAuthSlice } from '@/store/auth';
 
-import type { TSlice, TState } from '@/types';
+import type { TSlice } from '@/types';
 
 const resetSlicesFns: (() => void)[] = [];
 

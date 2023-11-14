@@ -23,16 +23,23 @@ export const Header: FC = () => {
     const {
         navRef,
         isNavigationOpen,
+        isLoggedUserAdmin,
         navigate,
         handleNavigationClose,
         handleNavigationClick
     } = useNavigation();
 
     return (
-        <AppBar position="static">
+        <AppBar position="fixed">
             <Toolbar variant="dense">
                 <Container>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            height: '2em'
+                        }}
+                    >
                         <Typography
                             variant="h6"
                             color="inherit"
@@ -77,26 +84,30 @@ export const Header: FC = () => {
                                 'aria-labelledby': 'basic-button'
                             }}
                         >
+                            {isLoggedUserAdmin ? (
+                                <Box>
+                                    <MenuItem
+                                        onClick={() => {
+                                            handleNavigationClose();
+                                            navigate(routes.tasks);
+                                        }}
+                                    >
+                                        Tasks
+                                    </MenuItem>
+                                    <MenuItem
+                                        onClick={() => {
+                                            handleNavigationClose();
+                                            navigate(routes.users);
+                                        }}
+                                    >
+                                        Users
+                                    </MenuItem>
+                                </Box>
+                            ) : null}
                             <MenuItem
                                 onClick={() => {
-                                    navigate(routes.tasks);
                                     handleNavigationClose();
-                                }}
-                            >
-                                Tasks
-                            </MenuItem>
-                            <MenuItem
-                                onClick={() => {
-                                    navigate(routes.users);
-                                    handleNavigationClose();
-                                }}
-                            >
-                                Users
-                            </MenuItem>
-                            <MenuItem
-                                onClick={() => {
                                     navigate(routes.dashboard);
-                                    handleNavigationClose();
                                 }}
                             >
                                 Dashboard
@@ -104,8 +115,8 @@ export const Header: FC = () => {
                             <Divider />
                             <MenuItem
                                 onClick={() => {
-                                    handleLogout();
                                     handleNavigationClose();
+                                    handleLogout();
                                 }}
                             >
                                 Logout

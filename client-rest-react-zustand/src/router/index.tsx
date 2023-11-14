@@ -1,8 +1,13 @@
+import { ReactNode, Suspense, lazy } from 'react';
+import { jwtDecode as decodeJwt } from 'jwt-decode';
 import { redirect, createBrowserRouter } from 'react-router-dom';
 
-import { LoginPage } from '@/pages/Login';
 import { ROLES } from '@/config/constants';
 import { AuthenticatedLayout } from '@/layouts/Authenticated';
+import PageErrorBoundary from '@/components/PageErrorBoundary';
+import { SuspenseFallback } from '@/components/SuspenseFallback';
+
+import type { User } from '@/types';
 
 export const routes = {
     root: '/',
@@ -13,7 +18,14 @@ export const routes = {
 };
 
 const loadOrRedirect = (role: string) => () => {
-    const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || 'null');
+    let loggedUser;
+    const access_token = localStorage.getItem('access_token');
+
+    try {
+        loggedUser = decodeJwt(access_token || 'null') as User | undefined;
+    } catch (error) {
+        console.error(error);
+    }
 
     if (role === 'guest') {
         if (loggedUser) {
@@ -27,7 +39,9 @@ const loadOrRedirect = (role: string) => () => {
         return null;
     }
 
-    if (loggedUser?.role?.name !== role) {
+    const loggedUserRole = loggedUser?.role?.name;
+
+    if (loggedUserRole && loggedUserRole !== role) {
         return redirect(routes.dashboard);
     }
 
@@ -38,10 +52,25 @@ const loadOrRedirect = (role: string) => () => {
     return null;
 };
 
+const LoginPage = lazy(() => import('@/pages/Login'));
+const DashboardPage = lazy(() => import('@/pages/Dashboard'));
+
+const PageWithSuspenseAndErrorBoundary = (element: ReactNode) => (
+    <PageErrorBoundary>
+        <Suspense
+            fallback={
+                <SuspenseFallback center size={75} message="Loading page" />
+            }
+        >
+            {element}
+        </Suspense>
+    </PageErrorBoundary>
+);
+
 export const router = createBrowserRouter([
     {
         path: routes.login,
-        element: <LoginPage />,
+        element: PageWithSuspenseAndErrorBoundary(<LoginPage />),
         loader: loadOrRedirect('guest')
     },
     {
@@ -50,7 +79,6 @@ export const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <div>DefaultPAGE</div>,
                 loader: loadOrRedirect('redirect-everyone')
             }
         ]
@@ -61,7 +89,7 @@ export const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <div>DefaultPAGE</div>,
+                element: PageWithSuspenseAndErrorBoundary(<DashboardPage />),
                 loader: loadOrRedirect('authenticated')
             }
         ]

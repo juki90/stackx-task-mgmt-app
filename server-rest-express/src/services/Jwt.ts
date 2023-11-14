@@ -51,7 +51,8 @@ export class Jwt implements IJwt {
             const decodedToken = this.jwt.verify(token, this.jwtSecret) as User;
 
             const verifiedUser = await this.userRepository.findById(
-                decodedToken.id
+                decodedToken.id,
+                { include: [{ association: 'role' }] }
             );
 
             if (!verifiedUser) {

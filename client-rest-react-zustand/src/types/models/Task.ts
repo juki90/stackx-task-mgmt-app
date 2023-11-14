@@ -1,10 +1,8 @@
 import { User } from '@/types/models';
 
 type UserStatus = {
-    userStatus: {
-        userId: string;
-        doneAt: string;
-    };
+    userId: string;
+    doneAt: string;
 };
 
 interface Task {

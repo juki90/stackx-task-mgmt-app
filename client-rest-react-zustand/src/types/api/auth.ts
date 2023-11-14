@@ -6,5 +6,6 @@ type AuthLoginRequest = {
 };
 
 type AuthLoginResponse = User;
+type AuthMeResponse = User;
 
-export type { AuthLoginRequest, AuthLoginResponse };
+export type { AuthMeResponse, AuthLoginRequest, AuthLoginResponse };

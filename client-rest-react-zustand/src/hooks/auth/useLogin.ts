@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { useTheme } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -7,24 +8,14 @@ import { useForm, useController } from 'react-hook-form';
 
 import { routes } from '@/router';
 import { authLogin } from '@/api/auth';
+import { selectFromStore } from '@/store';
 import { en as messages } from '@/locales';
 import handleFormErrors from '@/helpers/handleFormErrors';
-import { selectFromStore } from '@/store';
 import { loginValidationSchema } from '@/validations/auth/login';
 
-import type {
-    AuthLoginRequest,
-    AuthLoginResponse,
-    AuthSlice,
-    User
-} from '@/types';
-import toast from 'react-hot-toast';
+import type { AuthSlice, AuthLoginRequest, AuthLoginResponse } from '@/types';
 
 export const useLogin = () => {
-    const defaultValues = {
-        email: '',
-        password: ''
-    };
     const theme = useTheme();
     const navigate = useNavigate();
     const {
@@ -32,12 +23,10 @@ export const useLogin = () => {
         formState: { errors: formErrors, isValid: isFormValid },
         watch,
         setError,
-        setValue,
-        getValues,
         clearErrors,
         handleSubmit
     } = useForm<AuthLoginRequest & { general?: string }>({
-        defaultValues,
+        defaultValues: { email: '', password: '' },
         mode: 'onBlur',
         reValidateMode: 'onChange',
         resolver: yupResolver(loginValidationSchema)
@@ -50,10 +39,10 @@ export const useLogin = () => {
         control,
         name: 'password'
     });
+    const [otherResponseError, setOtherResponseError] = useState<string>('');
 
     const {
         data: loginResponseData,
-        error: loginResponseError,
         isError: loginResponseFailed,
         isPending: loginResponsePending,
         isSuccess: loginResponseSuccess,
@@ -64,11 +53,11 @@ export const useLogin = () => {
             loginData: AuthLoginRequest
         ): Promise<AuthLoginResponse | unknown> {
             try {
+                setOtherResponseError('');
+
                 return await authLogin(loginData);
             } catch (error) {
-                handleFormErrors(error, setError);
-
-                toast.error(messages.fixFormErrors);
+                handleFormErrors(error, setError, setOtherResponseError);
 
                 return error;
             }
@@ -98,7 +87,12 @@ export const useLogin = () => {
         loginButtonAttributes.backgroundColor = theme.palette.grey[400];
     }
 
-    if (loginResponseSuccess && isFormValid && !generalErrorMessage) {
+    if (
+        loginResponseSuccess &&
+        isFormValid &&
+        !generalErrorMessage &&
+        !otherResponseError
+    ) {
         loginButtonAttributes.message = 'Logged In';
         loginButtonAttributes.backgroundColor = theme.palette.success.light;
     }
@@ -115,35 +109,32 @@ export const useLogin = () => {
     }, [fieldWatcher.email, fieldWatcher.password]);
 
     useEffect(() => {
+        if (loginResponseData && otherResponseError) {
+            setTimeout(() => resetLoginResponse(), 2000);
+
+            return;
+        }
+
         if (loginResponseData && loginResponseSuccess && !generalErrorMessage) {
-            setLoggedUser(loginResponseData as User);
+            setLoggedUser();
             toast.success(messages.successfullyLoggedIn);
-            setTimeout(() => navigate(routes.dashboard), 1000);
+            setTimeout(() => navigate(routes.dashboard), 500);
         }
     }, [loginResponseData]);
 
     return {
         theme,
-        control,
-        formErrors,
         isFormValid,
         emailErrorMessage,
+        otherResponseError,
         generalErrorMessage,
-        passwordErrorMessage,
-        loginResponseData,
-        loginResponseError,
         loginResponseFailed,
+        passwordErrorMessage,
+        loginResponseSuccess,
         loginResponsePending,
         emailFieldController,
-        loginResponseSuccess,
         loginButtonAttributes,
         passwordFieldController,
-        watch,
-        setValue,
-        getValues,
-        clearErrors,
-        handleLogin,
-        mutateLogin,
-        resetLoginResponse
+        handleLogin
     };
 };

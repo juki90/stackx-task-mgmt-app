@@ -1,18 +1,25 @@
 import { AxiosError } from 'axios';
+import toast from 'react-hot-toast';
+import type { UseFormSetError } from 'react-hook-form';
 
 import { en as messages } from '@/locales';
 
-import type { UseFormSetError } from 'react-hook-form';
+import type { Dispatch, SetStateAction } from 'react';
 import type { AuthLoginRequest, ResponseFormErrors } from '@/types';
 
 export default (
     error: unknown | Error | AxiosError,
-    setError: UseFormSetError<AuthLoginRequest & { general?: string }>
+    setFormError: UseFormSetError<
+        AuthLoginRequest & { general?: string; other?: string }
+    >,
+    setOtherError: Dispatch<SetStateAction<string>>
 ) => {
     console.error(error);
 
     if (!(error instanceof AxiosError) && error instanceof Error) {
-        setError('general', { message: messages.internalServerError });
+        setOtherError(messages.internalServerError);
+
+        toast.error(messages.internalServerError);
 
         return;
     }
@@ -28,24 +35,46 @@ export default (
                 });
                 const message = error?.message;
 
+                toast.error(messages.fixFormErrors);
+
                 if (!field || field === 'general') {
-                    setError('general', { message });
+                    setFormError('general', { message });
 
                     return;
                 }
 
                 if (field) {
-                    setError(field, { message });
+                    setFormError(field, { message });
                 }
 
                 return;
             });
         }
 
+        if (!navigator?.onLine) {
+            setOtherError(messages.yourAreOffline);
+
+            toast.error(messages.yourAreOffline);
+
+            return;
+        }
+
         const otherError = (error as AxiosError)?.response?.data;
 
         if (typeof otherError === 'string') {
-            setError('general', { message: otherError });
+            setFormError('general', { message: otherError });
+
+            toast.error(otherError);
+
+            return;
+        }
+
+        if (!otherError) {
+            setOtherError(messages.ourServerIsDown);
+
+            toast.error(messages.ourServerIsDown);
+
+            return;
         }
     }
 };

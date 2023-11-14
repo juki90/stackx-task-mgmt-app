@@ -17,6 +17,6 @@
     },
     "plugins": ["react", "react-hooks"],
     "rules": {
-        "@typescript-eslint/no-unused-vars": "off"
+        "@typescript-eslint/no-unused-vars": "error"
     }
 }

@@ -4,16 +4,11 @@ import { LoginForm } from '@/components/Auth/LoginForm';
 
 import type { FC } from 'react';
 
-export const LoginPage: FC = () => {
-    const StyledContainerBox = styled(Box)(({ theme }) => ({
-        backgroundColor:
-            theme.palette.mode === 'dark'
-                ? theme.palette.grey[800]
-                : theme.palette.grey[200],
+const LoginPage: FC = () => {
+    const StyledContainerBox = styled(Box)(() => ({
         minHeight: '100vh',
         width: '100%',
-        paddingBottom: '20px',
-        backgroundImage: `linear-gradient(to bottom, transparent 35vh, rgba(150, 150, 150, 0.5) 35vh);`
+        paddingBottom: '20px'
     }));
 
     const StyledTitleBox = styled(Box)(({ theme }) => ({
@@ -24,48 +19,40 @@ export const LoginPage: FC = () => {
         textAlign: 'center'
     }));
 
-    const StyledFormBox = styled(Box)(({ theme }) => ({
-        color: theme.palette.primary.contrastText,
-        width: `calc(100% - ${theme.spacing(2)})`,
-        margin: `${theme.spacing(2)} auto 0 auto`,
-        padding: theme.spacing(4),
-        borderRadius: theme.shape.borderRadius,
-        backgroundColor: theme.palette.grey[800]
-    }));
-
     return (
         <StyledContainerBox>
             <Container maxWidth="sm">
-                <StyledTitleBox>
-                    <Typography variant="h2" component="h1">
+                <StyledTitleBox
+                    sx={{
+                        backgroundImage:
+                            'repeating-linear-gradient(to bottom, #fff 10px, #000 11px, #000 20px, #fff 22px);',
+                        backgroundClip: 'text'
+                    }}
+                >
+                    <Typography
+                        sx={{
+                            color: 'transparent',
+                            textShadow:
+                                '4px 4px 0 rgba(70, 170, 255, 0.5), 4px 4px 140px rgba(70, 170, 255, 1)'
+                        }}
+                        variant="h2"
+                        component="h1"
+                    >
                         <b>StackX</b>
                     </Typography>
                     <Typography
-                        variant="h3"
-                        component="p"
-                        sx={{ opacity: 0.7 }}
+                        variant="h4"
+                        component="h2"
+                        sx={{ color: 'rgba(50, 90, 125, 1)', opacity: 0.9 }}
                     >
                         Task Management
                     </Typography>
                 </StyledTitleBox>
                 <Divider />
-                <StyledFormBox>
-                    <Typography
-                        variant="h4"
-                        component="h2"
-                        textAlign="center"
-                        mb="15px"
-                    >
-                        Sign in
-                    </Typography>
-                    <Typography variant="body1" component="p">
-                        Log in to the system using your email and password. In
-                        case of forgotten password, please contact your
-                        administrator.
-                    </Typography>
-                    <LoginForm />
-                </StyledFormBox>
+                <LoginForm />
             </Container>
         </StyledContainerBox>
     );
 };
+
+export default LoginPage;
