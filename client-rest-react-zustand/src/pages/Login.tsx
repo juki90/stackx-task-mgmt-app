@@ -1,6 +1,7 @@
 import { Box, styled, Container, Divider, Typography } from '@mui/material';
 
 import { LoginForm } from '@/components/Auth/LoginForm';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 import type { FC } from 'react';
 
@@ -20,38 +21,40 @@ const LoginPage: FC = () => {
     }));
 
     return (
-        <StyledContainerBox>
-            <Container maxWidth="sm">
-                <StyledTitleBox
-                    sx={{
-                        backgroundImage:
-                            'repeating-linear-gradient(to bottom, #fff 10px, #000 11px, #000 20px, #fff 22px);',
-                        backgroundClip: 'text'
-                    }}
-                >
-                    <Typography
+        <ErrorBoundary>
+            <StyledContainerBox>
+                <Container maxWidth="sm">
+                    <StyledTitleBox
                         sx={{
-                            color: 'transparent',
-                            textShadow:
-                                '4px 4px 0 rgba(70, 170, 255, 0.5), 4px 4px 140px rgba(70, 170, 255, 1)'
+                            backgroundImage:
+                                'repeating-linear-gradient(to bottom, #fff 10px, #000 11px, #000 20px, #fff 22px);',
+                            backgroundClip: 'text'
                         }}
-                        variant="h2"
-                        component="h1"
                     >
-                        <b>StackX</b>
-                    </Typography>
-                    <Typography
-                        variant="h4"
-                        component="h2"
-                        sx={{ color: 'rgba(50, 90, 125, 1)', opacity: 0.9 }}
-                    >
-                        Task Management
-                    </Typography>
-                </StyledTitleBox>
-                <Divider />
-                <LoginForm />
-            </Container>
-        </StyledContainerBox>
+                        <Typography
+                            sx={{
+                                color: 'transparent',
+                                textShadow:
+                                    '4px 4px 0 rgba(70, 170, 255, 0.5), 4px 4px 140px rgba(70, 170, 255, 1)'
+                            }}
+                            variant="h2"
+                            component="h1"
+                        >
+                            <b>StackX</b>
+                        </Typography>
+                        <Typography
+                            variant="h4"
+                            component="h2"
+                            sx={{ color: 'rgba(50, 90, 125, 1)', opacity: 0.9 }}
+                        >
+                            Task Management
+                        </Typography>
+                    </StyledTitleBox>
+                    <Divider />
+                    <LoginForm />
+                </Container>
+            </StyledContainerBox>
+        </ErrorBoundary>
     );
 };
 

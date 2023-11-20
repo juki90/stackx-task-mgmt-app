@@ -3,6 +3,7 @@ import PropTypes, { type Validator } from 'prop-types';
 import { Box, Button, Drawer, styled, Typography } from '@mui/material';
 
 import { DATE_FORMAT } from '@/config/constants';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 import type { FC, Dispatch, SetStateAction } from 'react';
 import type { Task, IMyDashboardTaskDetails } from '@/types';
@@ -24,7 +25,7 @@ export const MyDashboardTaskDetails: FC<IMyDashboardTaskDetails> = ({
         backgroundColor: theme.palette.primary.light
     }));
 
-    const StyledSmallText = styled(Typography)(({ theme }) => ({
+    const StyledUserContentTitle = styled(Typography)(({ theme }) => ({
         fontWeight: 'bold',
         padding: '5px 20px',
         backgroundColor: theme.palette.grey[300]
@@ -40,78 +41,92 @@ export const MyDashboardTaskDetails: FC<IMyDashboardTaskDetails> = ({
     }));
 
     return (
-        <Drawer
-            open={!!task}
-            anchor="right"
-            ModalProps={{
-                onBackdropClick: () => setTask(null)
-            }}
-            PaperProps={{
-                sx: {
-                    width: '90% !important',
-                    '@media (min-width: 900px)': { width: '768px !important' }
-                }
-            }}
-        >
-            {task ? (
-                <Box>
-                    <StyledButtonsBox sx={{ display: 'flex', padding: '10px' }}>
-                        <StyledButton
-                            sx={{
-                                color: 'lightgreen',
-                                backgroundColor: 'green'
-                            }}
-                            size="medium"
-                        >
-                            Mark as done
-                        </StyledButton>
-                        <StyledButton
-                            sx={{
-                                color: 'white',
-                                marginLeft: 'auto'
-                            }}
-                            size="medium"
-                            onClick={() => setTask(null)}
-                        >
-                            Close
-                        </StyledButton>
-                    </StyledButtonsBox>
-                    <StyledTitleBox>
-                        <StyledTaskContent sx={{ fontSize: '120%' }}>
-                            {task.title}
-                        </StyledTaskContent>
-                    </StyledTitleBox>
-                    <StyledSmallText>Description</StyledSmallText>
-                    <StyledTaskContent>{task.description}</StyledTaskContent>
-                    <StyledSmallText>
-                        Users assigned / finished by
-                    </StyledSmallText>
-                    <StyledTaskContent>
-                        {
-                            task.usersStatus.filter(
-                                ({
-                                    doneAt
-                                }: {
-                                    userId: string;
-                                    doneAt: string;
-                                }) => doneAt
-                            ).length
+        <ErrorBoundary>
+            <Drawer
+                open={!!task}
+                anchor="right"
+                ModalProps={{
+                    onBackdropClick: () => setTask(null)
+                }}
+                PaperProps={{
+                    sx: {
+                        width: '90% !important',
+                        '@media (min-width: 900px)': {
+                            width: '768px !important'
                         }
-                        /{task.usersStatus.length}
-                    </StyledTaskContent>
-                    <StyledSmallText>Created at</StyledSmallText>
-                    <StyledTaskContent>
-                        {dayjs(task.createdAt).format(DATE_FORMAT)}
-                    </StyledTaskContent>
-                    <StyledSmallText>Updated at</StyledSmallText>
-                    <StyledTaskContent>
-                        {dayjs(task.updatedAt).format(DATE_FORMAT)}
-                    </StyledTaskContent>
-                    <StyledSmallText>Task ID</StyledSmallText>
-                    <StyledTaskContent>{task.id}</StyledTaskContent>
-                </Box>
-            ) : null}
-        </Drawer>
+                    }
+                }}
+            >
+                {task ? (
+                    <Box>
+                        <StyledButtonsBox
+                            sx={{ display: 'flex', padding: '10px' }}
+                        >
+                            <StyledButton
+                                sx={{
+                                    color: 'lightgreen',
+                                    backgroundColor: 'green'
+                                }}
+                                size="medium"
+                            >
+                                Mark as done
+                            </StyledButton>
+                            <StyledButton
+                                sx={{
+                                    color: 'white',
+                                    marginLeft: 'auto'
+                                }}
+                                size="medium"
+                                onClick={() => setTask(null)}
+                            >
+                                Close
+                            </StyledButton>
+                        </StyledButtonsBox>
+                        <StyledTitleBox>
+                            <StyledTaskContent sx={{ fontSize: '120%' }}>
+                                {task.title}
+                            </StyledTaskContent>
+                        </StyledTitleBox>
+                        <StyledUserContentTitle>
+                            Description
+                        </StyledUserContentTitle>
+                        <StyledTaskContent>
+                            {task.description}
+                        </StyledTaskContent>
+                        <StyledUserContentTitle>
+                            Users assigned / finished by
+                        </StyledUserContentTitle>
+                        <StyledTaskContent>
+                            {
+                                task.usersStatus.filter(
+                                    ({
+                                        doneAt
+                                    }: {
+                                        userId: string;
+                                        doneAt: string;
+                                    }) => doneAt
+                                ).length
+                            }
+                            /{task.usersStatus.length}
+                        </StyledTaskContent>
+                        <StyledUserContentTitle>
+                            Created at
+                        </StyledUserContentTitle>
+                        <StyledTaskContent>
+                            {dayjs(task.createdAt).format(DATE_FORMAT)}
+                        </StyledTaskContent>
+                        <StyledUserContentTitle>
+                            Updated at
+                        </StyledUserContentTitle>
+                        <StyledTaskContent>
+                            {dayjs(task.updatedAt).format(DATE_FORMAT)}
+                        </StyledTaskContent>
+                        <StyledUserContentTitle>Task ID</StyledUserContentTitle>
+                        <StyledTaskContent>{task.id}</StyledTaskContent>
+                    </Box>
+                ) : null}
+            </Drawer>
+        </ErrorBoundary>
     );
 };
 
@@ -133,7 +148,7 @@ MyDashboardTaskDetails.propTypes = {
         updatedBy: PropTypes.object,
         createdById: PropTypes.string.isRequired,
         updatedById: PropTypes.string,
-        users: PropTypes.object
+        users: PropTypes.arrayOf(PropTypes.object)
     }) as Validator<Task | null>,
     setTask: PropTypes.func.isRequired as Validator<
         Dispatch<SetStateAction<Task | null>>

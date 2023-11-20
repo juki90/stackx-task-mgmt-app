@@ -20,10 +20,10 @@ export class UserFetchController implements IUserFetchController {
     async invoke(
         @request() req: Request,
         @response() res: Response
-    ): Promise<Response<User[]>> {
+    ): Promise<Response<{ rows: User[]; count: number }>> {
         const { queryParams } = req;
 
-        const users = await this.userRepository.findAll(queryParams);
+        const users = await this.userRepository.findAndCount(queryParams);
 
         return res.json(users);
     }

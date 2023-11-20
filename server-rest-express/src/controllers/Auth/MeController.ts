@@ -26,7 +26,10 @@ export class MeController implements IMeController {
         } = req;
 
         const me = await this.userRepository.findById(id, {
-            include: [{ association: 'tasks' }, { association: 'createdBy' }]
+            include: [
+                { association: 'tasks', order: [['updatedAt', 'DESC']] },
+                { association: 'createdBy' }
+            ]
         });
 
         return res.json(me);

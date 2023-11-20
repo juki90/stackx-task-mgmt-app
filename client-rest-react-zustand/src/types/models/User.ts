@@ -8,8 +8,11 @@ interface User {
     email: string;
     createdAt: string;
     updatedAt: string;
-    createdBy: User;
+    deletedAt: string | null;
+    createdBy?: User;
+    createdById?: string;
     role?: Role;
+    roleId?: string;
     tasks?: Task[];
 }
 

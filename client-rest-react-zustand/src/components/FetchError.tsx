@@ -5,7 +5,7 @@ import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import type { FC } from 'react';
 import type { IFetchError } from '@/types';
 
-export const FetchError: FC<IFetchError> = ({ message, size }) => (
+export const FetchError: FC<IFetchError> = ({ message, size, center }) => (
     <Box
         sx={{
             display: 'flex',
@@ -14,9 +14,10 @@ export const FetchError: FC<IFetchError> = ({ message, size }) => (
             justifyContent: 'center',
             fontSize: '25px',
             color: '#777',
-            height: `${size * 1.2}px`,
+            height: center ? 'calc(100vh - 5em)' : `${size * 1.2}px`,
             width: '100%',
-            margin: '50px 0'
+            margin: center ? 0 : '50px 0',
+            marginBottom: center ? `${size * 1.2}px` : 0
         }}
     >
         <CancelOutlinedIcon
@@ -24,12 +25,13 @@ export const FetchError: FC<IFetchError> = ({ message, size }) => (
             sx={{ fontSize: size * 1.5, marginBottom: '10px' }}
         />
         <Typography color="error" fontSize={size / 3}>
-            {message}...
+            {message}
         </Typography>
     </Box>
 );
 
 FetchError.propTypes = {
     size: PropTypes.number.isRequired,
-    message: PropTypes.string.isRequired
+    message: PropTypes.string.isRequired,
+    center: PropTypes.bool
 };

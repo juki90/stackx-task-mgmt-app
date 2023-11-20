@@ -9,11 +9,15 @@ interface State {
     hasError: boolean;
 }
 
-export default class PageErrorBoundary extends Component<Props, State> {
+export class ErrorBoundary extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = { hasError: false };
     }
+
+    static getDerivedStateFromError = () => {
+        return { hasError: true };
+    };
 
     componentDidCatch() {
         this.setState({ hasError: true });
@@ -30,21 +34,21 @@ export default class PageErrorBoundary extends Component<Props, State> {
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'start',
-                    minHeight: '100vh',
-                    padding: '50px 20px'
+                    width: '100%',
+                    padding: '20px'
                 }}
             >
                 <Box
                     sx={{
-                        maxWidth: '600px',
                         backgroundColor: '#ccc',
-                        borderRadius: '10px',
+                        borderRadius: '4px',
                         padding: '25px',
-                        height: 'auto'
+                        height: '100%',
+                        width: '100%'
                     }}
                 >
                     <Typography variant="h5" mb="20px">
-                        Something went wrong with the page...
+                        Something went wrong with this section...
                     </Typography>
                     <Typography>
                         We are sorry that you are facing this error. Please

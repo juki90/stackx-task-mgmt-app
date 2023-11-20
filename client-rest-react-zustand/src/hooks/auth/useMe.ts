@@ -4,16 +4,21 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 
 import { authMe } from '@/api/auth';
+import { selectFromStore } from '@/store';
 import { en as messages } from '@/locales';
+import taskColumns from '@/utilities/taskColumns';
+
+import type { Task, User, AuthSlice } from '@/types';
 import { DATE_FORMAT } from '@/config/constants';
 
-import type { Task } from '@/types';
-import type { GridValueGetterParams } from '@mui/x-data-grid';
-
 export const useMe = () => {
+    const meInStore = selectFromStore('me') as User;
+    const setMeInStore = selectFromStore('me/set') as AuthSlice['me/set'];
     const [viewedTask, setViewedTask] = useState<Task | null>(null);
+    const [isRefetchDisabled, setIsRefetchDisabled] = useState(false);
+
     const {
-        data: me,
+        data: responseMe,
         dataUpdatedAt,
         error,
         isError,
@@ -23,8 +28,11 @@ export const useMe = () => {
     } = useQuery({
         queryFn: () => authMe(),
         queryKey: ['me'],
-        refetchInterval: false
+        refetchInterval: false,
+        enabled: !meInStore
     });
+
+    const me = (meInStore ? meInStore : responseMe) as User | null;
 
     const meDataRows = useMemo(
         () =>
@@ -40,56 +48,17 @@ export const useMe = () => {
         [me?.updatedAt]
     );
 
-    const taskColumns = [
-        { field: 'id', headerName: 'ID', width: 80 },
-        { field: 'title', headerName: 'Title', width: 260 },
-        { field: 'description', headerName: 'Description', width: 260 },
-        {
-            field: 'status',
-            headerName: 'Status',
-            width: 100,
-            valueGetter: ({ row }: GridValueGetterParams) => {
-                const statuses = ['CANCELLED', 'PENDING', 'DONE'];
-
-                return statuses[row.status + 1];
-            }
-        },
-        {
-            field: 'usersStatus',
-            headerName: 'Done by',
-            width: 100,
-            valueGetter: ({ row }: GridValueGetterParams) => {
-                const numberOfUsersFinishedTask = row.usersStatus.filter(
-                    ({ doneAt }: { userId: string; doneAt: string }) => doneAt
-                ).length;
-
-                return `${numberOfUsersFinishedTask}/${row.usersStatus.length}`;
-            }
-        },
-        {
-            field: 'createdAt',
-            headerName: 'Created at',
-            width: 160,
-            valueGetter: ({ row }: GridValueGetterParams) =>
-                dayjs(row.createdAt).format(DATE_FORMAT)
-        },
-        {
-            field: 'updatedAt',
-            headerName: 'Updated at',
-            width: 160,
-            valueGetter: ({ row }: GridValueGetterParams) =>
-                dayjs(row.updatedAt).format(DATE_FORMAT)
-        }
-    ];
-
     const handleRefetch = async () => {
         try {
+            setIsRefetchDisabled(true);
+
             const data = await refetch();
 
             if (data.error) {
                 throw data.error;
             }
 
+            setMeInStore(data.data as User);
             toast.success(messages.successfullyRefetchedData);
         } catch (error) {
             console.error(error);
@@ -106,6 +75,23 @@ export const useMe = () => {
         }
     }, [isError]);
 
+    useEffect(() => {
+        if (isSuccess && responseMe) {
+            setMeInStore(responseMe);
+        }
+    }, [isSuccess]);
+
+    useEffect(() => {
+        if (isRefetchDisabled) {
+            const timeout = setTimeout(
+                () => setIsRefetchDisabled(false),
+                5 * 1000
+            );
+
+            return () => clearTimeout(timeout);
+        }
+    }, [isRefetchDisabled]);
+
     return {
         me,
         isError,
@@ -113,8 +99,9 @@ export const useMe = () => {
         isPending,
         viewedTask,
         meDataRows,
-        dataUpdatedAt,
         taskColumns,
+        dataUpdatedAt,
+        isRefetchDisabled,
         handleRefetch,
         setViewedTask
     };

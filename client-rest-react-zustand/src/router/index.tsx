@@ -4,7 +4,6 @@ import { redirect, createBrowserRouter } from 'react-router-dom';
 
 import { ROLES } from '@/config/constants';
 import { AuthenticatedLayout } from '@/layouts/Authenticated';
-import PageErrorBoundary from '@/components/PageErrorBoundary';
 import { SuspenseFallback } from '@/components/SuspenseFallback';
 
 import type { User } from '@/types';
@@ -53,24 +52,21 @@ const loadOrRedirect = (role: string) => () => {
 };
 
 const LoginPage = lazy(() => import('@/pages/Login'));
+const UsersPage = lazy(() => import('@/pages/Users'));
 const DashboardPage = lazy(() => import('@/pages/Dashboard'));
 
-const PageWithSuspenseAndErrorBoundary = (element: ReactNode) => (
-    <PageErrorBoundary>
-        <Suspense
-            fallback={
-                <SuspenseFallback center size={75} message="Loading page" />
-            }
-        >
-            {element}
-        </Suspense>
-    </PageErrorBoundary>
+const withSuspense = (element: ReactNode) => (
+    <Suspense
+        fallback={<SuspenseFallback center size={75} message="Loading page" />}
+    >
+        {element}
+    </Suspense>
 );
 
 export const router = createBrowserRouter([
     {
         path: routes.login,
-        element: PageWithSuspenseAndErrorBoundary(<LoginPage />),
+        element: withSuspense(<LoginPage />),
         loader: loadOrRedirect('guest')
     },
     {
@@ -89,7 +85,7 @@ export const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: PageWithSuspenseAndErrorBoundary(<DashboardPage />),
+                element: withSuspense(<DashboardPage />),
                 loader: loadOrRedirect('authenticated')
             }
         ]
@@ -100,7 +96,7 @@ export const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <div>DefaultPAGE</div>,
+                element: withSuspense(<UsersPage />),
                 loader: loadOrRedirect(ROLES.ADMIN)
             }
         ]

@@ -13,6 +13,7 @@ export const authLogin = async (
 
     return data;
 };
+
 export const authMe = async (): Promise<AuthMeResponse> => {
     const { data } = await axios.get('/auth/me');
 

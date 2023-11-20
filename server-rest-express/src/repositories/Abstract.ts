@@ -12,6 +12,7 @@ import type {
     CreateOptions,
     UpdateOptions,
     InferAttributes,
+    FindAndCountOptions,
     InferCreationAttributes
 } from 'sequelize';
 
@@ -47,12 +48,20 @@ export abstract class AbstractRepository<
         return this.model.findAll(options);
     }
 
+    findAndCount(
+        options: FindAndCountOptions<T> = {}
+    ): Promise<{ rows: T[]; count: number }> {
+        return this.model.findAndCountAll(options);
+    }
+
     findOne(options: FindOptions<T>): Promise<T | null> {
         return this.model.findOne(options);
     }
 
-    findById(id: string, options: FindOptions<T>): Promise<T | null> {
-        return this.model.findByPk(id, options);
+    findById(id: string, options: FindOptions<T> = {}): Promise<T | null> {
+        const finalOptions = deepMerge(options, { where: { id } });
+
+        return this.model.findOne(finalOptions);
     }
 
     count(options: CountOptions = {}) {

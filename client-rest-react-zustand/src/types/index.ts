@@ -1,4 +1,5 @@
 export * from '@/types/api';
-export * from '@/types/components';
+export * from '@/types/hooks';
 export * from '@/types/models';
 export * from '@/types/stores';
+export * from '@/types/components';

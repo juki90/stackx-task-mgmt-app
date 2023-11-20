@@ -11,12 +11,15 @@ export default (basicRouteName: 'users' | 'tasks') =>
         const queryParams: {
             limit?: number;
             offset?: number;
+            order?: [string, string][];
             where?: {
-                [x: string]: {
-                    [y: string]: {
-                        [i: string]: string;
-                    };
-                }[];
+                [x: string]:
+                    | {
+                          [y: string]: {
+                              [i: string]: string;
+                          };
+                      }[]
+                    | { [z: string]: null };
             };
         } = {};
 
@@ -60,6 +63,16 @@ export default (basicRouteName: 'users' | 'tasks') =>
                 queryParams.where = { [Op.or]: orParams };
             }
         });
+
+        if (basicRouteName === 'users') {
+            if (!queryParams.where) {
+                queryParams.where = {};
+            }
+
+            queryParams.where.deletedAt = { [Op.eq]: null };
+        }
+
+        queryParams.order = [['updatedAt', 'DESC']];
 
         req.queryParams = queryParams;
 

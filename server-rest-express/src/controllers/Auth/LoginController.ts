@@ -17,6 +17,7 @@ import type {
     IUserRepository,
     ILoginController
 } from '@/types';
+import { Op } from 'sequelize';
 
 @controller('/auth')
 export class LoginController implements ILoginController {
@@ -41,6 +42,7 @@ export class LoginController implements ILoginController {
         } = req;
 
         const userToCheck = await this.userRepository.findByEmail(email, {
+            where: { deletedAt: null },
             attributes: ['password']
         });
 
@@ -74,6 +76,11 @@ export class LoginController implements ILoginController {
         }
 
         const userToSend = await this.userRepository.findByEmail(email, {
+            where: {
+                deletedAt: {
+                    [Op.eq]: null
+                }
+            },
             include: [{ association: 'role' }]
         });
         const authHeader = this.jwt.sign(userToSend);

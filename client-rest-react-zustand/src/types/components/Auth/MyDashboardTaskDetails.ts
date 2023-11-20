@@ -1,5 +1,5 @@
-import { Task } from '@/types/models';
-import { Dispatch, SetStateAction } from 'react';
+import type { Task } from '@/types/models';
+import type { Dispatch, SetStateAction } from 'react';
 
 export interface IMyDashboardTaskDetails {
     task: Task | null;

@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import { inject } from 'inversify';
 import { StatusCodes } from 'http-status-codes';
 import {
@@ -26,8 +27,13 @@ export class UserShowController implements IUserShowController {
             params: { id }
         } = req;
 
-        const user = await this.userRepository.findById(id, {
-            include: [{ association: 'tasks' }, { association: 'createdBy' }]
+        const user = await this.userRepository.findOne({
+            where: { id, deletedAt: { [Op.eq]: null } },
+            include: [
+                { association: 'tasks' },
+                { association: 'createdBy' },
+                { association: 'role' }
+            ]
         });
 
         if (!user) {

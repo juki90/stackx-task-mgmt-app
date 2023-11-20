@@ -50,7 +50,9 @@ export const createAuthSlice: (
                     ) as User | null;
                 } catch (error) {
                     console.error(error);
+
                     toast.error(messages.invalidAccessToken);
+                    
                     localStorage.clear();
                 }
 

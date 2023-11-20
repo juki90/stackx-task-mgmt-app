@@ -10,6 +10,13 @@ export const en = {
     successfullyRefetchedData: 'Successfully refetched data',
     failedToRefetchedData: 'Failed to refetch data',
     invalidAccessToken: 'Invalid access token',
+    failedToQueryWithFilter:
+        'Failed to query by filter, please try again in a few seconds',
+    successfullySaved: 'Record has been saved',
+    successfullyDeleted: 'Record has been deleted',
+    modifiedResourceNotFound:
+        "The resource you are modifying doesn't exist anymore",
+    notFoundShowing: 'The record you are looking for is not found',
     validators: {
         shared: {
             fieldShouldBeString: 'Field should be of type string',

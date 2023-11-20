@@ -12,10 +12,10 @@ export const useLogout = () => {
 
     const handleLogout = () => {
         resetAllSlices();
-        queryClient.clear();
         localStorage.clear();
-        toast.success(messages.loggedOut);
         navigate(routes.login);
+        toast.success(messages.loggedOut);
+        setTimeout(() => queryClient.clear(), 0);
     };
 
     return { handleLogout };

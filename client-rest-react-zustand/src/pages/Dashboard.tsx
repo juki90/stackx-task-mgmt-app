@@ -1,11 +1,12 @@
 import { Box, Divider, Typography } from '@mui/material';
 
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { MyDashboard } from '@/components/Auth/MyDashboard';
 
 import type { FC } from 'react';
 
-const DashboardPage: FC = () => {
-    return (
+const DashboardPage: FC = () => (
+    <ErrorBoundary>
         <Box height="100vh">
             <Box
                 sx={{
@@ -34,7 +35,7 @@ const DashboardPage: FC = () => {
             <Divider />
             <MyDashboard />
         </Box>
-    );
-};
+    </ErrorBoundary>
+);
 
 export default DashboardPage;

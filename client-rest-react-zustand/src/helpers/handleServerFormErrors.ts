@@ -1,28 +1,31 @@
 import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
-import type { UseFormSetError } from 'react-hook-form';
 
 import { en as messages } from '@/locales';
+import {
+    handleOtherErrors,
+    handleUnknownError
+} from '@/helpers/sharedErrorsHandlers';
 
 import type { Dispatch, SetStateAction } from 'react';
-import type { AuthLoginRequest, ResponseFormErrors } from '@/types';
+import type { UseFormSetError } from 'react-hook-form';
+import type {
+    AuthLoginRequest,
+    UserCreateRequest,
+    UserUpdateRequest,
+    ResponseFormErrors
+} from '@/types';
 
 export default (
     error: unknown | Error | AxiosError,
     setFormError: UseFormSetError<
-        AuthLoginRequest & { general?: string; other?: string }
+        AuthLoginRequest &
+            UserCreateRequest &
+            UserUpdateRequest & { general?: string; other?: string }
     >,
     setOtherError: Dispatch<SetStateAction<string>>
 ) => {
     console.error(error);
-
-    if (!(error instanceof AxiosError) && error instanceof Error) {
-        setOtherError(messages.internalServerError);
-
-        toast.error(messages.internalServerError);
-
-        return;
-    }
 
     if (error instanceof AxiosError) {
         const formErrors = (error as AxiosError<ResponseFormErrors>)?.response
@@ -35,8 +38,6 @@ export default (
                 });
                 const message = error?.message;
 
-                toast.error(messages.fixFormErrors);
-
                 if (!field || field === 'general') {
                     setFormError('general', { message });
 
@@ -47,34 +48,30 @@ export default (
                     setFormError(field, { message });
                 }
 
-                return;
+                toast.error(messages.fixFormErrors);
             });
-        }
-
-        if (!navigator?.onLine) {
-            setOtherError(messages.yourAreOffline);
-
-            toast.error(messages.yourAreOffline);
 
             return;
         }
 
-        const otherError = (error as AxiosError)?.response?.data;
+        if (error?.response?.status === 404) {
+            const notFoundMessage = (error as AxiosError)?.response
+                ?.data as string;
+            const finalMessage = notFoundMessage
+                ? notFoundMessage === 'Not Found'
+                    ? messages.modifiedResourceNotFound
+                    : notFoundMessage
+                : messages.modifiedResourceNotFound;
 
-        if (typeof otherError === 'string') {
-            setFormError('general', { message: otherError });
-
-            toast.error(otherError);
-
-            return;
-        }
-
-        if (!otherError) {
-            setOtherError(messages.ourServerIsDown);
-
-            toast.error(messages.ourServerIsDown);
+            setOtherError(finalMessage);
 
             return;
         }
+
+        handleOtherErrors(error, setOtherError);
+
+        return;
     }
+
+    handleUnknownError(error, setOtherError);
 };

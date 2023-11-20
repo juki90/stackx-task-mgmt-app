@@ -19,8 +19,8 @@ export const SuspenseFallback: FC<ISuspenseFallback> = ({
             color: '#777',
             height: center ? 'calc(100vh - 5em)' : `${size * 1.2}px`,
             width: '100%',
-            paddingBottom: center ? `${size * 1.2}px` : 0,
-            margin: center ? 0 : '50px 0'
+            margin: center ? 0 : '50px 0',
+            marginBottom: center ? `${size * 1.2}px` : 0
         }}
     >
         <CircularProgress

@@ -10,14 +10,15 @@ import { routes } from '@/router';
 import { authLogin } from '@/api/auth';
 import { selectFromStore } from '@/store';
 import { en as messages } from '@/locales';
-import handleFormErrors from '@/helpers/handleFormErrors';
 import { loginValidationSchema } from '@/validations/auth/login';
+import handleServerFormErrors from '@/helpers/handleServerFormErrors';
 
 import type { AuthSlice, AuthLoginRequest, AuthLoginResponse } from '@/types';
 
 export const useLogin = () => {
     const theme = useTheme();
     const navigate = useNavigate();
+    const [otherResponseError, setOtherResponseError] = useState<string>('');
     const {
         control,
         formState: { errors: formErrors, isValid: isFormValid },
@@ -39,7 +40,6 @@ export const useLogin = () => {
         control,
         name: 'password'
     });
-    const [otherResponseError, setOtherResponseError] = useState<string>('');
 
     const {
         data: loginResponseData,
@@ -57,8 +57,7 @@ export const useLogin = () => {
 
                 return await authLogin(loginData);
             } catch (error) {
-                handleFormErrors(error, setError, setOtherResponseError);
-
+                handleServerFormErrors(error, setError, setOtherResponseError);
                 return error;
             }
         }
@@ -110,15 +109,17 @@ export const useLogin = () => {
 
     useEffect(() => {
         if (loginResponseData && otherResponseError) {
-            setTimeout(() => resetLoginResponse(), 2000);
+            const timeout = setTimeout(() => resetLoginResponse(), 2000);
 
-            return;
+            return () => clearTimeout(timeout);
         }
 
         if (loginResponseData && loginResponseSuccess && !generalErrorMessage) {
             setLoggedUser();
             toast.success(messages.successfullyLoggedIn);
-            setTimeout(() => navigate(routes.dashboard), 500);
+            const timeout = setTimeout(() => navigate(routes.dashboard), 500);
+
+            return () => clearTimeout(timeout);
         }
     }, [loginResponseData]);
 

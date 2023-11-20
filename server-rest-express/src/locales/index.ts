@@ -38,7 +38,10 @@ export const en = {
             notUpdatableUserByYou: "This user can't be updated by you",
             notDeletableUserByYou: "This user can't be deleted by you",
             unableToDeleteYourself: "You can't delete yourself",
-            cantRemoveAdminRole: "You can't remove your admin role"
+            cantRemoveAdminRole: "You can't remove your admin role",
+            youCantCreateAdmin: 'You are not allowed to create administrators',
+            cantAssignUserAdminRole:
+                "You can't assign administrator permissions to user"
         },
         tasks: {
             descriptionIncorrectLength:

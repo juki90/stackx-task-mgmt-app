@@ -1,9 +1,10 @@
+import { Op } from 'sequelize';
 import { inject } from 'inversify';
 import { StatusCodes } from 'http-status-codes';
 import {
     request,
-    httpDelete,
     response,
+    httpDelete,
     controller
 } from 'inversify-express-utils';
 
@@ -29,15 +30,19 @@ export class UserDeleteController implements IUserDeleteController {
             params: { id }
         } = req;
 
-        const userToDelete = await this.userRepository.findById(id);
+        const userToDelete = await this.userRepository.findById(id, {
+            where: {
+                deletedAt: {
+                    [Op.eq]: null
+                }
+            }
+        });
 
         if (!userToDelete) {
             return res.sendStatus(StatusCodes.NO_CONTENT);
         }
 
-        const loggedUserCreatedBy = await loggedUser.getCreatedBy();
-
-        if (loggedUserCreatedBy?.id === userToDelete.id) {
+        if (loggedUser.createdById && (await userToDelete.checkAdminRole())) {
             return res
                 .status(StatusCodes.FORBIDDEN)
                 .send(messages.validators.users.notDeletableUserByYou);
@@ -49,7 +54,9 @@ export class UserDeleteController implements IUserDeleteController {
                 .send(messages.validators.users.unableToDeleteYourself);
         }
 
-        await userToDelete.destroy();
+        await userToDelete.update({
+            deletedAt: new Date()
+        });
 
         return res.sendStatus(StatusCodes.NO_CONTENT);
     }

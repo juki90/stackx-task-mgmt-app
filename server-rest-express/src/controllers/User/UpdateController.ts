@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import { inject } from 'inversify';
 import { StatusCodes } from 'http-status-codes';
 import {
@@ -48,7 +49,9 @@ export class UserUpdateController implements IUserUpdateController {
             body: { isAdmin, password }
         } = req;
 
-        const userToUpdate = await this.userRepository.findById(id);
+        const userToUpdate = await this.userRepository.findById(id, {
+            where: { deletedAt: { [Op.eq]: null } }
+        });
 
         if (!userToUpdate) {
             return res.sendStatus(StatusCodes.NOT_FOUND);
@@ -64,10 +67,16 @@ export class UserUpdateController implements IUserUpdateController {
             })
         ]);
 
-        if (loggedUserCreatedBy?.id === userToUpdate.id) {
+        if (loggedUserCreatedBy && (await userToUpdate.checkAdminRole())) {
             return res
                 .status(StatusCodes.FORBIDDEN)
                 .send(messages.validators.users.notUpdatableUserByYou);
+        }
+
+        if (loggedUserCreatedBy && isAdmin) {
+            return res
+                .status(StatusCodes.FORBIDDEN)
+                .send(messages.validators.users.cantAssignUserAdminRole);
         }
 
         if (
