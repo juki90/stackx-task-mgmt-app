@@ -10,10 +10,31 @@ Each main directory in this monorepository has the same task management app writ
 
 This app is written to manage tasks and users by administrators (users with 'admin' role). There is some additional logic and rules for users.
 
-- **Main administrator** is not created by somebody, but by the system. This admin can't be deleted by anyone, even by himself. Can only be edited, only by himself. His role can't be changed to regular user.
-- **Administrator** is created by other admin. He can't delete admin by whom he was created nor update him.
-- **User** is standard person who can have given tasks by administrators.
-- **Task** can be bound to many users/admins and user/admin can have many tasks. Every task has additionally title, description that is given during creation. Task has internal **status** (pending, cancelled or done). Users can change their own status of task as done. When task is done by a user, the date of finishing it appears on **usersStatus** list of task. Once a task is done by everyone it changes its status to done. It's impossible to change status of different user or undo status of task. When task is cancelled, it can't be reverted back to pending or done status. However cancelled task is editable (it's assignees, title and description).
+1. **Main administrator**:
+
+- Is not created by somebody, but by the system. This admin can't be deleted by anyone, even by himself.
+- Can only be edited, only by himself. His role can't be changed by anyone, even himself.
+- Can create administrators
+
+2. **Administrator**
+
+- Is created by main admin. He can't modify other administrators nor main admin.
+- Can create and modify regular users.
+- Can manage everyone's tasks.
+
+3. **User**
+
+- Is standard person who can have given tasks by administrators.
+- Can only browse and mark as done his tasks
+
+4. **Task**
+
+- Can be bound to many users/admins and user/admin can have many tasks. Every task has additionally title, description that is given during creation.
+- Task has internal **status** (pending, cancelled or done). Users can change their own status of task as done. When task is done by a user, the date of finishing it appears on **usersStatus** list of task.
+- Once a task is done by everyone it changes its status to done.
+- It's impossible to change status of different user or undo status of task.
+- When task is cancelled, it can't be reverted back to pending or done status. However cancelled task is editable (title and description, but not assigned users).
+- When task gets 'done' status, it is then impossible to modify its assigned users.
 
 ## Table of technologies, libraries and other things used in the project
 
@@ -24,10 +45,16 @@ Apart from that, directory names in this repository have explicit structure: <br
 
 ### Server technologies table
 
-| Server              | API Design             | Framework  | Test types | Databases | ORM/ODM   |
-| ------------------- | ---------------------- | ---------- | ---------- | --------- | --------- |
-| server-rest-express | REST API               | Express.js | Functional | Postgres  | Sequelize |
-| server-graphql-nest | GraphQL (Schema first) | Nest.js    | Functional | Postgres  | TypeORM   |
+| Server              | API Design             | Framework  | Test types | Databases | ORM/ODM   | Dependency inj. |
+| ------------------- | ---------------------- | ---------- | ---------- | --------- | --------- | --------------- |
+| server-rest-express | REST API               | Express.js | Functional | Postgres  | Sequelize | InverisfyJS     |
+| server-graphql-nest | GraphQL (Schema first) | Nest.js    | Functional | Postgres  | TypeORM   | (internal)      |
+
+### Client technologies table
+
+| Client                    | Framework (lib) | API Design | Component library | State Mgmt | API data loading | Forms           | Test types |
+| ------------------------- | --------------- | ---------- | ----------------- | ---------- | ---------------- | --------------- | ---------- |
+| client-rest-react-zustand | React v18       | REST API   | Material UI v5    | Zustand    | React Query      | react-hook-form | -          |
 
 ## Installation, deploying and running tests
 
