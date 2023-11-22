@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types';
 import { useMemo, type FC } from 'react';
 import ClearIcon from '@mui/icons-material/Clear';
+import PropTypes, { Validator } from 'prop-types';
 import {
     Box,
     Modal,
@@ -309,7 +309,23 @@ export const CreateOrUpdateUser: FC<ICreateOrUpdateUser> = ({
     );
 };
 
+export const UserPropTypes = PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+    fullName: PropTypes.string.isRequired,
+    createdAt: PropTypes.string.isRequired,
+    updatedAt: PropTypes.string.isRequired,
+    createdBy: PropTypes.object,
+    createdById: PropTypes.string.isRequired,
+    role: PropTypes.object,
+    roleId: PropTypes.string.isRequired,
+    tasks: PropTypes.arrayOf(PropTypes.object),
+    deletedAt: PropTypes.string
+}) as Validator<User | null>;
+
 CreateOrUpdateUser.propTypes = {
+    user: UserPropTypes,
     isModalOpen: PropTypes.bool.isRequired,
     setIsCreateOrUpdateModalOpen: PropTypes.func.isRequired
 };

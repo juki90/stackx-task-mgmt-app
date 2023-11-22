@@ -161,27 +161,35 @@ export const MyDashboardTaskDetails: FC<IMyDashboardTaskDetails> = ({
     );
 };
 
+export const TaskPropTypes = PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string,
+    status: PropTypes.number.isRequired,
+    usersStatus: PropTypes.arrayOf(
+        PropTypes.shape({
+            userId: PropTypes.string.isRequired,
+            doneAt: PropTypes.string
+        })
+    ).isRequired,
+    createdAt: PropTypes.string.isRequired,
+    updatedAt: PropTypes.string.isRequired,
+    createdBy: PropTypes.object,
+    updatedBy: PropTypes.object,
+    createdById: PropTypes.string.isRequired,
+    updatedById: PropTypes.string,
+    users: PropTypes.arrayOf(PropTypes.object)
+}) as Validator<Task | null>;
+
 MyDashboardTaskDetails.propTypes = {
-    task: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
-        description: PropTypes.string,
-        status: PropTypes.number.isRequired,
-        usersStatus: PropTypes.arrayOf(
-            PropTypes.shape({
-                userId: PropTypes.string.isRequired,
-                doneAt: PropTypes.string
-            })
-        ).isRequired,
-        createdAt: PropTypes.string.isRequired,
-        updatedAt: PropTypes.string.isRequired,
-        createdBy: PropTypes.object,
-        updatedBy: PropTypes.object,
-        createdById: PropTypes.string.isRequired,
-        updatedById: PropTypes.string,
-        users: PropTypes.arrayOf(PropTypes.object)
-    }) as Validator<Task | null>,
+    task: TaskPropTypes,
     setTask: PropTypes.func.isRequired as Validator<
         Dispatch<SetStateAction<Task | null>>
-    >
+    >,
+    formError: PropTypes.string,
+    otherError: PropTypes.string,
+    taskToMarkAsDone: TaskPropTypes,
+    handleMarkTaskAsDone: PropTypes.func.isRequired,
+    setTaskToMarkAsDone: PropTypes.func.isRequired,
+    handleCloseMarkAsDoneDialog: PropTypes.func.isRequired
 };

@@ -13,6 +13,7 @@ import {
 
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { UserListPicker } from '@/components/UserListPicker';
+import { TaskPropTypes } from '@/components/Auth/MyDashboardTaskDetails';
 import { useCreateOrUpdateTask } from '@/hooks/tasks/useCreateOrUpdateTask';
 
 import type { ICreateOrUpdateTask } from '@/types';
@@ -240,6 +241,7 @@ export const CreateOrUpdateTask: FC<ICreateOrUpdateTask> = ({
 };
 
 CreateOrUpdateTask.propTypes = {
+    task: TaskPropTypes,
     isModalOpen: PropTypes.bool.isRequired,
     setIsCreateOrUpdateModalOpen: PropTypes.func.isRequired
 };
