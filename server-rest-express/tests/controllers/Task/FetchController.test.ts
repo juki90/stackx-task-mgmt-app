@@ -45,9 +45,12 @@ describe('TASK FetchController GET /api/tasks?page={"size"=i,"index"=j}&filter=k
 
         expect(status).toEqual(OK);
         expect(responseJwt).toBeDefined();
-        expect(body).toHaveLength(2);
+        expect(body).toHaveProperty('rows');
+        expect(body).toHaveProperty('count');
+        expect(body.rows).toHaveLength(2);
+        expect(body.count).toEqual(4);
 
-        body.forEach((resultTask: Task) => {
+        body.rows.forEach((resultTask: Task) => {
             const taskInDb = tasksInDb.find(
                 dbTask => dbTask.id === resultTask.id
             );
@@ -100,16 +103,19 @@ describe('TASK FetchController GET /api/tasks?page={"size"=i,"index"=j}&filter=k
 
         expect(status).toEqual(OK);
         expect(responseJwt).toBeDefined();
-        expect(body).toHaveLength(1);
+        expect(body).toHaveProperty('rows');
+        expect(body).toHaveProperty('count');
+        expect(body.rows).toHaveLength(1);
+        expect(body.count).toEqual(1);
 
-        const taskInDb = tasksInDb.find(({ id }) => body[0].id === id);
+        const taskInDb = tasksInDb.find(({ id }) => body.rows[0].id === id);
 
-        expect(body[0].id).toBeDefined();
-        expect(body[0].title).toEqual('ThisIsUniqueString');
-        expect(body[0].description).toEqual(taskInDb.description);
-        expect(body[0].createdById).toEqual(adminUser.id);
-        expect(body[0].createdBy).not.toBeDefined();
-        expect(body[0].usersStatus).toHaveLength(1);
+        expect(body.rows[0].id).toBeDefined();
+        expect(body.rows[0].title).toEqual('ThisIsUniqueString');
+        expect(body.rows[0].description).toEqual(taskInDb.description);
+        expect(body.rows[0].createdById).toEqual(adminUser.id);
+        expect(body.rows[0].createdBy).not.toBeDefined();
+        expect(body.rows[0].usersStatus).toHaveLength(1);
     });
 
     it('returns BAD_REQUEST skipping query page info as ADMIN', async () => {

@@ -22,7 +22,7 @@ export class SequelizeFactory {
                 models: [path.join(__dirname, '..', 'models')],
                 logging: env === 'test' ? false : console.log,
                 dialectOptions: {
-                    statement_timeout: 60000,
+                    statement_timeout: 50000,
                     idle_in_transaction_session_timeout: 60000
                 }
             });

@@ -94,6 +94,7 @@ export class TaskCreateController implements ITaskCreateController {
                 createdTask.setCreatedBy(loggedUser),
                 createdTask.setUsers(users)
             ]);
+            await t.commit();
 
             return res.status(StatusCodes.CREATED).json(createdTask);
         } catch (error) {

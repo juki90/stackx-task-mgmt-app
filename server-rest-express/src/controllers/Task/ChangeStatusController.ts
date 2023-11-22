@@ -77,6 +77,8 @@ export class TaskChangeStatusController implements ITaskChangeStatusController {
                 if (usersStatus.every(({ doneAt }) => doneAt)) {
                     await task.update({ status: TASK_STATUSES.DONE });
                 }
+
+                await t.commit();
             } catch (error) {
                 await t.rollback();
 

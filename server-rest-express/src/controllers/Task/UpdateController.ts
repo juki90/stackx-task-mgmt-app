@@ -145,6 +145,8 @@ export class TaskUpdateController implements ITaskUpdateController {
                 { fields: TASK_UPDATABLE_FIELDS }
             );
 
+            await t.commit();
+
             return res.json(taskToSend);
         } catch (error) {
             await t.rollback();

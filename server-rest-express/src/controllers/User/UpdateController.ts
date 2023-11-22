@@ -105,6 +105,8 @@ export class UserUpdateController implements IUserUpdateController {
             ) {
                 await userToUpdate.setRole(isAdmin ? adminRole : userRole);
             }
+
+            await t.commit();
         } catch (error) {
             await t.rollback();
 
