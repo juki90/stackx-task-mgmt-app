@@ -32,9 +32,12 @@ describe('USER FetchController GET /api/users?page={"size"=i,"index"=j}&filter=k
 
         expect(status).toEqual(OK);
         expect(responseJwt).toBeDefined();
-        expect(body).toHaveLength(2);
+        expect(body).toHaveProperty('rows');
+        expect(body).toHaveProperty('count');
+        expect(body.rows).toHaveLength(2);
+        expect(body.count).toEqual(4);
 
-        body.forEach((resultUser: User) => {
+        body.rows.forEach((resultUser: User) => {
             const userInDb = usersInDb.find(
                 dbUser => dbUser.id === resultUser.id
             );
@@ -71,18 +74,21 @@ describe('USER FetchController GET /api/users?page={"size"=i,"index"=j}&filter=k
 
         expect(status).toEqual(OK);
         expect(responseJwt).toBeDefined();
-        expect(body).toHaveLength(1);
-        expect(body[0].firstName).toEqual(editableUser.firstName);
-        expect(body[0].lastName).toEqual(editableUser.lastName);
-        expect(body[0].fullName).toEqual(
+        expect(body).toHaveProperty('rows');
+        expect(body).toHaveProperty('count');
+        expect(body.count).toEqual(1);
+        expect(body.rows).toHaveLength(1);
+        expect(body.rows[0].firstName).toEqual(editableUser.firstName);
+        expect(body.rows[0].lastName).toEqual(editableUser.lastName);
+        expect(body.rows[0].fullName).toEqual(
             `${editableUser.firstName} ${editableUser.lastName}`
         );
-        expect(body[0].email).toEqual(editableUser.email);
-        expect(body[0].createdById).toEqual(adminUser.id);
-        expect(body[0].createdBy).not.toBeDefined();
-        expect(body[0].roleId).toEqual(userRole.id);
-        expect(body[0].role).not.toBeDefined();
-        expect(body[0].tasks).not.toBeDefined();
+        expect(body.rows[0].email).toEqual(editableUser.email);
+        expect(body.rows[0].createdById).toEqual(adminUser.id);
+        expect(body.rows[0].createdBy).not.toBeDefined();
+        expect(body.rows[0].roleId).toEqual(userRole.id);
+        expect(body.rows[0].role).not.toBeDefined();
+        expect(body.rows[0].tasks).not.toBeDefined();
     });
 
     it('returns BAD_REQUEST skipping query page info as ADMIN', async () => {

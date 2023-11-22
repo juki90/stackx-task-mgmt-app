@@ -39,8 +39,7 @@ export const up: Migration = ({
                 allowNull: false,
                 unique: true,
                 validate: {
-                    notEmpty: true,
-                    isEmail: true
+                    notEmpty: true
                 }
             },
             password: {
@@ -69,6 +68,10 @@ export const up: Migration = ({
                     model: 'Roles',
                     key: 'id'
                 }
+            },
+            deletedAt: {
+                type: Sequelize.DATE,
+                defaultValue: null
             },
             createdAt: {
                 type: Sequelize.DATE,

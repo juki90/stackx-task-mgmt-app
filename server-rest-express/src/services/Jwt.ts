@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import { inject, injectable } from 'inversify';
 
 import type {
@@ -51,7 +52,15 @@ export class Jwt implements IJwt {
             const decodedToken = this.jwt.verify(token, this.jwtSecret) as User;
 
             const verifiedUser = await this.userRepository.findById(
-                decodedToken.id
+                decodedToken.id,
+                {
+                    include: [{ association: 'role' }],
+                    where: {
+                        deletedAt: {
+                            [Op.eq]: null
+                        }
+                    }
+                }
             );
 
             if (!verifiedUser) {

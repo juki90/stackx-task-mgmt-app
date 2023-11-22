@@ -37,8 +37,14 @@ export class UserCreateController implements IUserCreateController {
         @request() req: Request,
         @response() res: Response
     ): Promise<Response<User | string>> {
-        const { body: userPayload } = req;
+        const { body: userPayload, loggedUser } = req;
         let createdUser;
+
+        if (loggedUser.createdById && userPayload.isAdmin) {
+            return res
+                .status(StatusCodes.BAD_REQUEST)
+                .send(messages.validators.users.youCantCreateAdmin);
+        }
 
         const t = await this.sequelize.transaction();
 
@@ -66,6 +72,7 @@ export class UserCreateController implements IUserCreateController {
                 user.setRole(isAdmin ? adminRole : userRole),
                 user.setCreatedBy(loggedUser)
             ]);
+            await t.commit();
         } catch (error) {
             await t.rollback();
 

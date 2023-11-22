@@ -68,7 +68,6 @@ export default class User extends Model<
     }
 
     @Length({ min: 6, max: 255 })
-    @IsEmail
     @Index
     @Unique
     @AllowNull(false)
@@ -98,6 +97,10 @@ export default class User extends Model<
 
     @BelongsToMany(() => Task, () => UserTask)
     tasks: Task[];
+
+    @Default(null)
+    @Column
+    deletedAt: Date | null;
 
     @BeforeSave
     static hashPasswordBeforeSave(

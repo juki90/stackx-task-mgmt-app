@@ -44,7 +44,7 @@ describe('USER UpdateController PUT /api/users/:id', () => {
         expect(body.roleId).toEqual(adminRole.id);
     });
 
-    it('returns OK updating user by ADMIN', async () => {
+    it('returns OK updating user by regular ADMIN', async () => {
         const {
             headers: { 'x-auth-token': jwt }
         } = await loginAs(request, ROLE_NAMES.ADMIN);

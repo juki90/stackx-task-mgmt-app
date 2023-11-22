@@ -8,6 +8,7 @@ import type {
     UpdateOptions,
     CreateOptions,
     InferAttributes,
+    FindAndCountOptions,
     InferCreationAttributes
 } from 'sequelize';
 
@@ -26,6 +27,9 @@ interface IAbstractRepository<
         options: UpdateOptions<Attributes<T>>
     ): Promise<[affectedCount: number]>;
     findAll(options?: FindOptions<T>): Promise<T[]>;
+    findAndCount(
+        options?: FindAndCountOptions<T>
+    ): Promise<{ rows: T[]; count: number }>;
     findOne(options: FindOptions<T>): Promise<T | null>;
     findById(id: string, options?: FindOptions<T>): Promise<T | null>;
 }

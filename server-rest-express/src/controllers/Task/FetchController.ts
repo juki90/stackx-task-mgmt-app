@@ -23,7 +23,7 @@ export class TaskFetchController implements ITaskFetchController {
     ): Promise<Response<Task[]>> {
         const { queryParams } = req;
 
-        const tasks = await this.taskRepository.findAll(queryParams);
+        const tasks = await this.taskRepository.findAndCount(queryParams);
 
         return res.json(tasks);
     }
