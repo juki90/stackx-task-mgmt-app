@@ -1,6 +1,6 @@
 export const en = {
     serverStartedOnPort: 'Server started on port',
-    internalServerError: 'An unknown error occured on our sever',
+    internalServerError: 'An unknown error occured on our server',
     loginSessionExpired: 'Login session expired, logging out',
     fixFormErrors: 'Fix forms errors',
     loggedOut: 'You are logged out',
@@ -17,6 +17,10 @@ export const en = {
     modifiedResourceNotFound:
         "The resource you are modifying doesn't exist anymore",
     notFoundShowing: 'The record you are looking for is not found',
+    successfullyCancelledTask: 'Successfully cancelled this task',
+    successfullyMarkedTaskAsDone: 'Task is successfully marked as done',
+    redirectBecauseOfForbiddenAction:
+        'Forbidden action for your role, redirecting...',
     validators: {
         shared: {
             fieldShouldBeString: 'Field should be of type string',

@@ -1,11 +1,11 @@
 import deepEqual from 'deep-equal';
 import toast from 'react-hot-toast';
 import { useTheme } from '@mui/material';
-import { useEffect, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useQueryClient } from '@tanstack/react-query';
 import { useForm, useController, Control } from 'react-hook-form';
+import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 
 import { selectFromStore } from '@/store';
 import { en as messages } from '@/locales';
@@ -25,10 +25,15 @@ import type {
     UserUpdateRequest
 } from '@/types';
 
-export const useCreateOrUpdateUser = (
-    userToUpdate: User | null | undefined,
-    handleCloseModal: () => void
-) => {
+export const useCreateOrUpdateUser = ({
+    user: userToUpdate,
+    isModalOpen,
+    setIsCreateOrUpdateModalOpen
+}: {
+    user: User | null | undefined;
+    isModalOpen: boolean;
+    setIsCreateOrUpdateModalOpen: Dispatch<SetStateAction<boolean>>;
+}) => {
     const defaultBlankValues = {
         firstName: '',
         lastName: '',
@@ -114,9 +119,8 @@ export const useCreateOrUpdateUser = (
 
     const {
         data: createOrUpdateData,
-        isError: createOrUpdateFailed,
-        isPending: createOrUpdatePending,
-        isSuccess: createOrUpdateSuccess,
+        isPending: isCreateOrUpdatePending,
+        isSuccess: isCreateOrUpdateSuccess,
         mutateAsync: saveUser,
         reset: resetCreateOrUpdateResponse
     } = useMutation({
@@ -164,7 +168,7 @@ export const useCreateOrUpdateUser = (
     };
 
     if (
-        ((!userToUpdate && !createOrUpdateSuccess) ||
+        ((!userToUpdate && !isCreateOrUpdateSuccess) ||
             (userToUpdate && checkIfFormValuesChanged())) &&
         isFormDirty &&
         isFormValid
@@ -172,12 +176,12 @@ export const useCreateOrUpdateUser = (
         saveButtonAttributes.backgroundColor = theme.palette.primary.light;
     }
 
-    if (createOrUpdatePending) {
+    if (isCreateOrUpdatePending) {
         saveButtonAttributes.message = userToUpdate ? 'Updating' : 'Creating';
         saveButtonAttributes.backgroundColor = theme.palette.grey[400];
     }
 
-    if (createOrUpdateSuccess && isFormValid && !otherResponseError) {
+    if (isCreateOrUpdateSuccess && isFormValid && !otherResponseError) {
         saveButtonAttributes.message = 'Success';
         saveButtonAttributes.backgroundColor = theme.palette.success.light;
     }
@@ -193,11 +197,19 @@ export const useCreateOrUpdateUser = (
         resetCreateOrUpdateResponse();
     };
 
+    const handleCloseModal = () => {
+        resetForm(userToUpdate ? defaultUserValues : defaultBlankValues);
+        setOtherResponseError('');
+        setIsCreateOrUpdateModalOpen(false);
+    };
+
     useEffect(() => {
-        if (userToUpdate) {
-            setValue('password', '');
+        if (userToUpdate && isPasswordCheckboxChecked) {
             clearErrors('password');
+            setValue('password', '');
         }
+
+        resetForm(getValues(), { keepDirty: true });
     }, [isPasswordCheckboxChecked]);
 
     useEffect(() => {
@@ -215,6 +227,10 @@ export const useCreateOrUpdateUser = (
         resetCreateOrUpdateResponse();
         resetForm(userToUpdate ? defaultUserValues : defaultBlankValues);
         setOtherResponseError('');
+
+        if (userToUpdate) {
+            setIsPasswordCheckboxChecked(true);
+        }
     }, [userToUpdate]);
 
     useEffect(() => {
@@ -226,7 +242,7 @@ export const useCreateOrUpdateUser = (
 
         if (
             createOrUpdateData &&
-            createOrUpdateSuccess &&
+            isCreateOrUpdateSuccess &&
             isFormValid &&
             !otherResponseError
         ) {
@@ -243,21 +259,21 @@ export const useCreateOrUpdateUser = (
         isFormValid,
         emailErrorMessage,
         otherResponseError,
-        createOrUpdateFailed,
         passwordErrorMessage,
         emailFieldController,
         lastNameErrorMessage,
         saveButtonAttributes,
         firstNameErrorMessage,
-        createOrUpdateSuccess,
-        createOrUpdatePending,
         isAdminFieldController,
+        isCreateOrUpdateSuccess,
+        isCreateOrUpdatePending,
         lastNameFieldController,
         passwordFieldController,
         firstNameFieldController,
         isPasswordCheckboxChecked,
         resetForm,
         handleSaveUser,
+        handleCloseModal,
         setOtherResponseError,
         checkIfFormValuesChanged,
         setIsPasswordCheckboxChecked

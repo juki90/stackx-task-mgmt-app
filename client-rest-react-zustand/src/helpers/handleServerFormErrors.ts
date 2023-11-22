@@ -13,6 +13,8 @@ import type {
     AuthLoginRequest,
     UserCreateRequest,
     UserUpdateRequest,
+    TaskCreateRequest,
+    TaskUpdateRequest,
     ResponseFormErrors
 } from '@/types';
 
@@ -21,7 +23,11 @@ export default (
     setFormError: UseFormSetError<
         AuthLoginRequest &
             UserCreateRequest &
-            UserUpdateRequest & { general?: string; other?: string }
+            UserUpdateRequest & {
+                general?: string;
+                other?: string;
+            } & TaskCreateRequest &
+            TaskUpdateRequest
     >,
     setOtherError: Dispatch<SetStateAction<string>>
 ) => {

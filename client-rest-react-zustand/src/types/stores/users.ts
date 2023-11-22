@@ -1,5 +1,4 @@
-import { User } from '@/types/models';
-import { PaginationInfo } from '@/types';
+import { User, PaginationInfo } from '@/types';
 
 interface UsersSlice {
     user: User | null;

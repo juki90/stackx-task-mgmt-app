@@ -7,33 +7,36 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { DATE_FORMAT } from '@/config/constants';
 import { FetchError } from '@/components/FetchError';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { UserDrawer } from '@/components/Users/UserDrawer';
-import { useUsersTable } from '@/hooks/users/useUsersTable';
+import { TaskDrawer } from '@/components/Tasks/TaskDrawer';
+import { useTasksTable } from '@/hooks/tasks/useTasksTable';
 import { SuspenseFallback } from '@/components/SuspenseFallback';
-import { CreateOrUpdateUser } from '@/components/Users/CreateOrUpdateUser';
+import { CreateOrUpdateTask } from '@/components/Tasks/CreateOrUpdateTask';
+import { UserPickerUsersListContext } from '@/context/UserPickerUsersList';
 
 import type { FC } from 'react';
 
-export const UsersTable: FC = () => {
+export const TasksTable: FC = () => {
     const {
-        users,
-        viewedUser,
+        tasks,
+        viewedTask,
         pagination,
-        usersFilter,
-        usersColumns,
-        isUsersRefetching,
+        tasksFilter,
+        tasksColumns,
+        isTasksRefetching,
+        userPickerUserList,
         isRefetchDisabled,
-        isResponseUsersFailed,
-        isResponseUsersPending,
-        isResponseUsersSuccess,
-        responseUsersUpdatedAt,
+        isResponseTasksFailed,
+        responseTasksUpdatedAt,
+        isResponseTasksPending,
+        isResponseTasksSuccess,
         isCreateOrUpdateModalOpen,
-        setUsersPage,
-        setViewedUser,
-        setUsersFilter,
-        handleRefetchUsers,
+        setTasksPage,
+        setViewedTask,
+        setTasksFilter,
+        handleRefetchTasks,
+        setUserPickerUserList,
         setIsCreateOrUpdateModalOpen
-    } = useUsersTable();
+    } = useTasksTable();
 
     return (
         <ErrorBoundary>
@@ -44,16 +47,14 @@ export const UsersTable: FC = () => {
                         variant="h5"
                         sx={{ marginBottom: '20px' }}
                     >
-                        Users table
+                        Tasks table
                     </Typography>
                     <Typography
                         component="p"
                         variant="body1"
                         sx={{ marginBottom: '30px' }}
                     >
-                        Below you can find all users and administrators. You
-                        can't edit or delete administrator who created your
-                        account.
+                        The table shows all tasks in the system.
                     </Typography>
                     <Box
                         sx={{
@@ -68,11 +69,11 @@ export const UsersTable: FC = () => {
                             label="Filter"
                             fullWidth
                             size="small"
-                            placeholder="Filter users by names and emails"
+                            placeholder="Filter tasks by names and emails"
                             inputProps={{
-                                value: usersFilter,
+                                value: tasksFilter,
                                 onChange: async e =>
-                                    setUsersFilter(
+                                    setTasksFilter(
                                         (e.target as HTMLInputElement).value
                                     )
                             }}
@@ -105,7 +106,7 @@ export const UsersTable: FC = () => {
                                     setIsCreateOrUpdateModalOpen(true)
                                 }
                             >
-                                Create&nbsp;User
+                                Create&nbsp;Task
                             </Button>
                             <Box
                                 sx={{
@@ -119,7 +120,7 @@ export const UsersTable: FC = () => {
                                 <Button
                                     size="medium"
                                     endIcon={<RefreshIcon />}
-                                    onClick={handleRefetchUsers}
+                                    onClick={handleRefetchTasks}
                                     disabled={isRefetchDisabled}
                                     sx={{ padding: '0 10px' }}
                                 >
@@ -137,17 +138,17 @@ export const UsersTable: FC = () => {
                                     Latest check at <br />
                                     <b>
                                         {dayjs(
-                                            responseUsersUpdatedAt || dayjs()
+                                            responseTasksUpdatedAt || dayjs()
                                         ).format(DATE_FORMAT)}
                                     </b>
                                 </small>
                             </Box>
                         </Box>
                     </Box>
-                    {isResponseUsersSuccess && !isUsersRefetching ? (
+                    {isResponseTasksSuccess && !isTasksRefetching ? (
                         <DataGrid
-                            rows={users || []}
-                            columns={usersColumns}
+                            rows={tasks || []}
+                            columns={tasksColumns}
                             hideFooterSelectedRowCount
                             disableColumnMenu
                             disableColumnFilter
@@ -157,7 +158,7 @@ export const UsersTable: FC = () => {
                             paginationMode="server"
                             autoHeight
                             localeText={{
-                                noRowsLabel: 'No users'
+                                noRowsLabel: 'No tasks'
                             }}
                             sx={{
                                 cursor: 'pointer !important',
@@ -180,35 +181,42 @@ export const UsersTable: FC = () => {
                                 page: pagination.index
                             }}
                             onPaginationModelChange={({ pageSize, page }) =>
-                                setUsersPage({ size: pageSize, index: page })
+                                setTasksPage({ size: pageSize, index: page })
                             }
-                            onRowClick={({ row }) => setViewedUser(row)}
+                            onRowClick={({ row }) => setViewedTask(row)}
                         />
                     ) : null}
-                    <UserDrawer
-                        viewedUserId={viewedUser?.id}
-                        setViewedUser={setViewedUser}
-                        setIsCreateOrUpdateModalOpen={
-                            setIsCreateOrUpdateModalOpen
-                        }
-                    />
-                    <CreateOrUpdateUser
-                        user={viewedUser}
-                        isModalOpen={isCreateOrUpdateModalOpen}
-                        setIsCreateOrUpdateModalOpen={
-                            setIsCreateOrUpdateModalOpen
-                        }
-                    />
+                    <UserPickerUsersListContext.Provider
+                        value={{
+                            userList: userPickerUserList,
+                            setUserList: setUserPickerUserList
+                        }}
+                    >
+                        <TaskDrawer
+                            viewedTaskId={viewedTask?.id}
+                            setViewedTask={setViewedTask}
+                            setIsCreateOrUpdateModalOpen={
+                                setIsCreateOrUpdateModalOpen
+                            }
+                        />
+                        <CreateOrUpdateTask
+                            task={viewedTask}
+                            isModalOpen={isCreateOrUpdateModalOpen}
+                            setIsCreateOrUpdateModalOpen={
+                                setIsCreateOrUpdateModalOpen
+                            }
+                        />
+                    </UserPickerUsersListContext.Provider>
                 </>
-                {isResponseUsersPending || isUsersRefetching ? (
-                    <SuspenseFallback size={50} message="Fetching users" />
+                {isResponseTasksPending || isTasksRefetching ? (
+                    <SuspenseFallback size={50} message="Fetching tasks" />
                 ) : null}
-                {isResponseUsersFailed &&
-                !isUsersRefetching &&
-                !isResponseUsersPending ? (
+                {isResponseTasksFailed &&
+                !isTasksRefetching &&
+                !isResponseTasksPending ? (
                     <FetchError
                         size={50}
-                        message="Fetching users failed. If this problem will persist, please contact administrator"
+                        message="Fetching tasks failed. If this problem will persist, please contact administrator"
                     />
                 ) : null}
             </Box>

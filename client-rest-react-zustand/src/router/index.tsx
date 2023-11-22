@@ -52,8 +52,9 @@ const loadOrRedirect = (role: string) => () => {
 };
 
 const LoginPage = lazy(() => import('@/pages/Login'));
-const UsersPage = lazy(() => import('@/pages/Users'));
 const DashboardPage = lazy(() => import('@/pages/Dashboard'));
+const UsersPage = lazy(() => import('@/pages/Users'));
+const TasksPage = lazy(() => import('@/pages/Tasks'));
 
 const withSuspense = (element: ReactNode) => (
     <Suspense
@@ -107,7 +108,7 @@ export const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <div>DefaultPAGE</div>,
+                element: withSuspense(<TasksPage />),
                 loader: loadOrRedirect(ROLES.ADMIN)
             }
         ]

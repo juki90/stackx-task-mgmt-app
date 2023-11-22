@@ -55,7 +55,12 @@ export class TaskCreateController implements ITaskCreateController {
             })
         );
         const users = await this.userRepository.findAll({
-            where: { id: { [Op.in]: taskPayloadUserIds } }
+            where: {
+                id: {
+                    [Op.in]: taskPayloadUserIds
+                },
+                deletedAt: { [Op.eq]: null }
+            }
         });
 
         if (users.length !== taskPayloadUserIds.length) {

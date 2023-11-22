@@ -5,10 +5,14 @@ type UserStatus = {
     doneAt: string;
 };
 
+type TaskUserStatusInfo = Pick<User, 'fullName' | 'id' | 'email'> & {
+    doneAt: string;
+};
+
 interface Task {
     id: string;
     title: string;
-    description: string;
+    description?: string;
     status: number;
     usersStatus: UserStatus[];
     createdAt: string;
@@ -18,4 +22,4 @@ interface Task {
     users: User[];
 }
 
-export type { Task };
+export type { Task, UserStatus, TaskUserStatusInfo };

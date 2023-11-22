@@ -11,7 +11,7 @@ const DashboardPage: FC = () => (
             <Box
                 sx={{
                     backgroundImage:
-                        'linear-gradient(45deg, #136 100px, #acf 300px);',
+                        'repeating-linear-gradient(45deg, #acf 0, #136 100px, #acf 200px);',
                     backgroundClip: 'text',
                     marginBottom: '20px'
                 }}
@@ -27,7 +27,6 @@ const DashboardPage: FC = () => (
                 >
                     Dashboard
                 </Typography>
-
                 <Typography component="p" variant="h6">
                     Your profile details and list of assigned tasks
                 </Typography>

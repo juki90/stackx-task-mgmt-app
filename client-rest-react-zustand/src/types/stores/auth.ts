@@ -5,7 +5,7 @@ interface AuthSlice {
     me: User | null;
     'loggedUser/set': () => void;
     'loggedUser/isAdmin': boolean | null;
-    'me/set': (user: User) => void;
+    'me/set': (user: User | null) => void;
 }
 
 export type { AuthSlice };

@@ -57,7 +57,9 @@ export const en = {
                 "You don't belong to this task, hence you can't change its status",
             onlyAdminCanCancelTask: 'Only administrators can cancel tasks',
             unsupportedStatusChange: 'Unsupported status change',
-            alreadyDone: 'This task is already done'
+            alreadyDone: 'This task is already done',
+            onlyPendingTaskCanReassingUsers:
+                'You can change assigned users only to tasks with PENDING status'
         }
     }
 };

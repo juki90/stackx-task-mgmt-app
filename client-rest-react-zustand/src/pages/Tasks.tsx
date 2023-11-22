@@ -1,6 +1,6 @@
 import { Box, Divider, Typography } from '@mui/material';
 
-import { UsersTable } from '@/components/Users/UsersTable';
+import { TasksTable } from '@/components/Tasks/TasksTable';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 import type { FC } from 'react';
@@ -25,15 +25,18 @@ const UsersPage: FC = () => (
                         marginBottom: '10px'
                     }}
                 >
-                    Users
+                    Tasks
                 </Typography>
 
                 <Typography component="p" variant="h6">
-                    Browse, create, update and delete regular users
+                    Browse, create, update and delete tasks. Tasks are
+                    assignable to every user in the system. They can be marked
+                    as done and will be listed as done by particular user. Each
+                    task can be also cancelled.
                 </Typography>
             </Box>
             <Divider />
-            <UsersTable />
+            <TasksTable />
         </Box>
     </ErrorBoundary>
 );

@@ -3,6 +3,7 @@ import PropTypes, { type Validator } from 'prop-types';
 import { Box, Button, Drawer, styled, Typography } from '@mui/material';
 
 import { DATE_FORMAT } from '@/config/constants';
+import { ConfirmDialog } from '@/components/ConfirmDialog';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 import type { FC, Dispatch, SetStateAction } from 'react';
@@ -10,7 +11,13 @@ import type { Task, IMyDashboardTaskDetails } from '@/types';
 
 export const MyDashboardTaskDetails: FC<IMyDashboardTaskDetails> = ({
     task,
-    setTask
+    formError,
+    otherError,
+    taskToMarkAsDone,
+    setTask,
+    setTaskToMarkAsDone,
+    handleMarkTaskAsDone,
+    handleCloseMarkAsDoneDialog
 }) => {
     const StyledButtonsBox = styled(Typography)(({ theme }) => ({
         display: 'flex',
@@ -62,15 +69,18 @@ export const MyDashboardTaskDetails: FC<IMyDashboardTaskDetails> = ({
                         <StyledButtonsBox
                             sx={{ display: 'flex', padding: '10px' }}
                         >
-                            <StyledButton
-                                sx={{
-                                    color: 'lightgreen',
-                                    backgroundColor: 'green'
-                                }}
-                                size="medium"
-                            >
-                                Mark as done
-                            </StyledButton>
+                            {task.status === 0 ? (
+                                <StyledButton
+                                    sx={{
+                                        color: 'lightgreen',
+                                        backgroundColor: 'green'
+                                    }}
+                                    size="medium"
+                                    onClick={() => setTaskToMarkAsDone(task)}
+                                >
+                                    Mark as done
+                                </StyledButton>
+                            ) : null}
                             <StyledButton
                                 sx={{
                                     color: 'white',
@@ -90,15 +100,23 @@ export const MyDashboardTaskDetails: FC<IMyDashboardTaskDetails> = ({
                         <StyledUserContentTitle>
                             Description
                         </StyledUserContentTitle>
-                        <StyledTaskContent>
+                        <StyledTaskContent sx={{ whiteSpace: 'pre' }}>
                             {task.description}
+                        </StyledTaskContent>
+                        <StyledUserContentTitle>Status</StyledUserContentTitle>
+                        <StyledTaskContent>
+                            {task.status === 0
+                                ? 'PENDING'
+                                : task.status === 1
+                                ? 'DONE'
+                                : 'CANCELLED'}
                         </StyledTaskContent>
                         <StyledUserContentTitle>
                             Users assigned / finished by
                         </StyledUserContentTitle>
                         <StyledTaskContent>
                             {
-                                task.usersStatus.filter(
+                                task.usersStatus?.filter(
                                     ({
                                         doneAt
                                     }: {
@@ -107,7 +125,7 @@ export const MyDashboardTaskDetails: FC<IMyDashboardTaskDetails> = ({
                                     }) => doneAt
                                 ).length
                             }
-                            /{task.usersStatus.length}
+                            /{task.usersStatus?.length}
                         </StyledTaskContent>
                         <StyledUserContentTitle>
                             Created at
@@ -125,6 +143,19 @@ export const MyDashboardTaskDetails: FC<IMyDashboardTaskDetails> = ({
                         <StyledTaskContent>{task.id}</StyledTaskContent>
                     </Box>
                 ) : null}
+                <ConfirmDialog
+                    title="Mark task as  done"
+                    description={`You are about to mark this task (${task?.title}) as done. This action is irreversible. Press CONFIRM to mark it as done.`}
+                    isDialogOpen={!!taskToMarkAsDone}
+                    errorMessage={formError || otherError}
+                    handleCloseDialog={handleCloseMarkAsDoneDialog}
+                    handleConfirm={() =>
+                        handleMarkTaskAsDone({
+                            id: taskToMarkAsDone?.id || '',
+                            status: 1
+                        })
+                    }
+                />
             </Drawer>
         </ErrorBoundary>
     );

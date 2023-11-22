@@ -9,7 +9,7 @@ import {
 } from 'inversify-express-utils';
 
 import { en as messages } from '@/locales';
-import { TASK_UPDATABLE_FIELDS } from '@/models/Task';
+import { TASK_STATUSES, TASK_UPDATABLE_FIELDS } from '@/models/Task';
 
 import type { Request, Response } from 'express';
 import type {
@@ -71,6 +71,17 @@ export class TaskUpdateController implements ITaskUpdateController {
 
         let newOrSameTaskUsersStatus: TaskUsersStatus = existingTaskUsersStatus;
 
+        if (
+            !isTaskPayloadAndExistingTaskUserIdsSame &&
+            existingTask.status !== TASK_STATUSES.PENDING
+        ) {
+            return res
+                .status(StatusCodes.BAD_REQUEST)
+                .send(
+                    messages.validators.tasks.onlyPendingTaskCanReassingUsers
+                );
+        }
+
         if (!isTaskPayloadAndExistingTaskUserIdsSame) {
             newOrSameTaskUsersStatus = [];
 
@@ -95,7 +106,10 @@ export class TaskUpdateController implements ITaskUpdateController {
             ({ userId }) => userId
         );
         const users = await this.userRepository.findAll({
-            where: { id: { [Op.in]: newOrSameUserIds } }
+            where: {
+                id: { [Op.in]: newOrSameUserIds },
+                deletedAt: { [Op.eq]: null }
+            }
         });
 
         if (users.length !== taskPayloadUserIds.length) {

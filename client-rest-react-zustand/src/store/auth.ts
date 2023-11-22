@@ -52,7 +52,7 @@ export const createAuthSlice: (
                     console.error(error);
 
                     toast.error(messages.invalidAccessToken);
-                    
+
                     localStorage.clear();
                 }
 
@@ -61,6 +61,6 @@ export const createAuthSlice: (
                     'loggedUser/isAdmin': loggedUser?.role?.name === ROLES.ADMIN
                 };
             }),
-        'me/set': me => set(() => ({ me }))
+        'me/set': (me: User | null) => set(() => ({ me }))
     };
 };

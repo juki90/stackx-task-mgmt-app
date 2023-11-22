@@ -28,15 +28,21 @@ const queryClient = new QueryClient({
     },
     queryCache: new QueryCache({
         onError: error => {
-            if (
-                error instanceof AxiosError &&
-                error?.response?.status === 401
-            ) {
-                toast.error(messages.loginSessionExpired);
-                queryClient.clear();
-                resetAllSlices();
-                localStorage.clear();
-                router.navigate(routes.login);
+            if (error instanceof AxiosError) {
+                const status = error?.response?.status;
+
+                if (status === 401) {
+                    toast.error(messages.loginSessionExpired);
+                    queryClient.clear();
+                    resetAllSlices();
+                    localStorage.clear();
+                    router.navigate(routes.login);
+                }
+
+                if (status === 403) {
+                    toast.error(messages.redirectBecauseOfForbiddenAction);
+                    router.navigate(routes.dashboard);
+                }
             }
         }
     })

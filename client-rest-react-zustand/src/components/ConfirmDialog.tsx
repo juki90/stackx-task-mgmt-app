@@ -1,14 +1,5 @@
 import PropTypes from 'prop-types';
-import {
-    Box,
-    Modal,
-    styled,
-    Button,
-    Checkbox,
-    TextField,
-    Typography,
-    CircularProgress
-} from '@mui/material';
+import { Box, Modal, Button, Typography } from '@mui/material';
 
 import type { FC } from 'react';
 import type { IConfirmDialog } from '@/types';
@@ -16,13 +7,13 @@ import type { IConfirmDialog } from '@/types';
 export const ConfirmDialog: FC<IConfirmDialog> = ({
     title,
     description,
-    isModalOpen,
+    isDialogOpen,
     errorMessage,
     handleConfirm,
-    handleCloseModal
+    handleCloseDialog
 }) => (
     <Modal
-        open={!!isModalOpen}
+        open={!!isDialogOpen}
         sx={{
             display: 'flex',
             alignItems: 'center',
@@ -62,7 +53,7 @@ export const ConfirmDialog: FC<IConfirmDialog> = ({
                 >
                     Confirm
                 </Button>
-                <Button variant="outlined" onClick={handleCloseModal}>
+                <Button variant="outlined" onClick={handleCloseDialog}>
                     Cancel
                 </Button>
             </Box>
@@ -77,9 +68,9 @@ export const ConfirmDialog: FC<IConfirmDialog> = ({
 
 ConfirmDialog.propTypes = {
     title: PropTypes.string.isRequired,
-    isModalOpen: PropTypes.bool.isRequired,
+    isDialogOpen: PropTypes.bool.isRequired,
     description: PropTypes.string.isRequired,
     errorMessage: PropTypes.string,
-    handleCloseModal: PropTypes.func.isRequired,
+    handleCloseDialog: PropTypes.func.isRequired,
     handleConfirm: PropTypes.func.isRequired
 };

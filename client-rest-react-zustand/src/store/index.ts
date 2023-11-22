@@ -2,6 +2,7 @@ import { create } from 'zustand';
 
 import { createAuthSlice } from '@/store/auth';
 import { createUsersSlice } from '@/store/users';
+import { createTasksSlice } from '@/store/tasks';
 
 import type { TSlice } from '@/types';
 
@@ -9,7 +10,8 @@ const resetSlicesFns: (() => void)[] = [];
 
 const useBoundStore = create<TSlice>((...args) => ({
     ...createAuthSlice(resetSlicesFns)(...args),
-    ...createUsersSlice(resetSlicesFns)(...args)
+    ...createUsersSlice(resetSlicesFns)(...args),
+    ...createTasksSlice(resetSlicesFns)(...args)
 }));
 
 const selectFromStore = (property: string) => {

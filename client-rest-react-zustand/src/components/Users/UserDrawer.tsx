@@ -10,7 +10,7 @@ import { DATE_FORMAT, ROLES } from '@/config/constants';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
 import { SuspenseFallback } from '@/components/SuspenseFallback';
-import { useShowOrDeleteUser } from '@/hooks/users/useShowOrDeleteUser';
+import { useUserDrawer } from '@/hooks/users/useUserDrawer';
 
 import type { IUserDrawer, User } from '@/types';
 import type { FC, Dispatch, SetStateAction } from 'react';
@@ -18,7 +18,7 @@ import type { FC, Dispatch, SetStateAction } from 'react';
 export const UserDrawer: FC<IUserDrawer> = ({
     viewedUserId,
     setViewedUser,
-    setIsUpdateModalOpen
+    setIsCreateOrUpdateModalOpen
 }) => {
     const {
         user,
@@ -35,9 +35,14 @@ export const UserDrawer: FC<IUserDrawer> = ({
         setUserToDelete,
         handleDeleteUser,
         handleRefetchUser,
-        setShowUserOtherErrorMessage,
-        setDeleteUserOtherErrorMessage
-    } = useShowOrDeleteUser(viewedUserId, setViewedUser);
+        handleCloseDrawer,
+        handleOpenUpdateModal,
+        handleCloseDeleteDialog
+    } = useUserDrawer({
+        viewedUserId,
+        setViewedUser,
+        setIsCreateOrUpdateModalOpen
+    });
 
     const StyledButtonsBox = styled(Typography)(({ theme }) => ({
         display: 'flex',
@@ -99,11 +104,7 @@ export const UserDrawer: FC<IUserDrawer> = ({
                                             backgroundColor: 'darkcyan'
                                         }}
                                         size="medium"
-                                        onClick={() => {
-                                            setShowUserOtherErrorMessage('');
-                                            setViewedUser(user);
-                                            setIsUpdateModalOpen();
-                                        }}
+                                        onClick={handleOpenUpdateModal}
                                     >
                                         Edit
                                     </StyledButton>
@@ -130,11 +131,7 @@ export const UserDrawer: FC<IUserDrawer> = ({
                                         marginLeft: 'auto'
                                     }}
                                     size="medium"
-                                    onClick={() => {
-                                        setViewedUser(null);
-                                        setShowUserOtherErrorMessage('');
-                                        setDeleteUserOtherErrorMessage('');
-                                    }}
+                                    onClick={handleCloseDrawer}
                                 >
                                     Close
                                 </StyledButton>
@@ -266,13 +263,10 @@ export const UserDrawer: FC<IUserDrawer> = ({
                         <ConfirmDialog
                             title="Delete user"
                             description={`You are about to delete user: ${userToDelete?.fullName} (${userToDelete?.email}). Click CONFIRM if you are confident to do it`}
-                            isModalOpen={!!userToDelete}
+                            isDialogOpen={!!userToDelete}
                             errorMessage={deleteUserOtherErrorMessage}
                             handleConfirm={handleDeleteUser}
-                            handleCloseModal={() => {
-                                setUserToDelete(null);
-                                setDeleteUserOtherErrorMessage('');
-                            }}
+                            handleCloseDialog={handleCloseDeleteDialog}
                         />
                     </>
                 ) : null}
@@ -299,5 +293,7 @@ UserDrawer.propTypes = {
     setViewedUser: PropTypes.func.isRequired as Validator<
         Dispatch<SetStateAction<User | null | undefined>>
     >,
-    setIsUpdateModalOpen: PropTypes.func.isRequired as Validator<() => void>
+    setIsCreateOrUpdateModalOpen: PropTypes.func.isRequired as Validator<
+        Dispatch<SetStateAction<boolean>>
+    >
 };

@@ -32,6 +32,7 @@ export const MyDashboard: FC = () => {
         viewedTask,
         taskColumns,
         dataUpdatedAt,
+        markAsDoneProps,
         isRefetchDisabled,
         setViewedTask,
         handleRefetch
@@ -144,6 +145,7 @@ export const MyDashboard: FC = () => {
                             onRowClick={({ row }) => setViewedTask(row)}
                         />
                         <MyDashboardTaskDetails
+                            {...markAsDoneProps}
                             task={viewedTask}
                             setTask={setViewedTask}
                         />

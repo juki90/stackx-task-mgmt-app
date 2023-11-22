@@ -11,7 +11,7 @@ export default [
     {
         field: 'status',
         headerName: 'Status',
-        width: 100,
+        width: 120,
         valueGetter: ({ row }: GridValueGetterParams) => {
             const statuses = ['CANCELLED', 'PENDING', 'DONE'];
 
@@ -23,11 +23,11 @@ export default [
         headerName: 'Done by',
         width: 100,
         valueGetter: ({ row }: GridValueGetterParams) => {
-            const numberOfUsersFinishedTask = row.usersStatus.filter(
+            const numberOfUsersFinishedTask = row?.usersStatus?.filter(
                 ({ doneAt }: { userId: string; doneAt: string }) => doneAt
             ).length;
 
-            return `${numberOfUsersFinishedTask}/${row.usersStatus.length}`;
+            return `${numberOfUsersFinishedTask}/${row?.usersStatus?.length}`;
         }
     },
     {

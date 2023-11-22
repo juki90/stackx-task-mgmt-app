@@ -12,15 +12,15 @@ import {
     CircularProgress
 } from '@mui/material';
 
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useCreateOrUpdateUser } from '@/hooks/users/useCreateOrUpdateUser';
 
 import type { User, ICreateOrUpdateUser } from '@/types';
-import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 export const CreateOrUpdateUser: FC<ICreateOrUpdateUser> = ({
     user,
     isModalOpen,
-    handleCloseModal
+    setIsCreateOrUpdateModalOpen
 }) => {
     const {
         theme,
@@ -33,19 +33,22 @@ export const CreateOrUpdateUser: FC<ICreateOrUpdateUser> = ({
         saveButtonAttributes,
         lastNameErrorMessage,
         firstNameErrorMessage,
-        createOrUpdateSuccess,
-        createOrUpdatePending,
         isAdminFieldController,
         lastNameFieldController,
+        isCreateOrUpdateSuccess,
+        isCreateOrUpdatePending,
         passwordFieldController,
         firstNameFieldController,
         isPasswordCheckboxChecked,
-        resetForm,
         handleSaveUser,
-        setOtherResponseError,
+        handleCloseModal,
         checkIfFormValuesChanged,
         setIsPasswordCheckboxChecked
-    } = useCreateOrUpdateUser(user, handleCloseModal);
+    } = useCreateOrUpdateUser({
+        user,
+        isModalOpen,
+        setIsCreateOrUpdateModalOpen
+    });
 
     const { StyledErrorText, StyledTextField } = useMemo(() => {
         const StyledErrorText = styled(Typography)(({ theme }) => ({
@@ -77,15 +80,21 @@ export const CreateOrUpdateUser: FC<ICreateOrUpdateUser> = ({
         <ErrorBoundary>
             <Modal
                 open={!!isModalOpen}
-                sx={{ display: 'flex', alignItems: 'center' }}
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}
             >
                 <Box
                     sx={{
-                        margin: '25px auto 15px auto',
+                        margin: '25px 10px 15px 10px',
                         padding: '35px 35px 50px 35px',
                         maxWidth: '500px',
                         borderRadius: '5px',
-                        backgroundColor: theme.palette.grey['200']
+                        backgroundColor: theme.palette.grey['200'],
+                        maxHeight: '95vh',
+                        overflowY: 'scroll'
                     }}
                 >
                     <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
@@ -104,11 +113,7 @@ export const CreateOrUpdateUser: FC<ICreateOrUpdateUser> = ({
                                 color: theme.palette.grey['800'],
                                 backgroundColor: theme.palette.grey['300']
                             }}
-                            onClick={() => {
-                                resetForm();
-                                handleCloseModal();
-                                setOtherResponseError('');
-                            }}
+                            onClick={handleCloseModal}
                         >
                             <ClearIcon />
                         </Button>
@@ -221,7 +226,7 @@ export const CreateOrUpdateUser: FC<ICreateOrUpdateUser> = ({
                             inputRef={passwordFieldController.field.ref}
                         />
                         {!(loggedUser as User)?.createdById &&
-                        (loggedUser as User).id !== user?.id ? (
+                        (loggedUser as User)?.id !== user?.id ? (
                             <Box
                                 sx={{
                                     display: 'flex',
@@ -269,8 +274,8 @@ export const CreateOrUpdateUser: FC<ICreateOrUpdateUser> = ({
                                         (!checkIfFormValuesChanged() ||
                                             !isFormValid)) ||
                                     (!user && !isFormValid) ||
-                                    createOrUpdatePending ||
-                                    createOrUpdateSuccess
+                                    isCreateOrUpdatePending ||
+                                    isCreateOrUpdateSuccess
                                 }
                                 sx={{
                                     display: 'flex',
@@ -282,7 +287,7 @@ export const CreateOrUpdateUser: FC<ICreateOrUpdateUser> = ({
                                 }}
                             >
                                 {saveButtonAttributes.message}
-                                {createOrUpdatePending ? (
+                                {isCreateOrUpdatePending ? (
                                     <CircularProgress
                                         size={20}
                                         sx={{ marginLeft: '20px' }}
@@ -306,5 +311,5 @@ export const CreateOrUpdateUser: FC<ICreateOrUpdateUser> = ({
 
 CreateOrUpdateUser.propTypes = {
     isModalOpen: PropTypes.bool.isRequired,
-    handleCloseModal: PropTypes.func.isRequired
+    setIsCreateOrUpdateModalOpen: PropTypes.func.isRequired
 };

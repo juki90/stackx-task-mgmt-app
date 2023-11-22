@@ -1,8 +1,8 @@
 export interface IConfirmDialog {
     title: string;
-    isModalOpen: boolean;
+    isDialogOpen: boolean;
     description: string;
     errorMessage?: string;
-    handleConfirm: () => Promise<void>;
-    handleCloseModal: () => void;
+    handleConfirm: () => Promise<void | unknown>;
+    handleCloseDialog: (() => void) | undefined;
 }

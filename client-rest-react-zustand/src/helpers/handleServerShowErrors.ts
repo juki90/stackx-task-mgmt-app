@@ -1,4 +1,5 @@
 import { AxiosError } from 'axios';
+import toast from 'react-hot-toast';
 
 import { en as messages } from '@/locales';
 import {
@@ -25,6 +26,8 @@ export default (
                 : messages.notFoundShowing;
 
             setOtherError(finalMessage);
+
+            toast.error(messages.notFoundShowing);
 
             return;
         }

@@ -1,11 +1,6 @@
 import toast from 'react-hot-toast';
-import { useEffect, useState } from 'react';
-import {
-    useQuery,
-    useMutation,
-    useQueryClient,
-    QueryClient
-} from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 
 import { selectFromStore } from '@/store';
 import { en as messages } from '@/locales';
@@ -21,10 +16,15 @@ import type {
     UserDeleteResponse
 } from '@/types';
 
-export const useShowOrDeleteUser = (
-    viewedUserId: string | null | undefined,
-    setViewedUser: (user: User | null) => void
-) => {
+export const useUserDrawer = ({
+    viewedUserId,
+    setViewedUser,
+    setIsCreateOrUpdateModalOpen
+}: {
+    viewedUserId: string | null | undefined;
+    setViewedUser: Dispatch<SetStateAction<User | null | undefined>>;
+    setIsCreateOrUpdateModalOpen: Dispatch<SetStateAction<boolean>>;
+}) => {
     const queryClient = useQueryClient();
     const [userToDelete, setUserToDelete] = useState<User | null>(null);
     const [isRefetchDisabled, setIsRefetchDisabled] = useState(false);
@@ -63,7 +63,6 @@ export const useShowOrDeleteUser = (
     });
 
     const {
-        data: deleteUserData,
         isError: isDeleteUserFailed,
         isPending: isDeleteUserPending,
         isSuccess: isDeleteUserSuccess,
@@ -85,8 +84,6 @@ export const useShowOrDeleteUser = (
             setViewedUser(null);
             setUserToDelete(null);
         } catch (error) {
-            console.log(error);
-
             setUsersInStore([]);
             setUserInStore(undefined);
             queryClient.invalidateQueries({ queryKey: ['users'] });
@@ -123,6 +120,23 @@ export const useShowOrDeleteUser = (
         }
     };
 
+    const handleOpenUpdateModal = () => {
+        setShowUserOtherErrorMessage('');
+        setViewedUser(user);
+        setIsCreateOrUpdateModalOpen(true);
+    };
+
+    const handleCloseDrawer = () => {
+        setViewedUser(null);
+        setShowUserOtherErrorMessage('');
+        setDeleteUserOtherErrorMessage('');
+    };
+
+    const handleCloseDeleteDialog = () => {
+        setUserToDelete(null);
+        setDeleteUserOtherErrorMessage('');
+    };
+
     useEffect(() => {
         if (isResponseUserFailed && responseUserError) {
             console.error(responseUserError);
@@ -155,8 +169,6 @@ export const useShowOrDeleteUser = (
 
     useEffect(() => {
         if (isDeleteUserSuccess) {
-            console.log(deleteUserData, isDeleteUserSuccess);
-
             setUserInStore(undefined);
             setUsersInStore([]);
             setUserPaginationInStore(undefined);
@@ -185,7 +197,8 @@ export const useShowOrDeleteUser = (
         setUserToDelete,
         handleDeleteUser,
         handleRefetchUser,
-        setShowUserOtherErrorMessage,
-        setDeleteUserOtherErrorMessage
+        handleCloseDrawer,
+        handleOpenUpdateModal,
+        handleCloseDeleteDialog
     };
 };
