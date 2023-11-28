@@ -17,13 +17,17 @@ export abstract class AbstractRepository<T extends { id: string }> {
         return this.repository.find(options);
     }
 
+    findAllAndCount(options: FindManyOptions<T> = {}): Promise<[T[], number]> {
+        return this.repository.findAndCount(options);
+    }
+
     findOne(options: FindOneOptions<T> = {}): Promise<T | null> {
         return this.repository.findOne(options);
     }
 
     findById(id: string, options: FindOneOptions<T> = {}): Promise<T | null> {
         const finalOptions = deepMerge(options, { where: { id } });
-
+        console.log({ finalOptions });
         return this.repository.findOne(finalOptions);
     }
 

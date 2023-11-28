@@ -18,16 +18,23 @@ export class UsersCreateService {
 
     async create(
         createUserInput: CreateUserInputDto,
-        loggerUser: User
+        loggedUser: User
     ): Promise<User> {
         const { isAdmin, email } = createUserInput;
 
         const userByEmail = await this.userRepository.findByEmail(email);
-
+        console.log({ userByEmail });
         if (userByEmail) {
             throw new UserInputError(
                 messages.validators.users.userWithThisEmailExists,
                 { field: 'email' }
+            );
+        }
+
+        if (loggedUser.createdBy && createUserInput.isAdmin) {
+            throw new UserInputError(
+                messages.validators.users.youCantCreateAdmin,
+                { field: 'general' }
             );
         }
 
@@ -42,7 +49,7 @@ export class UsersCreateService {
 
         let createdUser = await this.userRepository.create({
             ...createUserInput,
-            createdBy: loggerUser,
+            createdBy: loggedUser,
             role: isAdmin ? adminRole : userRole
         });
 

@@ -8,6 +8,7 @@ import { UserRepository } from '@/repositories/User';
 import { CreateTaskInputDto } from '@/dto/Task/CreateDto';
 
 import type { Task, User } from '@/graphql';
+import { TASK_STATUSES } from '@/entities/Task';
 
 @Injectable()
 export class TasksUpdateService {
@@ -40,6 +41,32 @@ export class TasksUpdateService {
             );
 
         let newOrSameTaskUsersStatus = existingTaskUsersStatus;
+
+        if (
+            areUserIdListsTheSame &&
+            [TASK_STATUSES.DONE, TASK_STATUSES.CANCELLED].includes(
+                existingTask.status
+            )
+        ) {
+            return this.taskRepository.update(id, {
+                title: updateTaskInput.title,
+                description: updateTaskInput.description,
+                usersStatus: newOrSameTaskUsersStatus,
+                updatedBy: loggedUser
+            });
+        }
+
+        if (
+            !areUserIdListsTheSame &&
+            [TASK_STATUSES.DONE, TASK_STATUSES.CANCELLED].includes(
+                existingTask.status
+            )
+        ) {
+            throw new UserInputError(
+                messages.validators.tasks.onlyPendingTaskCanReassingUsers,
+                { field: 'general' }
+            );
+        }
 
         if (!areUserIdListsTheSame) {
             newOrSameTaskUsersStatus = [];
@@ -84,6 +111,7 @@ export class TasksUpdateService {
             title: updateTaskInput.title,
             description: updateTaskInput.description,
             usersStatus: newOrSameTaskUsersStatus,
+            users,
             updatedBy: loggedUser
         });
     }

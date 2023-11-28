@@ -21,6 +21,11 @@ type UsersStatus {
     doneAt: Date
 }
 
+type TaskFetchOutput {
+    rows: [Task]!
+    count: Int!
+}
+
 input CreateTaskInput {
     title: String!
     description: String!
@@ -38,7 +43,7 @@ input ChangeTaskStatusInput {
 }
 
 type Query {
-    tasks(page: PageArg, filter: String): [Task]!
+    tasks(page: PageArg, filter: String): TaskFetchOutput!
     task(id: ID!): Task
 }
 

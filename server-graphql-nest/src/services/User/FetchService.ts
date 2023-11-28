@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Like, type FindManyOptions } from 'typeorm';
+import { Like, IsNull, FindOptionsWhere, type FindManyOptions } from 'typeorm';
 
 import { UserRepository } from '@/repositories/User';
 
@@ -9,8 +9,11 @@ import type { User, PageArg } from '@/graphql';
 export class UsersFetchService {
     constructor(private userRepository: UserRepository) {}
 
-    findAll({ size, index }: PageArg, filter: string): Promise<User[]> {
-        const options: FindManyOptions<User> = {};
+    async findAll(
+        { size, index }: PageArg,
+        filter: string
+    ): Promise<{ rows: User[]; count: number }> {
+        const options: FindManyOptions<User> = { where: [] };
 
         if (filter) {
             options.where = [
@@ -20,9 +23,18 @@ export class UsersFetchService {
             ];
         }
 
+        (options.where as FindOptionsWhere<User>[]).push({
+            deletedAt: IsNull()
+        });
         options.take = size;
         options.skip = size * index;
+        options.order = {
+            updatedAt: 'DESC'
+        };
 
-        return this.userRepository.findAll(options);
+        const [rows, count] =
+            await this.userRepository.findAllAndCount(options);
+
+        return { rows, count };
     }
 }

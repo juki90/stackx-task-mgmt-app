@@ -18,7 +18,8 @@ export class MeService {
                 tasks: true,
                 createdBy: true,
                 role: true
-            }
+            },
+            withDeleted: true
         });
     }
 }

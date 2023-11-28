@@ -12,7 +12,8 @@ export class TaskCreatedByFieldResolver {
     async getCreatedByOfTask(@Parent() task: Task): Promise<User> {
         const { createdBy } = await this.taskRepository.findOne({
             where: { id: task.id },
-            relations: { createdBy: true }
+            relations: { createdBy: true },
+            withDeleted: true
         });
 
         return createdBy;

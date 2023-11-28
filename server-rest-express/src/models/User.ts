@@ -7,7 +7,6 @@ import {
     Unique,
     Length,
     IsUUID,
-    IsEmail,
     Default,
     DataType,
     BelongsTo,

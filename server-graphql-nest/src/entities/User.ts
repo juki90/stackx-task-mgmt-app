@@ -11,6 +11,7 @@ import {
     BeforeUpdate,
     CreateDateColumn,
     UpdateDateColumn,
+    DeleteDateColumn,
     PrimaryGeneratedColumn
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
@@ -71,6 +72,12 @@ export class User implements GraphQlTypes.User {
 
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @DeleteDateColumn({
+        default: null,
+        nullable: true
+    })
+    deletedAt: Date;
 
     @BeforeInsert()
     @BeforeUpdate()
