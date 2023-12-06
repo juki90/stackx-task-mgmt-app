@@ -1,6 +1,5 @@
 import type { Task } from '@/types/models';
 import type { Dispatch, SetStateAction } from 'react';
-import type { UseMutateAsyncFunction } from '@tanstack/react-query';
 
 export interface IMyDashboardTaskDetails {
     task: Task | null;
@@ -8,12 +7,7 @@ export interface IMyDashboardTaskDetails {
     otherError?: string;
     taskToMarkAsDone?: Task | null;
     setTask: Dispatch<SetStateAction<Task | null>>;
-    handleMarkTaskAsDone: UseMutateAsyncFunction<
-        unknown,
-        Error,
-        string,
-        unknown
-    >;
+    handleMarkTaskAsDone: (id: string) => Promise<unknown>;
     setTaskToMarkAsDone: Dispatch<SetStateAction<Task | null>>;
     handleCloseMarkAsDoneDialog: () => void;
 }

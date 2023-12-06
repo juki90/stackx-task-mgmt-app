@@ -3,7 +3,7 @@ import { Autocomplete, TextField } from '@mui/material';
 import { useUserListPicker } from '@/hooks/useUserListPicker';
 
 import type { FC } from 'react';
-import type { TaskUserStatusInfo, IUserListPicker, User } from '@/types';
+import type { IUserListPicker } from '@/types';
 
 export const UserListPicker: FC<IUserListPicker> = ({ fieldController }) => {
     const {
