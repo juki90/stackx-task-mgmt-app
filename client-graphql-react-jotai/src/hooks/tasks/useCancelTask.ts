@@ -1,8 +1,9 @@
 import { useState } from 'react';
+import { useSetAtom } from 'jotai';
 import toast from 'react-hot-toast';
 import { useMutation } from '@apollo/client';
 
-import { selectFromStore } from '@/store';
+import { taskAtom, tasksAtom } from '@/atoms/tasks';
 import { en as messages } from '@/locales';
 import { TASKS_FETCH, TASK_CHANGE_STATUS, TASK_SHOW } from '@/graphql/tasks';
 import handleServerFormErrors from '@/helpers/handleServerFormErrors';
@@ -10,7 +11,6 @@ import handleServerFormErrors from '@/helpers/handleServerFormErrors';
 import type { ErrorOption } from 'react-hook-form';
 import type {
     Task,
-    TasksSlice,
     TaskChangeStatusRequest,
     TaskChangeStatusResponse
 } from '@/types';
@@ -20,12 +20,9 @@ export const useCancelTask = () => {
     const [formError, setFormError] = useState<string>('');
     const [otherError, setOtherError] = useState<string>('');
 
-    const setTaskInStore = selectFromStore(
-        'task/set'
-    ) as TasksSlice['task/set'];
-    const setTasksInStore = selectFromStore(
-        'tasks/set'
-    ) as TasksSlice['tasks/set'];
+    const setTaskInStore = useSetAtom(taskAtom);
+    const setTasksInStore = useSetAtom(tasksAtom);
+
     const setFormErrorSimple = (key: string, { message }: ErrorOption) =>
         setFormError(message || '');
 
@@ -46,7 +43,7 @@ export const useCancelTask = () => {
                 refetchQueries: [TASK_SHOW, TASKS_FETCH]
             });
 
-            setTaskInStore(undefined);
+            setTaskInStore(null);
             setTasksInStore([]);
             setTaskToCancel(undefined);
             toast.success(messages.successfullyCancelledTask);

@@ -1,4 +1,5 @@
 import deepEqual from 'deep-equal';
+import { useSetAtom } from 'jotai';
 import toast from 'react-hot-toast';
 import { useTheme } from '@mui/material';
 import { useMutation } from '@apollo/client';
@@ -12,9 +13,9 @@ import {
     type SetStateAction
 } from 'react';
 
-import { selectFromStore } from '@/store';
 import { en as messages } from '@/locales';
 import handleServerFormErrors from '@/helpers/handleServerFormErrors';
+import { taskAtom, taskPaginationAtom, tasksAtom } from '@/atoms/tasks';
 import { createOrUpdateTaskValidationSchema } from '@/validations/tasks';
 import { UserPickerUsersListContext } from '@/context/UserPickerUsersList';
 import mapTaskUsersToUsersStatusInfo from '@/utilities/mapTaskUsersToUsersStatusInfo';
@@ -27,7 +28,6 @@ import {
 
 import type {
     Task,
-    TasksSlice,
     TaskCreateRequest,
     TaskUpdateRequest,
     TaskUserStatusInfo
@@ -55,15 +55,9 @@ export const useCreateOrUpdateTask = ({
         description: taskToUpdate?.description,
         userIds: initialPickerUsers.map(({ id }) => id)
     };
-    const setTasksInStore = selectFromStore(
-        'tasks/set'
-    ) as TasksSlice['tasks/set'];
-    const setTaskInStore = selectFromStore(
-        'task/set'
-    ) as TasksSlice['task/set'];
-    const setTaskPaginationInStore = selectFromStore(
-        'taskPagination/set'
-    ) as TasksSlice['taskPagination/set'];
+    const setTasksInStore = useSetAtom(tasksAtom);
+    const setTaskInStore = useSetAtom(taskAtom);
+    const setTaskPaginationInStore = useSetAtom(taskPaginationAtom);
     const theme = useTheme();
     const [otherResponseError, setOtherResponseError] = useState<string>('');
     const {
@@ -219,8 +213,8 @@ export const useCreateOrUpdateTask = ({
 
     const handleUpdateCleanup = () => {
         setTasksInStore([]);
-        setTaskInStore(undefined);
-        setTaskPaginationInStore(undefined);
+        setTaskInStore(null);
+        setTaskPaginationInStore({ size: 10, index: 0, total: 0 });
         taskToUpdate ? resetUpdateTaskResponse() : resetCreateTaskResponse();
     };
 
@@ -252,7 +246,7 @@ export const useCreateOrUpdateTask = ({
     useEffect(() => {
         taskToUpdate ? resetUpdateTaskResponse() : resetCreateTaskResponse();
         resetForm(taskToUpdate ? defaultTaskValues : defaultBlankValues);
-        setTaskInStore(undefined);
+        setTaskInStore(null);
         setOtherResponseError('');
 
         if (!taskToUpdate && setUserPickerUserList) {

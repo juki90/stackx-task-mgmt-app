@@ -1,31 +1,32 @@
 import React from 'react';
-import { AxiosError } from 'axios';
 import ReactDOM from 'react-dom/client';
+import { Toaster } from 'react-hot-toast';
+import { purple } from '@mui/material/colors';
 import { ApolloProvider } from '@apollo/client';
-import toast, { Toaster } from 'react-hot-toast';
-import apolloClient from '@/plugins/apolloClient';
 import { RouterProvider } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@mui/material/styles';
 
-import { router, routes } from '@/router';
-import { en as messages } from '@/locales';
-import { resetAllSlices } from './store';
+import { Provider } from 'jotai';
+import { router } from '@/router';
+import apolloClient from '@/plugins/apolloClient';
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
 
-const theme = createTheme();
+const theme = createTheme({ palette: { primary: { main: purple[500] } } });
 
 root.render(
     <React.StrictMode>
         <CssBaseline />
         <ThemeProvider theme={theme}>
-            <ApolloProvider client={apolloClient}>
-                <RouterProvider router={router} />
-            </ApolloProvider>
+            <Provider>
+                <ApolloProvider client={apolloClient}>
+                    <RouterProvider router={router} />
+                </ApolloProvider>
+            </Provider>
         </ThemeProvider>
         <Toaster position="bottom-right" />
     </React.StrictMode>

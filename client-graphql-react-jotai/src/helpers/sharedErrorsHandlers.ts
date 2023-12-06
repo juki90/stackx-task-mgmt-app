@@ -1,9 +1,9 @@
-import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { ApolloError } from '@apollo/client';
 
 import { en as messages } from '@/locales';
 
+import type { GraphQLError } from 'graphql';
 import type { Dispatch, SetStateAction } from 'react';
 
 export const handleOtherErrors = (
@@ -53,5 +53,22 @@ export const handleUnknownError = (
         }
 
         toast.error(messages.internalServerError);
+    }
+};
+
+export const handleUnauthenticatedError = (error: ApolloError) => {
+    if (
+        error?.graphQLErrors?.find(
+            ({
+                code
+            }: GraphQLError & {
+                message?: string;
+                code?: string;
+            }) => code === 'UNAUTHENTICATED'
+        )
+    ) {
+        toast.error(messages.loginSessionExpired);
+
+        return true;
     }
 };

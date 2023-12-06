@@ -2,32 +2,29 @@ import deepEqual from 'deep-equal';
 import toast from 'react-hot-toast';
 import { useTheme } from '@mui/material';
 import { useMutation } from '@apollo/client';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm, useController, Control } from 'react-hook-form';
 import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 
-import { selectFromStore } from '@/store';
 import { en as messages } from '@/locales';
 import { ROLES } from '@/config/constants';
+import { loggedUserAtom } from '@/atoms/auth';
 import handleServerFormErrors from '@/helpers/handleServerFormErrors';
-import {
-    createUserValidationSchema,
-    updateUserNoPasswordValidationSchema,
-    updateUserWithPasswordValidationSchema
-} from '@/validations/users';
-
-import type {
-    User,
-    UsersSlice,
-    UserCreateRequest,
-    UserUpdateRequest
-} from '@/types';
+import { userAtom, userPaginationAtom, usersAtom } from '@/atoms/users';
 import {
     USERS_FETCH,
     USER_CREATE,
     USER_SHOW,
     USER_UPDATE
 } from '@/graphql/users';
+import {
+    createUserValidationSchema,
+    updateUserNoPasswordValidationSchema,
+    updateUserWithPasswordValidationSchema
+} from '@/validations/users';
+
+import type { User, UserCreateRequest, UserUpdateRequest } from '@/types';
 
 export const useCreateOrUpdateUser = ({
     user: userToUpdate,
@@ -51,16 +48,10 @@ export const useCreateOrUpdateUser = ({
         password: '',
         isAdmin: userToUpdate?.role?.name === ROLES.ADMIN
     };
-    const loggedUser = selectFromStore('loggedUser');
-    const setUsersInStore = selectFromStore(
-        'users/set'
-    ) as UsersSlice['users/set'];
-    const setUserInStore = selectFromStore(
-        'user/set'
-    ) as UsersSlice['user/set'];
-    const setUserPaginationInStore = selectFromStore(
-        'userPagination/set'
-    ) as UsersSlice['userPagination/set'];
+    const loggedUser = useAtomValue(loggedUserAtom);
+    const setUsersInStore = useSetAtom(usersAtom);
+    const setUserInStore = useSetAtom(userAtom);
+    const setUserPaginationInStore = useSetAtom(userPaginationAtom);
     const theme = useTheme();
     const [isPasswordCheckboxChecked, setIsPasswordCheckboxChecked] = useState(
         !userToUpdate
@@ -231,8 +222,8 @@ export const useCreateOrUpdateUser = ({
 
     const handleUpdateErrorCleanup = () => {
         setUsersInStore([]);
-        setUserInStore(undefined);
-        setUserPaginationInStore(undefined);
+        setUserInStore(null);
+        setUserPaginationInStore({ size: 10, index: 0, total: 0 });
         userToUpdate ? resetUpdateUserResponse() : resetCreateUserResponse();
     };
 

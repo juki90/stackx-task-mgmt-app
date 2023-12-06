@@ -8,13 +8,11 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 import type { FC, Dispatch, SetStateAction } from 'react';
 import type { Task, IMyDashboardTaskDetails } from '@/types';
-import { UserPropTypes } from '../Users/CreateOrUpdateUser';
 
 export const MyDashboardTaskDetails: FC<IMyDashboardTaskDetails> = ({
     task,
     formError,
     otherError,
-    loggedUser,
     taskToMarkAsDone,
     setTask,
     setTaskToMarkAsDone,
@@ -183,7 +181,6 @@ MyDashboardTaskDetails.propTypes = {
     setTask: PropTypes.func.isRequired as Validator<
         Dispatch<SetStateAction<Task | null>>
     >,
-    loggedUser: UserPropTypes,
     formError: PropTypes.string,
     otherError: PropTypes.string,
     taskToMarkAsDone: TaskPropTypes,

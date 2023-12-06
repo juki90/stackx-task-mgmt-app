@@ -9,17 +9,18 @@ import {
     useState
 } from 'react';
 
-import { selectFromStore } from '@/store';
 import { en as messages } from '@/locales';
 import { DATE_FORMAT } from '@/config/constants';
 import { useCancelTask } from '@/hooks/tasks/useCancelTask';
 import { TASKS_FETCH, TASK_DELETE, TASK_SHOW } from '@/graphql/tasks';
 import handleServerShowErrors from '@/helpers/handleServerShowErrors';
 import * as sharedErrorsHandlers from '@/helpers/sharedErrorsHandlers';
+import { taskAtom, tasksAtom, taskPaginationAtom } from '@/atoms/tasks';
 import { UserPickerUsersListContext } from '@/context/UserPickerUsersList';
 import mapTaskUsersToUsersStatusInfo from '@/utilities/mapTaskUsersToUsersStatusInfo';
 
-import type { User, Task, TasksSlice } from '@/types';
+import type { Task } from '@/types';
+import { useAtom, useSetAtom } from 'jotai';
 
 export const useTaskDrawer = ({
     viewedTaskId,
@@ -42,16 +43,10 @@ export const useTaskDrawer = ({
         useState('');
     const [deleteTaskOtherErrorMessage, setDeleteTaskOtherErrorMessage] =
         useState('');
-    const taskInStore = selectFromStore('task') as Task;
-    const setTaskInStore = selectFromStore(
-        'task/set'
-    ) as TasksSlice['task/set'];
-    const setTasksInStore = selectFromStore(
-        'tasks/set'
-    ) as TasksSlice['tasks/set'];
-    const setTaskPaginationInStore = selectFromStore(
-        'taskPagination/set'
-    ) as TasksSlice['taskPagination/set'];
+    const [taskInStore, setTaskInStore] = useAtom(taskAtom);
+    const setTasksInStore = useSetAtom(tasksAtom);
+    const setTaskPaginationInStore = useSetAtom(taskPaginationAtom);
+
     const taskId =
         taskInStore?.id !== viewedTaskId ? viewedTaskId : taskInStore?.id;
 
@@ -99,7 +94,7 @@ export const useTaskDrawer = ({
             setTaskToDelete(null);
         } catch (error) {
             setTasksInStore([]);
-            setTaskInStore(undefined);
+            setTaskInStore(null);
 
             sharedErrorsHandlers.handleOtherErrors(
                 error,
@@ -176,7 +171,7 @@ export const useTaskDrawer = ({
                 setShowTaskOtherErrorMessage
             );
 
-            setTaskInStore(undefined);
+            setTaskInStore(null);
         }
     }, [showStatus]);
 
@@ -193,9 +188,9 @@ export const useTaskDrawer = ({
 
     useEffect(() => {
         if (deleteTaskError) {
-            setTaskInStore(undefined);
+            setTaskInStore(null);
             setTasksInStore([]);
-            setTaskPaginationInStore(undefined);
+            setTaskPaginationInStore({ size: 10, index: 0, total: 0 });
 
             if (setUserPickerUserList) {
                 setUserPickerUserList([]);

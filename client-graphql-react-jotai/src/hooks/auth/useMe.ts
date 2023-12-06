@@ -1,32 +1,31 @@
 import dayjs from 'dayjs';
+import { useAtom } from 'jotai';
 import toast from 'react-hot-toast';
 import { useMemo, useState, useEffect } from 'react';
 import { useQuery, useMutation, NetworkStatus } from '@apollo/client';
 
 import { ME } from '@/graphql/auth';
-import { selectFromStore } from '@/store';
+import { meAtom } from '@/atoms/auth';
 import { en as messages } from '@/locales';
 import { DATE_FORMAT } from '@/config/constants';
 import taskColumns from '@/utilities/taskColumns';
 import { TASK_CHANGE_STATUS } from '@/graphql/tasks';
 import handleServerFormErrors from '@/helpers/handleServerFormErrors';
 
+import type { Task, User } from '@/types';
 import type { ErrorOption } from 'react-hook-form';
-import type { Task, User, AuthSlice } from '@/types';
 
 export const useMe = () => {
     const [formError, setFormError] = useState<string>('');
     const [otherError, setOtherError] = useState<string>('');
     const [taskToMarkAsDone, setTaskToMarkAsDone] = useState<Task | null>(null);
-    const meInStore = selectFromStore('me') as User | null;
-    const loggedUser = selectFromStore('loggedUser') as User | null;
-    const setMeInStore = selectFromStore('me/set') as AuthSlice['me/set'];
     const [viewedTask, setViewedTask] = useState<Task | null>(null);
     const [isRefetchDisabled, setIsRefetchDisabled] = useState(false);
     const [isRefetching, setIsRefetching] = useState(false);
     const [fetchedAt, setFetchedAt] = useState('');
     const setFormErrorSimple = (key: string, { message }: ErrorOption) =>
         setFormError(message || '');
+    const [meInStore, setMeInStore] = useAtom(meAtom);
 
     const {
         error,
@@ -38,7 +37,7 @@ export const useMe = () => {
         notifyOnNetworkStatusChange: true
     });
 
-    const me = (meInStore ? meInStore : responseMe) as User | null;
+    const me = (meInStore ? meInStore : responseMe?.me) as User | null;
 
     const [markAsDone, { reset: resetMarkTaskAsDoneResponse }] =
         useMutation(TASK_CHANGE_STATUS);
@@ -137,7 +136,6 @@ export const useMe = () => {
         fetchedAt,
         viewedTask,
         meDataRows,
-        loggedUser,
         fetchStatus,
         taskColumns,
         isRefetching,

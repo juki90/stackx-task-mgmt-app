@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Like, IsNull, FindOptionsWhere, type FindManyOptions } from 'typeorm';
+import { Like, type FindManyOptions } from 'typeorm';
 
 import { UserRepository } from '@/repositories/User';
 
@@ -13,7 +13,7 @@ export class UsersFetchService {
         { size, index }: PageArg,
         filter: string
     ): Promise<{ rows: User[]; count: number }> {
-        const options: FindManyOptions<User> = { where: [] };
+        const options: FindManyOptions<User> = {};
 
         if (filter) {
             options.where = [
@@ -23,9 +23,6 @@ export class UsersFetchService {
             ];
         }
 
-        (options.where as FindOptionsWhere<User>[]).push({
-            deletedAt: IsNull()
-        });
         options.take = size;
         options.skip = size * index;
         options.order = {

@@ -4,6 +4,7 @@ import { ApolloError } from '@apollo/client';
 import { en as messages } from '@/locales';
 import {
     handleOtherErrors,
+    handleUnauthenticatedError,
     handleUnknownError
 } from '@/helpers/sharedErrorsHandlers';
 
@@ -17,6 +18,10 @@ export default (
     console.error(error);
 
     if (error instanceof ApolloError) {
+        if (handleUnauthenticatedError(error)) {
+            return;
+        }
+
         const notFoundError = error?.graphQLErrors?.find(
             ({
                 message,

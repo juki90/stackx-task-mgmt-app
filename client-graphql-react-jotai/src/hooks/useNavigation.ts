@@ -1,12 +1,13 @@
 import { useState } from 'react';
+import { useAtomValue } from 'jotai';
 import { useNavigate } from 'react-router-dom';
 
-import { selectFromStore } from '@/store';
+import { loggedUserIsAdminAtom } from '@/atoms/auth';
 
 export const useNavigation = () => {
     const [navRef, setNavRef] = useState<null | HTMLElement>(null);
     const navigate = useNavigate();
-    const isLoggedUserAdmin = selectFromStore('loggedUser/isAdmin');
+    const isLoggedUserAdmin = useAtomValue(loggedUserIsAdminAtom);
     const isNavigationOpen = Boolean(navRef);
 
     const handleNavigationClick = (

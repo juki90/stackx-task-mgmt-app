@@ -27,7 +27,7 @@ export abstract class AbstractRepository<T extends { id: string }> {
 
     findById(id: string, options: FindOneOptions<T> = {}): Promise<T | null> {
         const finalOptions = deepMerge(options, { where: { id } });
-        console.log({ finalOptions });
+
         return this.repository.findOne(finalOptions);
     }
 

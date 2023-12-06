@@ -5,7 +5,8 @@ import { GraphQLError } from 'graphql/error';
 import { en as messages } from '@/locales';
 import {
     handleOtherErrors,
-    handleUnknownError
+    handleUnknownError,
+    handleUnauthenticatedError
 } from '@/helpers/sharedErrorsHandlers';
 
 import type { Dispatch, SetStateAction } from 'react';
@@ -34,6 +35,10 @@ export default (
     console.error(error);
 
     if (error instanceof ApolloError) {
+        if (handleUnauthenticatedError(error)) {
+            return;
+        }
+
         const errorContainingFormErrors = error?.graphQLErrors?.find(
             error => 'formErrors' in error
         ) as GraphQLError & {

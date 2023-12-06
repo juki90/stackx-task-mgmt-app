@@ -22,8 +22,10 @@ export class UsersCreateService {
     ): Promise<User> {
         const { isAdmin, email } = createUserInput;
 
-        const userByEmail = await this.userRepository.findByEmail(email);
-        console.log({ userByEmail });
+        const userByEmail = await this.userRepository.findByEmail(email, {
+            withDeleted: true
+        });
+
         if (userByEmail) {
             throw new UserInputError(
                 messages.validators.users.userWithThisEmailExists,

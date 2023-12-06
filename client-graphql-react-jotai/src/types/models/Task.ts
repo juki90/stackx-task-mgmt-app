@@ -1,4 +1,4 @@
-import { User } from '@/types/models';
+import type { User } from '@/types/models';
 
 type UserStatus = {
     userId: string;
@@ -9,7 +9,7 @@ type TaskUserStatusInfo = Pick<User, 'fullName' | 'id' | 'email'> & {
     doneAt: string;
 };
 
-interface Task {
+type Task = {
     id: string;
     title: string;
     description?: string;
@@ -20,6 +20,6 @@ interface Task {
     createdBy: User;
     updatedBy?: User;
     users: User[];
-}
+};
 
 export type { Task, UserStatus, TaskUserStatusInfo };

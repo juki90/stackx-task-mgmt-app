@@ -1,16 +1,18 @@
+import dayjs from 'dayjs';
 import toast from 'react-hot-toast';
+import { useAtom, useSetAtom, useAtomValue } from 'jotai';
 import { useQuery, useMutation, NetworkStatus } from '@apollo/client';
 import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 
-import { selectFromStore } from '@/store';
 import { en as messages } from '@/locales';
-import handleServerShowErrors from '@/helpers/handleServerShowErrors';
-import * as sharedErrorsHandlers from '@/helpers/sharedErrorsHandlers';
-
-import type { User, AuthSlice, UsersSlice } from '@/types';
-import { USERS_FETCH, USER_DELETE, USER_SHOW } from '@/graphql/users';
+import { loggedUserAtom } from '@/atoms/auth';
 import { DATE_FORMAT } from '@/config/constants';
-import dayjs from 'dayjs';
+import handleServerShowErrors from '@/helpers/handleServerShowErrors';
+import { USERS_FETCH, USER_DELETE, USER_SHOW } from '@/graphql/users';
+import * as sharedErrorsHandlers from '@/helpers/sharedErrorsHandlers';
+import { userAtom, userPaginationAtom, usersAtom } from '@/atoms/users';
+
+import type { User } from '@/types';
 
 export const useUserDrawer = ({
     viewedUserId,
@@ -29,17 +31,10 @@ export const useUserDrawer = ({
         useState('');
     const [deleteUserOtherErrorMessage, setDeleteUserOtherErrorMessage] =
         useState('');
-    const userInStore = selectFromStore('user') as User;
-    const setUserInStore = selectFromStore(
-        'user/set'
-    ) as UsersSlice['user/set'];
-    const setUsersInStore = selectFromStore(
-        'users/set'
-    ) as UsersSlice['users/set'];
-    const setUserPaginationInStore = selectFromStore(
-        'userPagination/set'
-    ) as UsersSlice['userPagination/set'];
-    const loggedUser = selectFromStore('loggedUser') as AuthSlice['loggedUser'];
+    const [userInStore, setUserInStore] = useAtom(userAtom);
+    const setUsersInStore = useSetAtom(usersAtom);
+    const setUserPaginationInStore = useSetAtom(userPaginationAtom);
+    const loggedUser = useAtomValue(loggedUserAtom);
     const userId =
         userInStore?.id !== viewedUserId ? viewedUserId : userInStore?.id;
 
@@ -72,7 +67,7 @@ export const useUserDrawer = ({
             setUserToDelete(null);
         } catch (error) {
             setUsersInStore([]);
-            setUserInStore(undefined);
+            setUserInStore(null);
 
             sharedErrorsHandlers.handleOtherErrors(
                 error,
@@ -138,7 +133,7 @@ export const useUserDrawer = ({
                 setShowUserOtherErrorMessage
             );
 
-            setUserInStore(undefined);
+            setUserInStore(null);
         }
     }, [showStatus]);
 
@@ -155,9 +150,9 @@ export const useUserDrawer = ({
 
     useEffect(() => {
         if (deleteUserData && !deleteUserError) {
-            setUserInStore(undefined);
+            setUserInStore(null);
             setUsersInStore([]);
-            setUserPaginationInStore(undefined);
+            setUserPaginationInStore({ size: 10, index: 0, total: 0 });
 
             toast.success(messages.successfullyDeleted);
         }

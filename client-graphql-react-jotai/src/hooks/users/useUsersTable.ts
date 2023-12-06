@@ -1,28 +1,22 @@
 import dayjs from 'dayjs';
+import { useAtom } from 'jotai';
 import toast from 'react-hot-toast';
 import { useState, useEffect } from 'react';
 import { NetworkStatus, useQuery } from '@apollo/client';
 
-import { selectFromStore } from '@/store';
 import { en as messages } from '@/locales';
 import { USERS_FETCH } from '@/graphql/users';
 import { DATE_FORMAT } from '@/config/constants';
 import { useDebounce } from '@/hooks/useDebounce';
+import { userPaginationAtom, usersAtom } from '@/atoms/users';
 
+import type { User } from '@/types';
 import type { GridValueGetterParams } from '@mui/x-data-grid';
-import type { User, UsersSlice, PaginationInfo } from '@/types';
 
 export const useUsersTable = () => {
-    const usersInStore = selectFromStore('users') as User[];
-    const paginationInStore = selectFromStore(
-        'userPagination'
-    ) as PaginationInfo;
-    const setUserPaginationInStore = selectFromStore(
-        'userPagination/set'
-    ) as UsersSlice['userPagination/set'];
-    const setUsersInStore = selectFromStore(
-        'users/set'
-    ) as UsersSlice['users/set'];
+    const [usersInStore, setUsersInStore] = useAtom(usersAtom);
+    const [paginationInStore, setUserPaginationInStore] =
+        useAtom(userPaginationAtom);
     const [isRefetching, setIsRefetching] = useState(false);
     const [viewedUser, setViewedUser] = useState<User | null | undefined>(null);
     const [usersPage, setUsersPage] = useState(

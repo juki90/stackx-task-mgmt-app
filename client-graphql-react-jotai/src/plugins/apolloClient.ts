@@ -63,7 +63,6 @@ const errorLink = onError(({ graphQLErrors }) => {
             ({ code }) => code === 'UNAUTHENTICATED'
         )
     ) {
-        // Jotai clear
         localStorage.clear();
         apolloClient.clearStore();
         window.location.href = routes.login;

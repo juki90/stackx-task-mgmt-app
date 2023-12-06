@@ -1,3 +1,4 @@
+import { useSetAtom } from 'jotai';
 import toast from 'react-hot-toast';
 import { useTheme } from '@mui/material';
 import { useEffect, useState } from 'react';
@@ -8,12 +9,12 @@ import { useForm, useController } from 'react-hook-form';
 
 import { routes } from '@/router';
 import { LOGIN } from '@/graphql/auth';
-import { selectFromStore } from '@/store';
 import { en as messages } from '@/locales';
 import { loginValidationSchema } from '@/validations/auth/login';
 import handleServerFormErrors from '@/helpers/handleServerFormErrors';
+import { loggedUserAtom, readLoggedUserFromAccessToken } from '@/atoms/auth';
 
-import type { AuthSlice, AuthLoginRequest } from '@/types';
+import type { AuthLoginRequest } from '@/types';
 
 export const useLogin = () => {
     const theme = useTheme();
@@ -31,6 +32,7 @@ export const useLogin = () => {
         reValidateMode: 'onChange',
         resolver: yupResolver(loginValidationSchema)
     });
+    const setLoggedUser = useSetAtom(loggedUserAtom);
 
     const emailFieldController = useController({
         control,
@@ -86,10 +88,6 @@ export const useLogin = () => {
         loginButtonAttributes.backgroundColor = theme.palette.success.light;
     }
 
-    const setLoggedUser = selectFromStore(
-        'loggedUser/set'
-    ) as AuthSlice['loggedUser/set'];
-
     useEffect(() => {
         if (otherResponseError) {
             setOtherResponseError('');
@@ -105,7 +103,7 @@ export const useLogin = () => {
         }
 
         if (loginResponseData && !otherResponseError) {
-            setLoggedUser();
+            setLoggedUser(readLoggedUserFromAccessToken());
             toast.success(messages.successfullyLoggedIn);
             const timeout = setTimeout(() => navigate(routes.dashboard), 500);
 

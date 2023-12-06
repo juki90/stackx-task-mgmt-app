@@ -26,7 +26,6 @@ export const MyDashboard: FC = () => {
     const {
         me,
         fetchedAt,
-        loggedUser,
         meDataRows,
         viewedTask,
         fetchStatus,
@@ -145,7 +144,6 @@ export const MyDashboard: FC = () => {
                         <MyDashboardTaskDetails
                             {...markAsDoneProps}
                             task={viewedTask}
-                            loggedUser={loggedUser}
                             setTask={setViewedTask}
                         />
                     </>

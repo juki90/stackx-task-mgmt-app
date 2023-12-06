@@ -4,7 +4,6 @@ import type { UseMutateAsyncFunction } from '@tanstack/react-query';
 
 export interface IMyDashboardTaskDetails {
     task: Task | null;
-    loggedUser: User | null;
     formError?: string;
     otherError?: string;
     taskToMarkAsDone?: Task | null;

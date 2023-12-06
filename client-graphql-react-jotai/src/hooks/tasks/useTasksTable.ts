@@ -1,33 +1,22 @@
 import dayjs from 'dayjs';
+import { useAtom } from 'jotai';
 import toast from 'react-hot-toast';
 import { useEffect, useState } from 'react';
 import { useQuery, NetworkStatus } from '@apollo/client';
 
-import { selectFromStore } from '@/store';
 import { en as messages } from '@/locales';
 import { TASKS_FETCH } from '@/graphql/tasks';
 import { DATE_FORMAT } from '@/config/constants';
 import { useDebounce } from '@/hooks/useDebounce';
 import tasksColumns from '@/utilities/taskColumns';
+import { tasksAtom, taskPaginationAtom } from '@/atoms/tasks';
 
-import type {
-    Task,
-    TasksSlice,
-    PaginationInfo,
-    TaskUserStatusInfo
-} from '@/types';
+import type { Task, TaskUserStatusInfo } from '@/types';
 
 export const useTasksTable = () => {
-    const tasksInStore = selectFromStore('tasks') as Task[];
-    const paginationInStore = selectFromStore(
-        'taskPagination'
-    ) as PaginationInfo;
-    const setTaskPaginationInStore = selectFromStore(
-        'taskPagination/set'
-    ) as TasksSlice['taskPagination/set'];
-    const setTasksInStore = selectFromStore(
-        'tasks/set'
-    ) as TasksSlice['tasks/set'];
+    const [tasksInStore, setTasksInStore] = useAtom(tasksAtom);
+    const [paginationInStore, setTaskPaginationInStore] =
+        useAtom(taskPaginationAtom);
     const [userPickerUserList, setUserPickerUserList] = useState<
         TaskUserStatusInfo[]
     >([]);
