@@ -132,7 +132,7 @@ export const MyDashboard: FC = () => {
                                         outline: 'none'
                                     },
                                 '& .MuiDataGrid-columnHeaders': {
-                                    backgroundColor: '#fdf'
+                                    backgroundColor: '#edf'
                                 }
                             }}
                             localeText={{

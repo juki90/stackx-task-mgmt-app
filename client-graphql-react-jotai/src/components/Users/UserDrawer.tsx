@@ -216,7 +216,7 @@ export const UserDrawer: FC<IUserDrawer> = ({
                                             outline: 'none'
                                         },
                                     '& .MuiDataGrid-columnHeaders': {
-                                        backgroundColor: '#fdf'
+                                        backgroundColor: '#edf'
                                     },
                                     '& .MuiDataGrid-overlay, & .MuiDataGrid-overlayWrapperInner, & .MuiDataGrid-overlayWrapper, & .MuiDataGrid-virtualScroller':
                                         {

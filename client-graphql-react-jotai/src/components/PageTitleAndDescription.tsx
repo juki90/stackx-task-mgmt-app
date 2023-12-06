@@ -11,7 +11,7 @@ export const PageTitleAndDescription: FC<IPageTitleAndDescription> = ({
     <Box
         sx={{
             backgroundImage:
-                'repeating-linear-gradient(45deg, #d5f 0, #92a 50px, #d5f 100px);',
+                'repeating-linear-gradient(45deg, #d5f 0, #85a 50px, #d5f 100px);',
             backgroundClip: 'text',
             marginBottom: '20px'
         }}

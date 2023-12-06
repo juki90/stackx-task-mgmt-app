@@ -83,6 +83,7 @@ export const useUserDrawer = ({
 
             setViewedUser(null);
             setUserToDelete(null);
+            toast.success(messages.successfullyDeleted);
         } catch (error) {
             setUsersInStore([]);
             setUserInStore(undefined);

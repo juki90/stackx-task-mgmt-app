@@ -52,9 +52,10 @@ Apart from that, directory names in this repository have explicit structure: <br
 
 ### Client technologies table
 
-| Client                    | API Design | Framework (lib) | Component library | State Mgmt | API data loading | Forms           | Test types (basic coverage) |
-| ------------------------- | ---------- | --------------- | ----------------- | ---------- | ---------------- | --------------- | --------------------------- |
-| client-rest-react-zustand | REST API   | React v18       | Material UI v5    | Zustand    | React Query      | react-hook-form | -                           |
+| Client                     | API Design | Framework (lib) | Component library | State Mgmt | API data loading | Forms           | Test types (basic coverage) |
+| -------------------------- | ---------- | --------------- | ----------------- | ---------- | ---------------- | --------------- | --------------------------- |
+| client-rest-react-zustand  | REST API   | React v18       | Material UI v5    | Zustand    | React Query      | react-hook-form | -                           |
+| client-graphql-react-jotai | GraphQL    | React v18       | Material UI v5    | Jotai      | Apollo Client    | react-hook-form | -                           |
 
 ## Installation, deploying and running tests
 

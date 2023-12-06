@@ -164,7 +164,7 @@ export const TasksTable: FC = () => {
                                         outline: 'none'
                                     },
                                 '& .MuiDataGrid-columnHeaders': {
-                                    backgroundColor: '#fdf'
+                                    backgroundColor: '#edf'
                                 },
                                 '& .MuiDataGrid-iconButtonContainer': {
                                     display: 'none'

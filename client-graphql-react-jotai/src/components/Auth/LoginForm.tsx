@@ -61,7 +61,7 @@ export const LoginForm: FC = () => {
                     margin: `${theme.spacing(2)} auto 0 auto`,
                     padding: theme.spacing(4),
                     borderRadius: `${theme.shape.borderRadius}px`,
-                    backgroundColor: 'rgba(30, 80, 115, 1)'
+                    backgroundColor: 'rgba(80, 30, 100, 1)'
                 }}
             >
                 <Typography
