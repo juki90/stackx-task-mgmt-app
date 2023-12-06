@@ -45,7 +45,7 @@ export const Header: FC = () => {
                             color="inherit"
                             component="div"
                         >
-                            StackX App
+                            StackX
                         </Typography>
 
                         <Box

@@ -326,13 +326,15 @@ describe('mutation UpdateUser > updateUser(updateUserInput: {firstName,lastName,
                 updateUserInputData: generatedUser
             }
         });
+        console.log({ errors: JSON.stringify(errors, null, 4) });
 
         expect(errors).toHaveLength(1);
-        expect(errors[0].message).toEqual(
+
+        const formError = findFieldErrorMessage(errors, 'general');
+
+        expect(formError).toEqual(
             messages.validators.users.notUpdatableUserByYou
         );
-        expect('code' in errors[0]).toBeTruthy();
-        expect('code' in errors[0] && errors[0].code).toEqual('BAD_USER_INPUT');
         expect(responseJwt).toBeDefined();
     });
 

@@ -226,7 +226,7 @@ export const TaskDrawer: FC<ITaskDrawer> = ({
                                             outline: 'none'
                                         },
                                     '& .MuiDataGrid-columnHeaders': {
-                                        backgroundColor: '#def'
+                                        backgroundColor: '#fdf'
                                     }
                                 }}
                                 localeText={{

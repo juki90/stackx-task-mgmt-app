@@ -10,37 +10,43 @@ describe('query Users > users(page: {size,index}, filter)', () => {
     const gqlSchemaUsers = ` 
         query Users($pageData: PageArg!, $filterData: String) {
             users(page: $pageData, filter: $filterData) {
-                id
-                firstName
-                lastName
-                fullName
-                email
-                createdAt
-                updatedAt
+                rows {
+                    id
+                    firstName
+                    lastName
+                    fullName
+                    email
+                    createdAt
+                    updatedAt
+                }
+                count
             }
         }
     `;
     const gqlSchemaUsersWithRelations = ` 
         query Users($pageData: PageArg!, $filterData: String) {
             users(page: $pageData, filter: $filterData) {
-                id
-                firstName
-                lastName
-                fullName
-                email
-                createdAt
-                updatedAt
-                role {
+                rows {
                     id
-                    name
-                }
-                createdBy {
-                    id
+                    firstName
+                    lastName
+                    fullName
                     email
+                    createdAt
+                    updatedAt
+                    role {
+                        id
+                        name
+                    }
+                    createdBy {
+                        id
+                        email
+                    }
+                    tasks {
+                        id
+                    }
                 }
-                tasks {
-                    id
-                }
+                count
             }
         }
     `;
@@ -64,7 +70,9 @@ describe('query Users > users(page: {size,index}, filter)', () => {
         } = await loginAs(ROLE_NAMES.ADMIN);
 
         const {
-            data: { users },
+            data: {
+                users: { rows: users, count }
+            },
             response: {
                 header: { 'x-auth-token': responseJwt }
             }
@@ -77,9 +85,12 @@ describe('query Users > users(page: {size,index}, filter)', () => {
                     index: 0
                 }
             }
-        })) as SuperTestExecutionResult<{ users: User[] }>;
+        })) as SuperTestExecutionResult<{
+            users: { rows: User[]; count: number };
+        }>;
 
         expect(users).toHaveLength(4);
+        expect(count).toEqual(4);
 
         users.forEach(user => {
             const userInDb = usersInDb.find(({ id }) => user.id === id);
@@ -106,7 +117,9 @@ describe('query Users > users(page: {size,index}, filter)', () => {
         } = await loginAs(ROLE_NAMES.ADMIN);
 
         const {
-            data: { users },
+            data: {
+                users: { rows: users, count }
+            },
             response: {
                 header: { 'x-auth-token': responseJwt }
             }
@@ -119,9 +132,12 @@ describe('query Users > users(page: {size,index}, filter)', () => {
                     index: 1
                 }
             }
-        })) as SuperTestExecutionResult<{ users: User[] }>;
+        })) as SuperTestExecutionResult<{
+            users: { rows: User[]; count: number };
+        }>;
 
         expect(users).toHaveLength(0);
+        expect(count).toEqual(4);
         expect(responseJwt).toBeDefined();
     });
 
@@ -133,7 +149,9 @@ describe('query Users > users(page: {size,index}, filter)', () => {
         } = await loginAs(ROLE_NAMES.ADMIN);
 
         const {
-            data: { users },
+            data: {
+                users: { rows: users, count }
+            },
             response: {
                 header: { 'x-auth-token': responseJwt }
             }
@@ -147,11 +165,14 @@ describe('query Users > users(page: {size,index}, filter)', () => {
                 },
                 filterData: 'editable.user'
             }
-        })) as SuperTestExecutionResult<{ users: User[] }>;
+        })) as SuperTestExecutionResult<{
+            users: { rows: User[]; count: number };
+        }>;
 
         const { editableUser } = seederData;
 
         expect(users).toHaveLength(1);
+        expect(count).toEqual(1);
 
         const [user] = users;
 
@@ -177,7 +198,9 @@ describe('query Users > users(page: {size,index}, filter)', () => {
         } = await loginAs(ROLE_NAMES.ADMIN);
 
         const {
-            data: { users },
+            data: {
+                users: { rows: users, count }
+            },
             response: {
                 header: { 'x-auth-token': responseJwt }
             }
@@ -190,9 +213,12 @@ describe('query Users > users(page: {size,index}, filter)', () => {
                     index: 0
                 }
             }
-        })) as SuperTestExecutionResult<{ users: User[] }>;
+        })) as SuperTestExecutionResult<{
+            users: { rows: User[]; count: number };
+        }>;
 
         expect(users).toHaveLength(4);
+        expect(count).toEqual(4);
 
         users.forEach(user => {
             const userInDb = usersInDb.find(({ id }) => user.id === id);

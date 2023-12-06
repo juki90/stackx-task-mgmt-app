@@ -1,4 +1,4 @@
-# StackX Task Management App Client: REST API / React.js/Zustand edition
+# StackX Task Management App Client: REST API / React.js/Jotai edition
 
 ## Prerequisities
 
@@ -12,7 +12,7 @@
 Copy **.env.example** file and rename it to **.env** file. Adjust some variables if needed, though default should work on clean environment:
 
 ```
-REACT_APP_SERVER_API_URL=http://localhost:8080/api
+REACT_APP_SERVER_API_URL=http://localhost:8080/graphql
 PORT=3000
 ```
 

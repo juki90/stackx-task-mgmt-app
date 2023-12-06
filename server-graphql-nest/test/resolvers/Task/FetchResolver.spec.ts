@@ -11,41 +11,47 @@ describe('query Tasks > tasks(page: {size,index}, filter)', () => {
     const gqlSchemaTasks = ` 
         query Tasks($pageData: PageArg!, $filterData: String) {
             tasks(page: $pageData, filter: $filterData) {
-                id
-                title
-                description
-                usersStatus {
-                    userId
+                rows {
+                    id
+                    title
+                    description
+                    usersStatus {
+                        userId
+                    }
+                    status
+                    createdAt
+                    updatedAt
                 }
-                status
-                createdAt
-                updatedAt
+                count
             }
         }
     `;
     const gqlSchemaTasksWithRelations = ` 
         query Tasks($pageData: PageArg!, $filterData: String) {
             tasks(page: $pageData, filter: $filterData) {
-                id
-                title
-                description
-                usersStatus {
-                    userId
-                }
-                status
-                createdAt
-                updatedAt
-                createdBy {
+               rows {
                     id
-                    email
-                }
-                updatedBy {
-                    id
-                    email
-                }
-                users {
-                    id
-                }
+                    title
+                    description
+                    usersStatus {
+                        userId
+                    }
+                    status
+                    createdAt
+                    updatedAt
+                    createdBy {
+                        id
+                        email
+                    }
+                    updatedBy {
+                        id
+                        email
+                    }
+                    users {
+                        id
+                    }
+               }
+               count
             }
         }
     `;
@@ -72,7 +78,9 @@ describe('query Tasks > tasks(page: {size,index}, filter)', () => {
         } = await loginAs(ROLE_NAMES.ADMIN);
 
         const {
-            data: { tasks },
+            data: {
+                tasks: { rows: tasks, count }
+            },
             response: {
                 header: { 'x-auth-token': responseJwt }
             }
@@ -85,9 +93,12 @@ describe('query Tasks > tasks(page: {size,index}, filter)', () => {
                     index: 0
                 }
             }
-        })) as SuperTestExecutionResult<{ tasks: Task[] }>;
+        })) as SuperTestExecutionResult<{
+            tasks: { rows: Task[]; count: number };
+        }>;
 
         expect(tasks).toHaveLength(2);
+        expect(count).toEqual(2);
 
         tasks.forEach(task => {
             const taskInDb = tasksInDb.find(({ id }) => task.id === id);
@@ -114,7 +125,9 @@ describe('query Tasks > tasks(page: {size,index}, filter)', () => {
         } = await loginAs(ROLE_NAMES.ADMIN);
 
         const {
-            data: { tasks },
+            data: {
+                tasks: { rows: tasks, count }
+            },
             response: {
                 header: { 'x-auth-token': responseJwt }
             }
@@ -127,9 +140,12 @@ describe('query Tasks > tasks(page: {size,index}, filter)', () => {
                     index: 1
                 }
             }
-        })) as SuperTestExecutionResult<{ tasks: Task[] }>;
+        })) as SuperTestExecutionResult<{
+            tasks: { rows: Task[]; count: number };
+        }>;
 
         expect(tasks).toHaveLength(0);
+        expect(count).toEqual(2);
         expect(responseJwt).toBeDefined();
     });
 
@@ -142,7 +158,9 @@ describe('query Tasks > tasks(page: {size,index}, filter)', () => {
         } = await loginAs(ROLE_NAMES.ADMIN);
 
         const {
-            data: { tasks },
+            data: {
+                tasks: { rows: tasks, count }
+            },
             response: {
                 header: { 'x-auth-token': responseJwt }
             }
@@ -156,11 +174,14 @@ describe('query Tasks > tasks(page: {size,index}, filter)', () => {
                 },
                 filterData: 'findable'
             }
-        })) as SuperTestExecutionResult<{ tasks: Task[] }>;
+        })) as SuperTestExecutionResult<{
+            tasks: { rows: Task[]; count: number };
+        }>;
 
         const [, findableTask] = tasksInDb;
 
         expect(tasks).toHaveLength(1);
+        expect(count).toEqual(1);
 
         const [task] = tasks;
 
@@ -187,7 +208,9 @@ describe('query Tasks > tasks(page: {size,index}, filter)', () => {
         } = await loginAs(ROLE_NAMES.ADMIN);
 
         const {
-            data: { tasks },
+            data: {
+                tasks: { rows: tasks, count }
+            },
             response: {
                 header: { 'x-auth-token': responseJwt }
             }
@@ -200,9 +223,12 @@ describe('query Tasks > tasks(page: {size,index}, filter)', () => {
                     index: 0
                 }
             }
-        })) as SuperTestExecutionResult<{ tasks: Task[] }>;
+        })) as SuperTestExecutionResult<{
+            tasks: { rows: Task[]; count: number };
+        }>;
 
         expect(tasks).toHaveLength(2);
+        expect(count).toEqual(2);
 
         await taskRepository.update(tasks[1].id, {
             updatedBy: editableAdmin

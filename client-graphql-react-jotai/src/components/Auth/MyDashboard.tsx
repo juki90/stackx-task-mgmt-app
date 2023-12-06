@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import {
     Box,
     Card,
@@ -133,7 +132,7 @@ export const MyDashboard: FC = () => {
                                         outline: 'none'
                                     },
                                 '& .MuiDataGrid-columnHeaders': {
-                                    backgroundColor: '#def'
+                                    backgroundColor: '#fdf'
                                 }
                             }}
                             localeText={{

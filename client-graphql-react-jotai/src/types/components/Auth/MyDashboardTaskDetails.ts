@@ -1,4 +1,4 @@
-import type { Task, User } from '@/types/models';
+import type { Task } from '@/types/models';
 import type { Dispatch, SetStateAction } from 'react';
 import type { UseMutateAsyncFunction } from '@tanstack/react-query';
 

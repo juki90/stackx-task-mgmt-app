@@ -88,8 +88,10 @@ export const UsersTable: FC = () => {
                             }}
                         >
                             <Button
-                                color="info"
-                                endIcon={<AddCircleOutlineIcon />}
+                                color="primary"
+                                endIcon={
+                                    <AddCircleOutlineIcon color="primary" />
+                                }
                                 sx={{
                                     fontWeight: 'bold',
                                     marginBottom: '15px',
@@ -165,7 +167,7 @@ export const UsersTable: FC = () => {
                                         outline: 'none'
                                     },
                                 '& .MuiDataGrid-columnHeaders': {
-                                    backgroundColor: '#bdf'
+                                    backgroundColor: '#fdf'
                                 },
                                 '& .MuiDataGrid-iconButtonContainer': {
                                     display: 'none'
