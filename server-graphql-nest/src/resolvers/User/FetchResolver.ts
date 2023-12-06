@@ -18,7 +18,7 @@ export class UsersFetchResolver {
         @Args('page') page: PageArgsInputDto,
 
         @Args('filter') filter: string
-    ): Promise<User[]> {
+    ): Promise<{ rows: User[]; count: number }> {
         return this.usersFetchService.findAll(page, filter);
     }
 }

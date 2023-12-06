@@ -4,7 +4,6 @@ const ROLES = {
 };
 
 const REACT_QUERY = {
-    // staleTime: 5 * 60 * 1000,
     retry: false
 };
 

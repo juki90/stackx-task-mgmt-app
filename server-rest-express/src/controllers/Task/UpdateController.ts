@@ -72,6 +72,30 @@ export class TaskUpdateController implements ITaskUpdateController {
         let newOrSameTaskUsersStatus: TaskUsersStatus = existingTaskUsersStatus;
 
         if (
+            isTaskPayloadAndExistingTaskUserIdsSame &&
+            existingTask.status !== TASK_STATUSES.PENDING
+        ) {
+            const t = await this.sequelize.transaction();
+
+            try {
+                existingTask.setUpdatedBy(loggedUser);
+
+                const taskToSend = await existingTask.update(
+                    { ...taskPayload, usersStatus: newOrSameTaskUsersStatus },
+                    { fields: TASK_UPDATABLE_FIELDS }
+                );
+
+                await t.commit();
+
+                return res.json(taskToSend);
+            } catch (error) {
+                await t.rollback();
+
+                throw error;
+            }
+        }
+
+        if (
             !isTaskPayloadAndExistingTaskUserIdsSame &&
             existingTask.status !== TASK_STATUSES.PENDING
         ) {

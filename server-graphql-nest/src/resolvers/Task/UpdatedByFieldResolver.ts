@@ -12,7 +12,8 @@ export class TaskUpdatedByFieldResolver {
     async getUpdatedByOfTask(@Parent() task: Task): Promise<User> {
         const { updatedBy } = await this.taskRepository.findOne({
             where: { id: task.id },
-            relations: { updatedBy: true }
+            relations: { updatedBy: true },
+            withDeleted: true
         });
 
         return updatedBy;

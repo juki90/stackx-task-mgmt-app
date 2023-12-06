@@ -12,6 +12,7 @@ export class TaskUsersFieldResolver {
     fetchUsersOfTask(@Parent() task: Task): Promise<User[]> {
         return this.userRepository
             .createQueryBuilder('user')
+            .withDeleted()
             .innerJoin('user.tasks', 'tasks', 'tasks.id = :taskId', {
                 taskId: task.id
             })

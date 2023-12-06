@@ -41,21 +41,22 @@ This app is written to manage tasks and users by administrators (users with 'adm
 Generally, the app utilizes Typescript, Postgres, DI container (on the sever side only), some of the tests (not in every server or client) and JWT authentication for login.
 
 Apart from that, directory names in this repository have explicit structure: <br /><br />For Node servers: <br />**server**-**\<rest-api-or-alternative\>**-**\<nodejs-framework\>**.
-<br /><br />For React clients: <br />**server**-**\<rest-api-or-alternative\>**-**\<nodejs-framework\>**.
+<br /><br />For React clients: <br />**client**-**\<rest-api-or-alternative\>**-**\<react\>**-**\<react-state-mgmt\>**.
 
 ### Server technologies table
 
-| Server              | API Design             | Framework  | Test types | Databases | ORM/ODM   | Dependency inj. |
-| ------------------- | ---------------------- | ---------- | ---------- | --------- | --------- | --------------- |
-| server-rest-express | REST API               | Express.js | Functional | Postgres  | Sequelize | InverisfyJS     |
-| server-graphql-nest | GraphQL (Schema first) | Nest.js    | Functional | Postgres  | TypeORM   | (internal)      |
+| Server              | API Design             | Framework  | Test types (basic coverage) | Databases | ORM/ODM   | Dependency inj. |
+| ------------------- | ---------------------- | ---------- | --------------------------- | --------- | --------- | --------------- |
+| server-rest-express | REST API               | Express.js | Functional                  | Postgres  | Sequelize | InverisfyJS     |
+| server-graphql-nest | GraphQL (Schema first) | Nest.js    | Functional                  | Postgres  | TypeORM   | (built-in)      |
 
 ### Client technologies table
 
-| Client                    | Framework (lib) | API Design | Component library | State Mgmt | API data loading | Forms           | Test types |
-| ------------------------- | --------------- | ---------- | ----------------- | ---------- | ---------------- | --------------- | ---------- |
-| client-rest-react-zustand | React v18       | REST API   | Material UI v5    | Zustand    | React Query      | react-hook-form | -          |
+| Client                     | API Design | Framework (lib) | Component library | State Mgmt | API data loading | Forms           | Test types (basic coverage) |
+| -------------------------- | ---------- | --------------- | ----------------- | ---------- | ---------------- | --------------- | --------------------------- |
+| client-rest-react-zustand  | REST API   | React v18       | Material UI v5    | Zustand    | React Query      | react-hook-form | -                           |
+| client-graphql-react-jotai | GraphQL    | React v18       | Material UI v5    | Jotai      | Apollo Client    | react-hook-form | -                           |
 
 ## Installation, deploying and running tests
 
-For every **client-\*** and **server-\*** directory conjunction, the app is able to run only with the same REST API alternative (REST API, GraphQL or tRPC). For example directories starting with **server-rest-** and **client-rest-** only then will work together.
+For every **client-\*** and **server-\*** directory conjunction, the app is able to run only with the same REST API alternative (REST API, GraphQL or tRPC). For example directories starting with **server-rest-** and **client-rest-** only will work together.

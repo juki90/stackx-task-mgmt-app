@@ -22,6 +22,7 @@ export class JwtGuard implements CanActivate {
 
         const { refreshedToken, loggedUser } = verification;
 
+        req.res.setHeader('Access-Control-Expose-Headers', 'X-Auth-Token');
         req.res.setHeader('X-Auth-Token', refreshedToken);
         req.loggedUser = loggedUser;
 

@@ -24,7 +24,7 @@ export class UsersUpdateService {
         const { isAdmin } = updateUserInput;
         const [userByEmail, userToUpdate] = await Promise.all([
             this.userRepository.findByEmail(updateUserInput.email),
-            this.userRepository.findById(id)
+            this.userRepository.findById(id, { relations: { role: true } })
         ]);
 
         if (!userToUpdate) {
@@ -52,9 +52,20 @@ export class UsersUpdateService {
                 })
             ]);
 
-        if (loggedUserCreatedBy?.id === userToUpdate.id) {
+        if (
+            loggedUserCreatedBy &&
+            userToUpdate.role.name === ROLE_NAMES.ADMIN
+        ) {
             throw new UserInputError(
-                messages.validators.users.notUpdatableUserByYou
+                messages.validators.users.notUpdatableUserByYou,
+                { field: 'general' }
+            );
+        }
+
+        if (loggedUserCreatedBy && isAdmin) {
+            throw new UserInputError(
+                messages.validators.users.cantAssignUserAdminRole,
+                { field: 'email' }
             );
         }
 

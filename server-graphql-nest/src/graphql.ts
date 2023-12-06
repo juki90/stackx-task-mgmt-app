@@ -52,9 +52,9 @@ export class UpdateUserInput {
 
 export abstract class IQuery {
     me: User;
-    tasks?: Nullable<Task>[];
+    tasks?: TaskFetchOutput;
     task?: Nullable<Task>;
-    users?: Nullable<User>[];
+    users?: UserFetchOutput;
     user?: Nullable<User>;
 }
 
@@ -94,6 +94,11 @@ export class UsersStatus {
     doneAt?: Nullable<Date>;
 }
 
+export class TaskFetchOutput {
+    rows: Nullable<Task>[];
+    count: number;
+}
+
 export class User {
     id: string;
     firstName: string;
@@ -105,6 +110,12 @@ export class User {
     tasks?: Nullable<Task[]>;
     createdAt?: Nullable<Date>;
     updatedAt?: Nullable<Date>;
+    deletedAt?: Nullable<Date>;
+}
+
+export class UserFetchOutput {
+    rows: Nullable<User>[];
+    count: number;
 }
 
 type Nullable<T> = T | null;

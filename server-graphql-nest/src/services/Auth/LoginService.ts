@@ -26,7 +26,8 @@ export class LoginService {
         const { email, password } = loginInput;
 
         const userToCheck = await this.userRepository.findByEmail(email, {
-            select: { password: true }
+            select: { password: true },
+            where: { deletedAt: null }
         });
 
         if (!userToCheck) {
@@ -43,10 +44,11 @@ export class LoginService {
         }
 
         const userToSend = await this.userRepository.findByEmail(email, {
-            relations: { role: true }
+            relations: { role: true, createdBy: true }
         });
         const authHeader = await this.jwtAuth.sign(userToSend);
 
+        res.setHeader('Access-Control-Expose-Headers', 'X-Auth-Token');
         res.setHeader('X-Auth-Token', authHeader);
 
         return userToSend;

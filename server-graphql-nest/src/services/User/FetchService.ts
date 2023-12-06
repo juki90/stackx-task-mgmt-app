@@ -9,7 +9,10 @@ import type { User, PageArg } from '@/graphql';
 export class UsersFetchService {
     constructor(private userRepository: UserRepository) {}
 
-    findAll({ size, index }: PageArg, filter: string): Promise<User[]> {
+    async findAll(
+        { size, index }: PageArg,
+        filter: string
+    ): Promise<{ rows: User[]; count: number }> {
         const options: FindManyOptions<User> = {};
 
         if (filter) {
@@ -22,7 +25,13 @@ export class UsersFetchService {
 
         options.take = size;
         options.skip = size * index;
+        options.order = {
+            updatedAt: 'DESC'
+        };
 
-        return this.userRepository.findAll(options);
+        const [rows, count] =
+            await this.userRepository.findAllAndCount(options);
+
+        return { rows, count };
     }
 }

@@ -37,6 +37,8 @@ export class UsersDeleteService {
             );
         }
 
-        return this.userRepository.delete(userToDelete.id);
+        return this.userRepository.update(userToDelete.id, {
+            deletedAt: new Date()
+        });
     }
 }

@@ -14,6 +14,12 @@ type User {
     tasks: [Task!]
     createdAt: Date
     updatedAt: Date
+    deletedAt: Date
+}
+
+type UserFetchOutput {
+    rows: [User]!
+    count: Int!
 }
 
 input CreateUserInput {
@@ -33,7 +39,7 @@ input UpdateUserInput {
 }
 
 type Query {
-    users(page: PageArg, filter: String): [User]!
+    users(page: PageArg, filter: String): UserFetchOutput!
     user(id: ID!): User
 }
 

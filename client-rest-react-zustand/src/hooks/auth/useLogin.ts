@@ -58,6 +58,7 @@ export const useLogin = () => {
                 return await authLogin(loginData);
             } catch (error) {
                 handleServerFormErrors(error, setError, setOtherResponseError);
+
                 return error;
             }
         }

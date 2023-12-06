@@ -35,7 +35,10 @@ export class JwtAuthService {
             const decodedToken = await this.jwtService.verifyAsync(token);
             const verifiedUser = await this.userRepository.findById(
                 decodedToken.id,
-                { relations: { role: true } }
+                {
+                    relations: { role: true, createdBy: true },
+                    where: { deletedAt: null }
+                }
             );
 
             if (!verifiedUser) {

@@ -9,7 +9,10 @@ import type { PageArg, Task } from '@/graphql';
 export class TasksFetchService {
     constructor(private taskRepository: TaskRepository) {}
 
-    findAll({ size, index }: PageArg, filter: string): Promise<Task[]> {
+    async findAll(
+        { size, index }: PageArg,
+        filter: string
+    ): Promise<{ rows: Task[]; count: number }> {
         const options: FindManyOptions<Task> = {};
 
         if (filter) {
@@ -21,7 +24,13 @@ export class TasksFetchService {
 
         options.take = size;
         options.skip = size * index;
+        options.order = {
+            updatedAt: 'DESC'
+        };
 
-        return this.taskRepository.findAll(options);
+        const [rows, count] =
+            await this.taskRepository.findAllAndCount(options);
+
+        return { rows, count };
     }
 }

@@ -18,7 +18,7 @@ export class TasksFetchResolver {
         @Args('page') page: PageArgsInputDto,
 
         @Args('filter') filter: string
-    ): Promise<Task[]> {
+    ): Promise<{ rows: Task[]; count: number }> {
         return this.tasksFetchService.findAll(page, filter);
     }
 }

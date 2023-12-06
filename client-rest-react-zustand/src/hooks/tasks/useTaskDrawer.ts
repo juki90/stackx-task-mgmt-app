@@ -136,6 +136,7 @@ export const useTaskDrawer = ({
 
             setViewedTask(null);
             setTaskToDelete(null);
+            toast.success(messages.successfullyDeleted);
         } catch (error) {
             setTasksInStore([]);
             setTaskInStore(undefined);
