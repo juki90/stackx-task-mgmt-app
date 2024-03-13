@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_URL")
+}
+
+model Role {
+  id        String   @id @default(uuid())
+  name      String
+  users     User[]   @relation(name: "role")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model User {
+  id              String       @id   @default(uuid())
+  firstName       String
+  lastName        String
+  password        String
+  email           String       @unique
+  createdById     String?    
+  createdBy       User?        @relation(name: "userCreatedBy", fields: [createdById], references: [id])  
+  creatorOf       User[]       @relation("userCreatedBy")
+  roleId          String    
+  role            Role         @relation(name: "role", fields: [roleId], references: [id])  
+  tasks           Task[]
+  createdTasks    Task[]       @relation(name: "taskCreatedBy")
+  updatedTasks    Task[]       @relation(name: "taskUpdatedBy")
+  deletedAt       DateTime? 
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @default(now())
+
+  @@index(fields: [email])
+}
+
+model Task {
+  id           String     @id @default(uuid())
+  title        String
+  description  String?
+  status       Int   
+  usersStatus  Json   
+  createdById  String    
+  createdBy    User       @relation(name: "taskCreatedBy", fields: [createdById], references: [id])  
+  updatedById  String?   
+  updatedBy    User?      @relation(name: "taskUpdatedBy", fields: [updatedById], references: [id])  
+  users        User[] 
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @default(now())
+}
