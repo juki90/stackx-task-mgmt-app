@@ -1,4 +1,7 @@
 import dayjs from 'dayjs';
+import { observer } from 'mobx-react';
+import { DataGrid } from '@mui/x-data-grid';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import {
     Box,
     Card,
@@ -10,8 +13,6 @@ import {
     Typography,
     TableContainer
 } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
-import RefreshIcon from '@mui/icons-material/Refresh';
 
 import { useMe } from '@/hooks/auth/useMe';
 import { DATE_FORMAT } from '@/config/constants';
@@ -22,7 +23,7 @@ import { MyDashboardTaskDetails } from '@/components/Auth/MyDashboardTaskDetails
 
 import type { FC } from 'react';
 
-export const MyDashboard: FC = () => {
+export const MyDashboard: FC = observer(() => {
     const {
         me,
         isError,
@@ -136,7 +137,7 @@ export const MyDashboard: FC = () => {
                                         outline: 'none'
                                     },
                                 '& .MuiDataGrid-columnHeaders': {
-                                    backgroundColor: '#def'
+                                    backgroundColor: '#dfe'
                                 },
                                 '--DataGrid-overlayHeight': '60px'
                             }}
@@ -167,4 +168,4 @@ export const MyDashboard: FC = () => {
             </Box>
         </ErrorBoundary>
     );
-};
+});

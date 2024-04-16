@@ -1,23 +1,25 @@
-import { create } from 'zustand';
+import { AuthStore } from '@/store/auth';
+import { UsersStore } from '@/store/users';
+import { TasksStore } from '@/store/tasks';
 
-import { createAuthSlice } from '@/store/auth';
-import { createUsersSlice } from '@/store/users';
-import { createTasksSlice } from '@/store/tasks';
+import type { IRootStore } from '@/types';
 
-import type { TSlice } from '@/types';
+class RootStore implements IRootStore {
+    authStore: AuthStore;
+    usersStore: UsersStore;
+    tasksStore: TasksStore;
 
-const resetSlicesFns: (() => void)[] = [];
+    constructor() {
+        this.authStore = new AuthStore();
+        this.usersStore = new UsersStore();
+        this.tasksStore = new TasksStore();
+    }
+}
 
-const useBoundStore = create<TSlice>((...args) => ({
-    ...createAuthSlice(resetSlicesFns)(...args),
-    ...createUsersSlice(resetSlicesFns)(...args),
-    ...createTasksSlice(resetSlicesFns)(...args)
-}));
+const store = new RootStore();
 
-const selectFromStore = (property: string) => {
-    return useBoundStore(state => state[property as keyof TSlice]);
-};
+const resetFns = Object.values(store).map(({ reset }) => reset);
 
-const resetAllSlices = () => resetSlicesFns.forEach(fn => fn());
+const resetAllSlices = () => resetFns.forEach(fn => fn());
 
-export { selectFromStore, resetAllSlices };
+export { store, resetAllSlices };

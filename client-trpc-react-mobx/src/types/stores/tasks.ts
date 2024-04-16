@@ -1,13 +1,14 @@
 import type { Task } from '@/types/models';
 import type { PaginationInfo } from '@/types/stores';
 
-interface TasksSlice {
+interface ITasksStore {
     task: Task | undefined;
     tasks: Task[];
     taskPagination: PaginationInfo | undefined;
-    'task/set': (task: Task | undefined) => void;
-    'tasks/set': (tasks: Task[]) => void;
-    'taskPagination/set': (page: PaginationInfo | undefined) => void;
+    setTask: (task: Task | undefined) => void;
+    setTasks: (tasks: Task[]) => void;
+    setTaskPagination: (page: PaginationInfo | undefined) => void;
+    reset: () => void;
 }
 
-export type { TasksSlice };
+export type { ITasksStore };

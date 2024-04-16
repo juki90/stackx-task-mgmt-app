@@ -12,8 +12,8 @@ import {
 } from 'react';
 
 import { trpc } from '@/plugins/trpc';
-import { selectFromStore } from '@/store';
 import { en as messages } from '@/locales';
+import { RootStore } from '@/context/RootStore';
 import handleServerFormErrors from '@/helpers/handleServerFormErrors';
 import { createOrUpdateTaskValidationSchema } from '@/validations/tasks';
 import { UserPickerUsersListContext } from '@/context/UserPickerUsersList';
@@ -21,7 +21,6 @@ import mapTaskUsersToUsersStatusInfo from '@/utilities/mapTaskUsersToUsersStatus
 
 import type {
     Task,
-    TasksSlice,
     TasksCreateRequest,
     TasksUpdateRequest,
     TaskUserStatusInfo
@@ -40,6 +39,7 @@ export const useCreateOrUpdateTask = ({
         userIds: []
     };
     const trpcUtils = trpc.useUtils();
+    const { tasksStore } = useContext(RootStore);
     const { userList: userPickerUserList, setUserList: setUserPickerUserList } =
         useContext(UserPickerUsersListContext);
     const [initialPickerUsers, setInitialPickerUsers] =
@@ -50,15 +50,11 @@ export const useCreateOrUpdateTask = ({
         description: taskToUpdate?.description || '',
         userIds: initialPickerUsers.map(({ id }) => id)
     };
-    const setTasksInStore = selectFromStore(
-        'tasks/set'
-    ) as TasksSlice['tasks/set'];
-    const setTaskInStore = selectFromStore(
-        'task/set'
-    ) as TasksSlice['task/set'];
-    const setTaskPaginationInStore = selectFromStore(
-        'taskPagination/set'
-    ) as TasksSlice['taskPagination/set'];
+    const {
+        setTasks: setTasksInStore,
+        setTask: setTaskInStore,
+        setTaskPagination: setTaskPaginationInStore
+    } = tasksStore;
     const theme = useTheme();
     const [otherResponseError, setOtherResponseError] = useState<string>('');
     const {

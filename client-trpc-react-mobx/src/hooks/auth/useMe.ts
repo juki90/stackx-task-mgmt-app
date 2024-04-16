@@ -1,10 +1,10 @@
 import dayjs from 'dayjs';
 import toast from 'react-hot-toast';
-import { useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 
 import { trpc } from '@/plugins/trpc';
-import { selectFromStore } from '@/store';
 import { en as messages } from '@/locales';
+import { RootStore } from '@/context/RootStore';
 import { DATE_FORMAT } from '@/config/constants';
 import taskColumns from '@/utilities/taskColumns';
 import handleServerFormErrors from '@/helpers/handleServerFormErrors';
@@ -13,18 +13,17 @@ import type { ErrorOption } from 'react-hook-form';
 import type {
     Task,
     User,
-    AuthSlice,
     TaskChangeStatusRequest,
     TaskChangeStatusResponse
 } from '@/types';
 
 export const useMe = () => {
     const trpcUtils = trpc.useUtils();
+    const { authStore } = useContext(RootStore);
     const [formError, setFormError] = useState<string>('');
     const [otherError, setOtherError] = useState<string>('');
     const [taskToMarkAsDone, setTaskToMarkAsDone] = useState<Task | null>(null);
-    const meInStore = selectFromStore('me') as User | undefined;
-    const setMeInStore = selectFromStore('me/set') as AuthSlice['me/set'];
+    const { me: meInStore, setMe: setMeInStore } = authStore;
     const [viewedTask, setViewedTask] = useState<Task | null>(null);
     const [isRefetchDisabled, setIsRefetchDisabled] = useState(false);
     const setFormErrorSimple = (key: string, { message }: ErrorOption) =>

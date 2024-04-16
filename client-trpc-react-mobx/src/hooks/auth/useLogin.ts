@@ -1,20 +1,21 @@
 import toast from 'react-hot-toast';
 import { useTheme } from '@mui/material';
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useContext, useEffect, useState } from 'react';
 import { useForm, useController } from 'react-hook-form';
 
 import { routes } from '@/router';
 import { trpc } from '@/plugins/trpc';
-import { selectFromStore } from '@/store';
 import { en as messages } from '@/locales';
+import { RootStore } from '@/context/RootStore';
 import { loginValidationSchema } from '@/validations/auth/login';
 import handleServerFormErrors from '@/helpers/handleServerFormErrors';
 
-import type { AuthSlice, AuthLoginRequest } from '@/types';
+import type { AuthLoginRequest } from '@/types';
 
 export const useLogin = () => {
+    const { authStore } = useContext(RootStore);
     const theme = useTheme();
     const navigate = useNavigate();
     const [otherResponseError, setOtherResponseError] = useState<string>('');
@@ -88,9 +89,7 @@ export const useLogin = () => {
         loginButtonAttributes.backgroundColor = theme.palette.success.light;
     }
 
-    const setLoggedUser = selectFromStore(
-        'loggedUser/set'
-    ) as AuthSlice['loggedUser/set'];
+    const { setLoggedUser } = authStore;
 
     useEffect(() => {
         if (formErrors.general) {

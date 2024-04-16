@@ -1,3 +1,4 @@
+import { observer } from 'mobx-react';
 import MenuIcon from '@mui/icons-material/Menu';
 import {
     Box,
@@ -18,7 +19,7 @@ import { useLogout } from '@/hooks/auth/useLogout';
 
 import type { FC } from 'react';
 
-export const Header: FC = () => {
+export const Header: FC = observer(() => {
     const { handleLogout } = useLogout();
     const {
         navRef,
@@ -127,4 +128,4 @@ export const Header: FC = () => {
             </Toolbar>
         </AppBar>
     );
-};
+});

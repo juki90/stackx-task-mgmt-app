@@ -1,3 +1,5 @@
+import { observer } from 'mobx-react';
+import { useMemo, type FC } from 'react';
 import {
     Box,
     Button,
@@ -10,9 +12,7 @@ import {
 import { useLogin } from '@/hooks/auth/useLogin';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 
-import { useMemo, type FC } from 'react';
-
-export const LoginForm: FC = () => {
+export const LoginForm: FC = observer(() => {
     const {
         theme,
         isFormValid,
@@ -44,6 +44,9 @@ export const LoginForm: FC = () => {
             },
             '& .MuiInputBase-root': {
                 backgroundColor: 'tranparent !important'
+            },
+            '& .MuiFormHelperText-root.Mui-error': {
+                color: theme.palette.error.light
             }
         }));
 
@@ -62,7 +65,7 @@ export const LoginForm: FC = () => {
                     margin: `${theme.spacing(2)} auto 0 auto`,
                     padding: theme.spacing(4),
                     borderRadius: `${theme.shape.borderRadius}px`,
-                    backgroundColor: 'rgba(30, 80, 115, 1)'
+                    backgroundColor: 'rgb(0, 80, 70)'
                 }}
             >
                 <Typography
@@ -165,4 +168,4 @@ export const LoginForm: FC = () => {
             </Box>
         </ErrorBoundary>
     );
-};
+});

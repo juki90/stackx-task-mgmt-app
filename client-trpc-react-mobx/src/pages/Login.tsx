@@ -35,7 +35,7 @@ const LoginPage: FC = () => {
                             sx={{
                                 color: 'transparent',
                                 textShadow:
-                                    '4px 4px 0 rgba(70, 170, 255, 0.5), 4px 4px 140px rgba(70, 170, 255, 1)'
+                                    '4px 4px 0 rgba(0, 150, 120, 0.5), 4px 4px 140px rgba(0, 100, 80, 1)'
                             }}
                             variant="h2"
                             component="h1"
@@ -45,7 +45,7 @@ const LoginPage: FC = () => {
                         <Typography
                             variant="h4"
                             component="h2"
-                            sx={{ color: 'rgba(50, 90, 125, 1)', opacity: 0.9 }}
+                            sx={{ color: 'rgb(0, 120, 100)', opacity: 0.9 }}
                         >
                             Task Management
                         </Typography>

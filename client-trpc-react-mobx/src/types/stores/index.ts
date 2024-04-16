@@ -1,11 +1,13 @@
-import type { StateCreator } from 'zustand';
-import type { AuthSlice, UsersSlice, TasksSlice } from '@/types';
+import type { IAuthStore, ITasksStore, IUsersStore } from '@/types';
 
-type TSlice = AuthSlice & UsersSlice & TasksSlice;
-type TState = StateCreator<TSlice, [], [], TSlice>;
+interface IRootStore {
+    authStore: IAuthStore;
+    usersStore: IUsersStore;
+    tasksStore: ITasksStore;
+}
 type PaginationInfo = { size: number; index: number; total: number };
 
-export type { TState, TSlice, PaginationInfo };
+export type { IRootStore, PaginationInfo };
 
 export * from '@/types/stores/auth';
 export * from '@/types/stores/users';

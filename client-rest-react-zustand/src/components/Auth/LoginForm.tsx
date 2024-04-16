@@ -1,3 +1,4 @@
+import { useMemo, type FC } from 'react';
 import {
     Box,
     Button,
@@ -9,8 +10,6 @@ import {
 
 import { useLogin } from '@/hooks/auth/useLogin';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
-
-import { useMemo, type FC } from 'react';
 
 export const LoginForm: FC = () => {
     const {

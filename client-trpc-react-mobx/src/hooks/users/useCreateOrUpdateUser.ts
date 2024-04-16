@@ -3,12 +3,18 @@ import toast from 'react-hot-toast';
 import { useTheme } from '@mui/material';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm, useController, Control } from 'react-hook-form';
-import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
+import {
+    useEffect,
+    useState,
+    type Dispatch,
+    type SetStateAction,
+    useContext
+} from 'react';
 
 import { trpc } from '@/plugins/trpc';
-import { selectFromStore } from '@/store';
 import { en as messages } from '@/locales';
 import { ROLES } from '@/config/constants';
+import { RootStore } from '@/context/RootStore';
 import handleServerFormErrors from '@/helpers/handleServerFormErrors';
 import {
     createUserValidationSchema,
@@ -16,12 +22,7 @@ import {
     updateUserWithPasswordValidationSchema
 } from '@/validations/users';
 
-import type {
-    User,
-    UsersSlice,
-    UsersCreateRequest,
-    UsersUpdateRequest
-} from '@/types';
+import type { User, UsersCreateRequest, UsersUpdateRequest } from '@/types';
 
 export const useCreateOrUpdateUser = ({
     user: userToUpdate,
@@ -47,16 +48,15 @@ export const useCreateOrUpdateUser = ({
         isAdmin: userToUpdate?.role?.name === ROLES.ADMIN
     };
     const trpcUtils = trpc.useUtils();
-    const loggedUser = selectFromStore('loggedUser');
-    const setUsersInStore = selectFromStore(
-        'users/set'
-    ) as UsersSlice['users/set'];
-    const setUserInStore = selectFromStore(
-        'user/set'
-    ) as UsersSlice['user/set'];
-    const setUserPaginationInStore = selectFromStore(
-        'userPagination/set'
-    ) as UsersSlice['userPagination/set'];
+    const store = useContext(RootStore);
+    const {
+        authStore: { loggedUser },
+        usersStore: {
+            setUsers: setUsersInStore,
+            setUser: setUserInStore,
+            setUserPagination: setUserPaginationInStore
+        }
+    } = store;
     const theme = useTheme();
     const [isPasswordCheckboxChecked, setIsPasswordCheckboxChecked] = useState(
         !userToUpdate
@@ -92,8 +92,6 @@ export const useCreateOrUpdateUser = ({
                 : createUserValidationSchema
         )
     });
-
-    console.log(userToUpdate?.role?.name === ROLES.ADMIN, userToUpdate);
 
     const firstNameFieldController = useController({
         control: control as Control<UsersCreateRequest | UsersUpdateRequest>,

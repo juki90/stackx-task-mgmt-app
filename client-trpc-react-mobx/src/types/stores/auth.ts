@@ -1,11 +1,13 @@
 import type { User } from '@/types/models';
 
-interface AuthSlice {
-    loggedUser: User | undefined;
+interface IAuthStore {
     me: User | undefined;
-    'loggedUser/set': () => void;
-    'loggedUser/isAdmin': boolean | null;
-    'me/set': (user: User | undefined) => void;
+    loggedUser: User | undefined;
+    isLoggedUserAdmin: boolean | undefined;
+    setLoggedUser: () => void;
+    setMe: (user: User | undefined) => void;
+    initState: () => void;
+    reset: () => void;
 }
 
-export type { AuthSlice };
+export type { IAuthStore };

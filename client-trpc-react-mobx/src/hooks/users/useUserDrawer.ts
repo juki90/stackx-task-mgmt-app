@@ -1,13 +1,19 @@
 import toast from 'react-hot-toast';
-import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
+import {
+    useState,
+    useEffect,
+    useContext,
+    type Dispatch,
+    type SetStateAction
+} from 'react';
 
 import { trpc } from '@/plugins/trpc';
-import { selectFromStore } from '@/store';
 import { en as messages } from '@/locales';
+import { RootStore } from '@/context/RootStore';
 import handleServerShowErrors from '@/helpers/handleServerShowErrors';
 import * as sharedErrorsHandlers from '@/helpers/sharedErrorsHandlers';
 
-import type { User, AuthSlice, UsersSlice } from '@/types';
+import type { User } from '@/types';
 
 export const useUserDrawer = ({
     viewedUserId,
@@ -19,25 +25,28 @@ export const useUserDrawer = ({
     setIsCreateOrUpdateModalOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
     const trpcUtils = trpc.useUtils();
+    const store = useContext(RootStore);
     const [userToDelete, setUserToDelete] = useState<User | undefined>();
     const [isRefetchDisabled, setIsRefetchDisabled] = useState(false);
     const [showUserOtherErrorMessage, setShowUserOtherErrorMessage] =
         useState('');
     const [deleteUserOtherErrorMessage, setDeleteUserOtherErrorMessage] =
         useState('');
-    const userInStore = selectFromStore('user') as User;
-    const setUserInStore = selectFromStore(
-        'user/set'
-    ) as UsersSlice['user/set'];
-    const setUsersInStore = selectFromStore(
-        'users/set'
-    ) as UsersSlice['users/set'];
-    const setUserPaginationInStore = selectFromStore(
-        'userPagination/set'
-    ) as UsersSlice['userPagination/set'];
-    const loggedUser = selectFromStore('loggedUser') as AuthSlice['loggedUser'];
+
+    const {
+        authStore: { loggedUser },
+        usersStore: {
+            user: userInStore,
+            setUser: setUserInStore,
+            setUsers: setUsersInStore,
+            setUserPagination: setUserPaginationInStore
+        }
+    } = store;
     const userId =
-        userInStore?.id !== viewedUserId ? viewedUserId : userInStore?.id;
+        viewedUserId && userInStore?.id !== viewedUserId
+            ? viewedUserId
+            : userInStore?.id;
+
     const {
         data: responseUser,
         error: responseUserError,
@@ -138,7 +147,7 @@ export const useUserDrawer = ({
         if (isResponseUserSuccess && responseUser) {
             setUserInStore(responseUser as User);
         }
-    }, [isResponseUserSuccess]);
+    }, [isResponseUserSuccess, responseUser?.id]);
 
     useEffect(() => {
         if (isRefetchDisabled) {

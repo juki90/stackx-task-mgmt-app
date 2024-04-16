@@ -1,69 +1,70 @@
 import toast from 'react-hot-toast';
+import { makeAutoObservable } from 'mobx';
 import { jwtDecode as decodeJwt } from 'jwt-decode';
 
 import { en as messages } from '@/locales';
 import { ROLES } from '@/config/constants';
 
-import type { StateCreator } from 'zustand';
-import type { User, Role, AuthSlice } from '@/types';
+import type { User, Role, IAuthStore } from '@/types';
 
-const initialAuthState: () => {
+export class AuthStore implements IAuthStore {
     loggedUser: User | undefined;
-    'loggedUser/isAdmin': boolean;
-    me: User | undefined;
-} = () => {
-    let loggedUser = undefined;
 
-    try {
-        loggedUser = decodeJwt(localStorage.getItem('access_token') || '') as
-            | User
-            | undefined;
-    } catch (error) {
-        console.error(error);
+    me: User | undefined;
+
+    constructor() {
+        makeAutoObservable(this);
+        this.initState();
     }
 
-    return {
-        loggedUser,
-        'loggedUser/isAdmin':
-            (loggedUser as User & { role?: Role })?.role?.name === ROLES.ADMIN,
-        me: undefined
-    };
-};
+    get isLoggedUserAdmin(): boolean | undefined {
+        return (
+            (this.loggedUser as User & { role?: Role })?.role?.name ===
+            ROLES.ADMIN
+        );
+    }
 
-export const createAuthSlice: (
-    resetFns: ((state: unknown) => unknown | Partial<unknown>)[]
-) => StateCreator<AuthSlice, [], [], AuthSlice> = resetFns => set => {
-    resetFns.push(() => {
+    setLoggedUser = () => {
+        let loggedUser;
+
+        try {
+            loggedUser = decodeJwt(
+                localStorage.getItem('access_token') || 'null'
+            ) as User | undefined;
+        } catch (error) {
+            console.error(error);
+
+            toast.error(messages.invalidAccessToken);
+
+            localStorage.clear();
+        }
+
+        this.loggedUser = loggedUser || undefined;
+    };
+
+    setMe = (me: User | undefined) => {
+        this.me = me;
+    };
+
+    initState = () => {
+        let loggedUser;
+
+        try {
+            loggedUser = decodeJwt(
+                localStorage.getItem('access_token') || ''
+            ) as User | undefined;
+        } catch (error) {
+            console.error(error);
+        }
+
+        this.loggedUser = loggedUser;
+        this.me = undefined;
+    };
+
+    reset = () => {
         localStorage.removeItem('access_token');
 
-        return set(initialAuthState());
-    });
-
-    return {
-        ...initialAuthState(),
-        'loggedUser/set': () =>
-            set(() => {
-                let loggedUser = undefined;
-
-                try {
-                    loggedUser = decodeJwt(
-                        localStorage.getItem('access_token') || 'null'
-                    ) as User | undefined;
-                } catch (error) {
-                    console.error(error);
-
-                    toast.error(messages.invalidAccessToken);
-
-                    localStorage.clear();
-                }
-
-                return {
-                    loggedUser: loggedUser || undefined,
-                    'loggedUser/isAdmin':
-                        (loggedUser as User & { role?: Role })?.role?.name ===
-                        ROLES.ADMIN
-                };
-            }),
-        'me/set': (me: User | undefined) => set(() => ({ me }))
+        this.me = undefined;
+        this.loggedUser = undefined;
     };
-};
+}

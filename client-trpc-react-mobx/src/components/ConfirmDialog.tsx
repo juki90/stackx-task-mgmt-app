@@ -46,7 +46,7 @@ export const ConfirmDialog: FC<IConfirmDialog> = ({
             <Box sx={{ display: 'flex', marginBottom: '20px' }}>
                 <Button
                     disabled={!!errorMessage}
-                    color={errorMessage ? 'error' : 'info'}
+                    color={errorMessage ? 'error' : 'primary'}
                     sx={{ marginRight: '20px' }}
                     variant="contained"
                     onClick={handleConfirm}

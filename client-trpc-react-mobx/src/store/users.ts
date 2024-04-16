@@ -1,34 +1,41 @@
-import type { StateCreator } from 'zustand';
-import type { User, UsersSlice, PaginationInfo } from '@/types';
+import { makeAutoObservable } from 'mobx';
 
-const initialUsersState: () => {
+import type { User, IUsersStore, PaginationInfo } from '@/types';
+
+export class UsersStore implements IUsersStore {
     user: User | undefined;
-    users: User[];
-    userPagination: PaginationInfo;
-} = () => ({
-    user: undefined,
-    users: [],
-    userPagination: { size: 10, index: 0, total: 0 }
-});
 
-export const createUsersSlice: (
-    resetFns: ((state: unknown) => unknown | Partial<unknown>)[]
-) => StateCreator<UsersSlice, [], [], UsersSlice> = resetFns => set => {
-    resetFns.push(() => {
-        return set(initialUsersState());
-    });
+    users: User[] = [];
 
-    return {
-        ...initialUsersState(),
-        'userPagination/set': (userPagination: PaginationInfo | undefined) =>
-            set(() => ({ userPagination })),
-        'user/set': (user: User | undefined) =>
-            set(() => ({
-                user
-            })),
-        'users/set': (users: User[]) =>
-            set(() => ({
-                users
-            }))
+    userPagination: PaginationInfo | undefined;
+
+    constructor() {
+        makeAutoObservable(this);
+        this.initState();
+    }
+
+    setUserPagination: (pagination: PaginationInfo | undefined) => void = (
+        pagination: PaginationInfo | undefined
+    ) => {
+        this.userPagination = pagination;
     };
-};
+
+    setUser: (user: User | undefined) => void = (user: User | undefined) => {
+        this.user = user;
+    };
+
+    setUsers: (users: User[]) => void = (users: User[]) => {
+        this.users = users;
+    };
+
+    initState = () => {
+        this.user = undefined;
+        this.users = [];
+        this.userPagination = { size: 10, index: 0, total: 0 };
+    };
+
+    reset = () => {
+        this.user = undefined;
+        this.users = [];
+    };
+}

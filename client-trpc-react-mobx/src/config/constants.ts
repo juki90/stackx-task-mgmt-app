@@ -4,7 +4,8 @@ const ROLES = {
 };
 
 const REACT_QUERY = {
-    retry: false
+    retry: false,
+    refetchOnWindowFocus: false
 };
 
 const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';

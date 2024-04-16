@@ -2,15 +2,15 @@ import dayjs from 'dayjs';
 import toast from 'react-hot-toast';
 import {
     Dispatch,
-    SetStateAction,
-    useContext,
+    useState,
     useEffect,
-    useState
+    useContext,
+    SetStateAction
 } from 'react';
 
 import { trpc } from '@/plugins/trpc';
-import { selectFromStore } from '@/store';
 import { en as messages } from '@/locales';
+import { RootStore } from '@/context/RootStore';
 import { DATE_FORMAT } from '@/config/constants';
 import { useCancelTask } from '@/hooks/tasks/useCancelTask';
 import handleServerShowErrors from '@/helpers/handleServerShowErrors';
@@ -18,13 +18,7 @@ import * as sharedErrorsHandlers from '@/helpers/sharedErrorsHandlers';
 import { UserPickerUsersListContext } from '@/context/UserPickerUsersList';
 import mapTaskUsersToUsersStatusInfo from '@/utilities/mapTaskUsersToUsersStatusInfo';
 
-import type {
-    User,
-    Task,
-    TasksSlice,
-    TaskUsersStatus,
-    TaskUserStatusInfo
-} from '@/types';
+import type { User, Task, TaskUsersStatus, TaskUserStatusInfo } from '@/types';
 
 export const useTaskDrawer = ({
     viewedTaskId,
@@ -36,6 +30,7 @@ export const useTaskDrawer = ({
     setIsCreateOrUpdateModalOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
     const trpcUtils = trpc.useUtils();
+    const { tasksStore } = useContext(RootStore);
     const cancelTask = useCancelTask();
     const { setUserList: setUserPickerUserList } = useContext(
         UserPickerUsersListContext
@@ -46,18 +41,16 @@ export const useTaskDrawer = ({
         useState('');
     const [deleteTaskOtherErrorMessage, setDeleteTaskOtherErrorMessage] =
         useState('');
-    const taskInStore = selectFromStore('task') as Task;
-    const setTaskInStore = selectFromStore(
-        'task/set'
-    ) as TasksSlice['task/set'];
-    const setTasksInStore = selectFromStore(
-        'tasks/set'
-    ) as TasksSlice['tasks/set'];
-    const setTaskPaginationInStore = selectFromStore(
-        'taskPagination/set'
-    ) as TasksSlice['taskPagination/set'];
+    const {
+        task: taskInStore,
+        setTask: setTaskInStore,
+        setTasks: setTasksInStore,
+        setTaskPagination: setTaskPaginationInStore
+    } = tasksStore;
     const taskId =
-        taskInStore?.id !== viewedTaskId ? viewedTaskId : taskInStore?.id;
+        viewedTaskId && taskInStore?.id !== viewedTaskId
+            ? viewedTaskId
+            : taskInStore?.id;
 
     const {
         data: responseTask,
@@ -209,7 +202,7 @@ export const useTaskDrawer = ({
             setTaskInStore(responseTask as Task);
             setUserPickerUserList(usersStatusWithUserInfo);
         }
-    }, [isResponseTaskSuccess]);
+    }, [isResponseTaskSuccess, responseTask?.id]);
 
     useEffect(() => {
         if (isRefetchDisabled) {

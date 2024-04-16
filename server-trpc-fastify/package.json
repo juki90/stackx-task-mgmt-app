@@ -4,7 +4,8 @@
     "description": "",
     "main": "src/bin/server.ts",
     "scripts": {
-        "dev": "nodemon"
+        "dev": "nodemon",
+        "db:recreate:dev": "prisma migrate dev --name init"
     },
     "author": "",
     "license": "ISC",
@@ -12,7 +13,6 @@
         "@fastify/cors": "~8.4.2",
         "@prisma/client": "~5.7.0",
         "@trpc/server": "~10.45.1",
-        "awilix": "~9.0.0",
         "bcryptjs": "~2.4.3",
         "deepmerge": "~4.3.1",
         "dotenv": "~16.3.1",

@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { selectFromStore } from '@/store';
+import { RootStore } from '@/context/RootStore';
 
 export const useNavigation = () => {
+    const { authStore } = useContext(RootStore);
     const [navRef, setNavRef] = useState<null | HTMLElement>(null);
     const navigate = useNavigate();
-    const isLoggedUserAdmin = selectFromStore('loggedUser/isAdmin');
+    const { isLoggedUserAdmin } = authStore;
     const isNavigationOpen = Boolean(navRef);
 
     const handleNavigationClick = (
@@ -22,7 +23,7 @@ export const useNavigation = () => {
     return {
         navRef,
         isNavigationOpen,
-        isLoggedUserAdmin: isLoggedUserAdmin,
+        isLoggedUserAdmin,
         navigate,
         handleNavigationClose,
         handleNavigationClick

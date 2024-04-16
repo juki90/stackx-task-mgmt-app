@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { observer } from 'mobx-react';
 import { DataGrid } from '@mui/x-data-grid';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { Box, Button, Typography, TextField } from '@mui/material';
@@ -15,7 +16,7 @@ import { UserPickerUsersListContext } from '@/context/UserPickerUsersList';
 
 import type { FC } from 'react';
 
-export const TasksTable: FC = () => {
+export const TasksTable: FC = observer(() => {
     const {
         tasks,
         viewedTask,
@@ -92,7 +93,7 @@ export const TasksTable: FC = () => {
                             }}
                         >
                             <Button
-                                color="info"
+                                color="primary"
                                 endIcon={<AddCircleOutlineIcon />}
                                 sx={{
                                     fontWeight: 'bold',
@@ -168,7 +169,7 @@ export const TasksTable: FC = () => {
                                         outline: 'none'
                                     },
                                 '& .MuiDataGrid-columnHeaders': {
-                                    backgroundColor: '#bdf'
+                                    backgroundColor: '#dfe'
                                 },
                                 '& .MuiDataGrid-iconButtonContainer': {
                                     display: 'none'
@@ -223,4 +224,4 @@ export const TasksTable: FC = () => {
             </Box>
         </ErrorBoundary>
     );
-};
+});

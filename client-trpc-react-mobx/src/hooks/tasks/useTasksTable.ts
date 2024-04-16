@@ -1,30 +1,22 @@
 import toast from 'react-hot-toast';
-import { useEffect, useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
 import { trpc } from '@/plugins/trpc';
-import { selectFromStore } from '@/store';
 import { en as messages } from '@/locales';
+import { RootStore } from '@/context/RootStore';
 import { useDebounce } from '@/hooks/useDebounce';
 import tasksColumns from '@/utilities/taskColumns';
 
-import type {
-    Task,
-    TasksSlice,
-    PaginationInfo,
-    TaskUserStatusInfo
-} from '@/types';
+import type { Task, TaskUserStatusInfo } from '@/types';
 
 export const useTasksTable = () => {
-    const tasksInStore = selectFromStore('tasks') as Task[];
-    const paginationInStore = selectFromStore(
-        'taskPagination'
-    ) as PaginationInfo;
-    const setTaskPaginationInStore = selectFromStore(
-        'taskPagination/set'
-    ) as TasksSlice['taskPagination/set'];
-    const setTasksInStore = selectFromStore(
-        'tasks/set'
-    ) as TasksSlice['tasks/set'];
+    const { tasksStore } = useContext(RootStore);
+    const {
+        tasks: tasksInStore,
+        taskPagination: paginationInStore,
+        setTaskPagination: setTaskPaginationInStore,
+        setTasks: setTasksInStore
+    } = tasksStore;
     const [userPickerUserList, setUserPickerUserList] = useState<
         TaskUserStatusInfo[]
     >([]);

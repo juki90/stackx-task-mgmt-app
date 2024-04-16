@@ -1,31 +1,26 @@
-import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { useContext, useState } from 'react';
 
 import { trpc } from '@/plugins/trpc';
-import { selectFromStore } from '@/store';
 import { en as messages } from '@/locales';
+import { RootStore } from '@/context/RootStore';
 import handleServerFormErrors from '@/helpers/handleServerFormErrors';
 
 import type { ErrorOption } from 'react-hook-form';
 import type {
     Task,
-    TasksSlice,
     TaskChangeStatusRequest,
     TaskChangeStatusResponse
 } from '@/types';
 
 export const useCancelTask = () => {
     const trpcUtils = trpc.useUtils();
+    const { tasksStore } = useContext(RootStore);
     const [taskToCancel, setTaskToCancel] = useState<Task | undefined>();
     const [formError, setFormError] = useState<string>('');
     const [otherError, setOtherError] = useState<string>('');
 
-    const setTaskInStore = selectFromStore(
-        'task/set'
-    ) as TasksSlice['task/set'];
-    const setTasksInStore = selectFromStore(
-        'tasks/set'
-    ) as TasksSlice['tasks/set'];
+    const { setTask: setTaskInStore, setTasks: setTasksInStore } = tasksStore;
 
     const setFormErrorSimple = (key: string, { message }: ErrorOption) =>
         setFormError(message || '');

@@ -10,43 +10,43 @@ datasource db {
 model Role {
   id        String   @id @default(uuid())
   name      String
-  users     User[]   @relation(name: "role")
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+  users     User[]   @relation("role")
 }
 
 model User {
-  id              String       @id   @default(uuid())
-  firstName       String
-  lastName        String
-  password        String
-  email           String       @unique
-  createdById     String?    
-  createdBy       User?        @relation(name: "userCreatedBy", fields: [createdById], references: [id])  
-  creatorOf       User[]       @relation("userCreatedBy")
-  roleId          String    
-  role            Role         @relation(name: "role", fields: [roleId], references: [id])  
-  tasks           Task[]
-  createdTasks    Task[]       @relation(name: "taskCreatedBy")
-  updatedTasks    Task[]       @relation(name: "taskUpdatedBy")
-  deletedAt       DateTime? 
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @default(now())
+  id           String    @id @default(uuid())
+  firstName    String
+  lastName     String
+  password     String
+  email        String    @unique
+  createdById  String?
+  roleId       String
+  deletedAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @default(now())
+  createdTasks Task[]    @relation("taskCreatedBy")
+  updatedTasks Task[]    @relation("taskUpdatedBy")
+  createdBy    User?     @relation("userCreatedBy", fields: [createdById], references: [id])
+  creatorOf    User[]    @relation("userCreatedBy")
+  role         Role      @relation("role", fields: [roleId], references: [id])
+  tasks        Task[]    @relation("TaskToUser")
 
-  @@index(fields: [email])
+  @@index([email])
 }
 
 model Task {
-  id           String     @id @default(uuid())
-  title        String
-  description  String?
-  status       Int   
-  usersStatus  Json   
-  createdById  String    
-  createdBy    User       @relation(name: "taskCreatedBy", fields: [createdById], references: [id])  
-  updatedById  String?   
-  updatedBy    User?      @relation(name: "taskUpdatedBy", fields: [updatedById], references: [id])  
-  users        User[] 
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @default(now())
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  status      Int
+  usersStatus Json
+  createdById String
+  updatedById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+  createdBy   User     @relation("taskCreatedBy", fields: [createdById], references: [id])
+  updatedBy   User?    @relation("taskUpdatedBy", fields: [updatedById], references: [id])
+  users       User[]   @relation("TaskToUser")
 }

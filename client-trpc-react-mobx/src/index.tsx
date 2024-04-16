@@ -5,14 +5,16 @@ import ReactDOM from 'react-dom/client';
 import toast, { Toaster } from 'react-hot-toast';
 import { RouterProvider } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
-import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@mui/material/styles';
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { trpc } from '@/plugins/trpc';
-import { resetAllSlices } from '@/store';
+import { theme } from '@/styles/theme';
 import { router, routes } from '@/router';
 import { en as messages } from '@/locales';
+import { store, resetAllSlices } from '@/store';
+import { RootStore } from '@/context/RootStore';
 import { REACT_QUERY } from '@/config/constants';
 
 const root = ReactDOM.createRoot(
@@ -88,27 +90,22 @@ const trpcClient = trpc.createClient({
     transformer: superjson
 });
 
-const App: FC = () => {
-    const theme = createTheme();
-
-    return (
-        <>
-            <CssBaseline />
-            <ThemeProvider theme={theme}>
+const App: FC = () => (
+    <>
+        <CssBaseline />
+        <ThemeProvider theme={theme}>
+            <RootStore.Provider value={store}>
                 <trpc.Provider client={trpcClient} queryClient={queryClient}>
                     <QueryClientProvider client={queryClient}>
                         <RouterProvider router={router} />
                     </QueryClientProvider>
                 </trpc.Provider>
-            </ThemeProvider>
+            </RootStore.Provider>
+        </ThemeProvider>
 
-            <Toaster
-                position="bottom-right"
-                toastOptions={{ duration: 5000 }}
-            />
-        </>
-    );
-};
+        <Toaster position="bottom-right" toastOptions={{ duration: 5000 }} />
+    </>
+);
 
 root.render(
     <React.StrictMode>

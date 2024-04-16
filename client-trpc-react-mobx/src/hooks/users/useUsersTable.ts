@@ -1,27 +1,24 @@
 import dayjs from 'dayjs';
 import toast from 'react-hot-toast';
-import { useEffect, useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
 import { trpc } from '@/plugins/trpc';
-import { selectFromStore } from '@/store';
 import { en as messages } from '@/locales';
+import { RootStore } from '@/context/RootStore';
 import { DATE_FORMAT } from '@/config/constants';
 import { useDebounce } from '@/hooks/useDebounce';
 
+import type { User } from '@/types';
 import type { GridValueGetterParams } from '@mui/x-data-grid';
-import type { User, UsersSlice, PaginationInfo } from '@/types';
 
 export const useUsersTable = () => {
-    const usersInStore = selectFromStore('users') as UsersSlice['users'];
-    const paginationInStore = selectFromStore(
-        'userPagination'
-    ) as PaginationInfo;
-    const setUserPaginationInStore = selectFromStore(
-        'userPagination/set'
-    ) as UsersSlice['userPagination/set'];
-    const setUsersInStore = selectFromStore(
-        'users/set'
-    ) as UsersSlice['users/set'];
+    const { usersStore } = useContext(RootStore);
+    const {
+        users: usersInStore,
+        userPagination: paginationInStore,
+        setUserPagination: setUserPaginationInStore,
+        setUsers: setUsersInStore
+    } = usersStore;
     const [viewedUser, setViewedUser] = useState<User | undefined>();
     const [usersPage, setUsersPage] = useState(
         paginationInStore
