@@ -110,7 +110,7 @@ export const updateTaskProcedure = publicProcedure
             throw new ZodError([
                 {
                     code: 'custom',
-                    path: ['general'],
+                    path: ['userIds'],
                     message: messages.validators.tasks.notAllUsersFromArrayExist
                 }
             ]);

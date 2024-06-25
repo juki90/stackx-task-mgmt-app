@@ -1,5 +1,4 @@
 import type { Task } from '@/types';
-import { type } from 'os';
 
 type TasksFetchRequest = {
     page: {

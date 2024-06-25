@@ -1,5 +1,6 @@
 import { TRPCError } from '@trpc/server';
 
+import { USER } from '~/config/constants';
 import { publicProcedure } from '~/router/trpc';
 import { sharedShowValidation } from '~/validations/shared';
 import { checkAdminRoleMiddleware } from '~/middleware/checkAdminRole';
@@ -19,9 +20,9 @@ export const showTaskProcedure = publicProcedure
 
         const task = await taskRepository.findById(id, {
             include: {
-                createdBy: true,
-                updatedBy: true,
-                users: true
+                createdBy: { select: USER.SELECTABLE_FIELDS },
+                updatedBy: { select: USER.SELECTABLE_FIELDS },
+                users: { select: USER.SELECTABLE_FIELDS }
             }
         });
 

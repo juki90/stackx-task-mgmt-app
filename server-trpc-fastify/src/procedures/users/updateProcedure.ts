@@ -1,4 +1,5 @@
 import bcrypt from 'bcryptjs';
+import { ZodError } from 'zod';
 import { TRPCError } from '@trpc/server';
 
 import { en as messages } from '~/locales';
@@ -33,6 +34,20 @@ export const updateUserProcedure = publicProcedure
             });
         }
 
+        const existingUserWithEmail = await userRepository.findOne({
+            where: { email: input.email, id: { not: input.id } }
+        });
+
+        if (existingUserWithEmail) {
+            throw new ZodError([
+                {
+                    code: 'custom',
+                    path: ['email'],
+                    message: messages.validators.users.userWithThisEmailExists
+                }
+            ]);
+        }
+
         const [loggedUserCreatedBy, adminRole, userRole] =
             await prisma.$transaction([
                 userRepository.findById(loggedUser.createdById || '', {
@@ -45,7 +60,7 @@ export const updateUserProcedure = publicProcedure
                     }
                 }) as any,
                 roleRepository.findOne({
-                    where: { name: ROLE.NAMES.ADMIN },
+                    where: { name: ROLE.NAMES.USER },
                     select: {
                         id: true
                     }
@@ -99,7 +114,8 @@ export const updateUserProcedure = publicProcedure
         });
 
         const userToSend = await prisma.user.findUnique({
-            where: { id: userToUpdate.id }
+            where: { id: userToUpdate.id },
+            select: { ...USER.SELECTABLE_FIELDS, role: true, createdBy: true }
         });
 
         return userToSend;

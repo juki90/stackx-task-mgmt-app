@@ -13,6 +13,7 @@ interface IAbstractRepository<T> {
     update(options?: any): Promise<any>;
     delete(options?: any): Promise<any>;
     count(options?: any): Promise<any>;
+    upsert(options?: any): Promise<any>;
 }
 
 interface IUserRepository
@@ -26,6 +27,7 @@ interface IUserRepository
     create(options?: any): Promise<User>;
     update(options?: any): Promise<User>;
     count(options?: any): Promise<number>;
+    upsert(options?: any): Promise<User>;
 }
 
 interface ITaskRepository
@@ -39,12 +41,14 @@ interface ITaskRepository
     update(options?: any): Promise<Task>;
     delete(options?: any): Promise<Task>;
     count(options?: any): Promise<number>;
+    upsert(options?: any): Promise<Task>;
 }
 
 interface IRoleRepository
     extends IAbstractRepository<Prisma.RoleDelegate<DefaultArgs>> {
     get model(): Prisma.RoleDelegate<DefaultArgs>;
     findOne(options?: any): Promise<Role | null>;
+    upsert(options?: any): Promise<Role>;
 }
 
 export type {

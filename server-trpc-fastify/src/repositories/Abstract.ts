@@ -38,4 +38,8 @@ export abstract class AbstractRepository<T> implements IAbstractRepository<T> {
     count(options: any = {}): Promise<number> {
         return this.model.count(options);
     }
+
+    upsert(options: any = {}): Promise<any> {
+        return this.model.upsert(options);
+    }
 }

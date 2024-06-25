@@ -31,7 +31,7 @@ export const sharedFetchValidation = z.object({
                 )
         },
         {
-            required_error: messages.validators.shared.fetchParamShouldBeObject,
+            required_error: messages.validators.shared.fieldShouldNotBeEmpty,
             invalid_type_error:
                 messages.validators.shared.fetchParamShouldBeObject
         }

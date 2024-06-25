@@ -166,9 +166,11 @@ export const UserDrawer: FC<IUserDrawer> = observer(
                                     Role
                                 </StyledUserContentTitle>
                                 <StyledUserContent>
-                                    {user.createdBy
-                                        ? user.role?.name
-                                        : 'Main admin'}
+                                    {user?.createdBy
+                                        ? `${user.role?.name[0].toUpperCase()}${user.role?.name.slice(
+                                              1
+                                          )}`
+                                        : 'Main Admin'}
                                 </StyledUserContent>
                                 <StyledUserContentTitle>
                                     Created at

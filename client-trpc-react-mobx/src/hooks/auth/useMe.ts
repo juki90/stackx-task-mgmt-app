@@ -34,8 +34,8 @@ export const useMe = () => {
         dataUpdatedAt,
         error,
         isError,
-        isLoading,
         isSuccess,
+        isInitialLoading: isLoading,
         refetch
     } = trpc.auth.me.useQuery(undefined, {
         refetchInterval: false,

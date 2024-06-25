@@ -17,10 +17,10 @@
         "strictPropertyInitialization": false,
         "skipLibCheck": true,
         "paths": {
-            "~/*": ["./src/*"]
+            "~/*": ["./src/*", "./tests/*"]
         }
     },
-    "include": ["src", "test"],
+    "include": ["src", "tests"],
     "exclude": ["dist", "node_modules"],
     "ts-node": {
         "require": ["tsconfig-paths/register"]

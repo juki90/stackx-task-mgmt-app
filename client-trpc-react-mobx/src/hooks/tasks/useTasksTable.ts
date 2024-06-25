@@ -39,7 +39,7 @@ export const useTasksTable = () => {
         error: responseTasksError,
         isError: isResponseTasksFailed,
         isRefetching: isTasksRefetching,
-        isLoading: isResponseTasksPending,
+        isInitialLoading: isResponseTasksPending,
         isSuccess: isResponseTasksSuccess,
         dataUpdatedAt: responseTasksUpdatedAt,
         refetch

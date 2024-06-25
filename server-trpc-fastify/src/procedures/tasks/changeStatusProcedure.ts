@@ -49,17 +49,19 @@ export const changeTaskStatusProcedure = publicProcedure
             (task.usersStatus as TaskUsersStatus)[userIndex].doneAt =
                 new Date();
 
-            if (
-                (usersStatus as TaskUsersStatus).every(({ doneAt }) => doneAt)
-            ) {
-                return taskRepository.update({
-                    where: { id },
-                    data: {
-                        status: TASK.STATUS.DONE,
-                        usersStatus: task.usersStatus
-                    }
-                });
-            }
+            const isDoneByAllUsers = (usersStatus as TaskUsersStatus).every(
+                ({ doneAt }) => doneAt
+            );
+
+            return taskRepository.update({
+                where: { id },
+                data: {
+                    status: isDoneByAllUsers
+                        ? TASK.STATUS.DONE
+                        : TASK.STATUS.PENDING,
+                    usersStatus: task.usersStatus
+                }
+            });
         }
 
         const isLoggedUserAdmin = loggedUser.role?.name === ROLE.NAMES.ADMIN;

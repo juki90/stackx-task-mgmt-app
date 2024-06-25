@@ -38,7 +38,7 @@ export const useUsersTable = () => {
         error: responseUsersError,
         isError: isResponseUsersFailed,
         isRefetching: isUsersRefetching,
-        isLoading: isResponseUsersPending,
+        isInitialLoading: isResponseUsersPending,
         isSuccess: isResponseUsersSuccess,
         dataUpdatedAt: responseUsersUpdatedAt,
         refetch

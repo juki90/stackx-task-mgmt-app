@@ -1,5 +1,6 @@
 import { TRPCError } from '@trpc/server';
 
+import { USER } from '~/config/constants';
 import { publicProcedure } from '~/router/trpc';
 import { sharedShowValidation } from '~/validations/shared';
 import { checkAdminRoleMiddleware } from '~/middleware/checkAdminRole';
@@ -19,9 +20,11 @@ export const showUserProcedure = publicProcedure
 
         const user = await userRepository.findById(id, {
             where: { deletedAt: null },
-            include: {
+            select: {
+                ...USER.SELECTABLE_FIELDS,
                 role: true,
-                tasks: true
+                tasks: true,
+                createdBy: true
             }
         });
 
