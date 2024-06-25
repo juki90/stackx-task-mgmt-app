@@ -326,7 +326,6 @@ describe('mutation UpdateUser > updateUser(updateUserInput: {firstName,lastName,
                 updateUserInputData: generatedUser
             }
         });
-        console.log({ errors: JSON.stringify(errors, null, 4) });
 
         expect(errors).toHaveLength(1);
 
