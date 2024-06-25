@@ -16,7 +16,7 @@ Copy **.env.example** file and rename it to **.env** file. Adjust some variables
 NODE_ENV=dev
 NODE_PORT=8080
 
-COMPOSE_PROJECT_NAME=stackx-task-mgmt-dev
+COMPOSE_PROJECT_NAME=stackx-task-mgmt-server-rest-express-dev
 
 APP_URL=http://localhost:8080
 APP_FRONTEND_URL=http://localhost:3000
@@ -68,7 +68,7 @@ Copy **.env.test.example** file and rename it to **.env.test** file. Adjust some
 NODE_ENV=test // must be 'test'
 NODE_PORT=8081
 
-COMPOSE_PROJECT_NAME=stackx-task-mgmt-test
+COMPOSE_PROJECT_NAME=stackx-task-mgmt-server-rest-express-test
 
 APP_URL=http://localhost:8081
 

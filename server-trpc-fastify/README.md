@@ -1,4 +1,4 @@
-# StackX Task Management App Server: GraphQL API (Schema first) / Nest.js edition
+# StackX Task Management App Server: tRPC API / Fastify.js edition
 
 ## Prerequisities
 
@@ -16,7 +16,7 @@ Copy **.env.example** file and rename it to **.env** file. Adjust some variables
 NODE_ENV=dev
 NODE_PORT=8080
 
-COMPOSE_PROJECT_NAME=stackx-task-mgmt-server-graphql-nest-dev
+COMPOSE_PROJECT_NAME=stackx-task-mgmt-server-trpc-fastify-dev
 
 APP_URL=http://localhost:8080
 APP_FRONTEND_URL=http://localhost:3000
@@ -25,8 +25,9 @@ APP_CORS_SITES=
 POSTGRES_HOST=localhost
 POSTGRES_DB=taskmgmt
 POSTGRES_USER=postgres
-POSTGRES_PASSWORD='10@C4$e%v*5n&ue#2d{?d!'
+POSTGRES_PASSWORD='9@C3$e%v*5n&ue#8d{?d!'
 POSTGRES_PORT=8100
+POSTGRES_URL=postgres://postgres:9%40C3%24e%25v*5n%26ue%238d%7B%3Fd!@localhost:8100/taskmgmt
 
 PGADMIN_EMAIL=example@example.com
 PGADMIN_PASSWORD=xyz123
@@ -48,13 +49,15 @@ Install dependencies:
 
 `npm install`
 
-Run this command only for the first time:
+Run these commands in following order for the first time:
 
-`npm run db:recreate:dev`
+`npm run db:clientinit:dev`
+
+`npm run db:create:dev`
 
 and then start server:
 
-`npm run start:dev`
+`npm run dev`
 
 and now you can interact with this API
 
@@ -68,15 +71,16 @@ Copy **.env.test.example** file and rename it to **.env.test** file. Adjust some
 NODE_ENV=test // must be 'test'
 NODE_PORT=8081
 
-COMPOSE_PROJECT_NAME=stackx-task-mgmt-server-graphql-nest-dev-test
+COMPOSE_PROJECT_NAME=stackx-task-mgmt-server-trpc-fastify-test
 
 APP_URL=http://localhost:8081
 
 POSTGRES_HOST=localhost
 POSTGRES_DB=taskmgmttest
 POSTGRES_USER=postgrestest
-POSTGRES_PASSWORD='9@C4$e%v*8n&ue#8e{?d!'
-POSTGRES_PORT=8101
+POSTGRES_PASSWORD='9@C3$e%v*5n&ue#8d{?d!'
+POSTGRES_PORT=8100
+POSTGRES_URL=postgres://postgrestest:9%40C3%24e%25v%2A5n%26ue%238d%7B%3Fd%21@localhost:8101/taskmgmttest
 
 JWT_SECRET=jwt123
 ```
