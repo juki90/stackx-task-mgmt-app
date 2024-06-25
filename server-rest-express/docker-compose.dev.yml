@@ -3,8 +3,8 @@ version: '3.8'
 name: '${COMPOSE_PROJECT_NAME}'
 
 volumes:
-    stackx_task_mgmt_dev_postgres:
-    stackx_task_mgmt_dev_pgadmin:
+    stackx_task_mgmt_dev_postgres_express_rest:
+    stackx_task_mgmt_dev_pgadmin_express_rest:
 
 services:
     postgres:
@@ -20,7 +20,7 @@ services:
         ports:
             - '${POSTGRES_PORT}:5432'
         volumes:
-            - stackx_task_mgmt_dev_postgres:/var/lib/postgresql
+            - stackx_task_mgmt_dev_postgres_express_rest:/var/lib/postgresql
         networks:
             - stackx-task-mgmt-dev
     pgadmin:
@@ -35,7 +35,7 @@ services:
         ports:
             - '5433:80'
         volumes:
-            - stackx_task_mgmt_dev_pgadmin:/var/lib/pgadmin
+            - stackx_task_mgmt_dev_pgadmin_express_rest:/var/lib/pgadmin
         networks:
             - stackx-task-mgmt-dev
 

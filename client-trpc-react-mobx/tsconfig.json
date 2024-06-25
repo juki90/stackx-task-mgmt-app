@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "lib": ["dom", "dom.iterable", "esnext"],
+        "allowJs": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "declaration": false,
+        "declarationMap": false,
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "noFallthroughCasesInSwitch": true,
+        "module": "ESNext",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "jsx": "react-jsx",
+        "paths": {
+            "@/*": ["./src/*"],
+            "~/*": ["../server-trpc-fastify/src/*"]
+        }
+    },
+    "include": ["src", "craco.config.ts"],
+    "exclude": ["node_modules"]
+}

@@ -1,0 +1,28 @@
+version: '3.8'
+
+name: '${COMPOSE_PROJECT_NAME}'
+
+volumes:
+    stackx_task_mgmt_test_postgres_fastify_trpc:
+    stackx_task_mgmt_test_pgadmin_fastify_trpc:
+
+services:
+    postgres:
+        platform: linux/x86_64
+        image: postgres:latest
+        restart: unless-stopped
+        env_file: .env.test
+        environment:
+            - 'POSTGRES_USER=${POSTGRES_USER}'
+            - 'POSTGRES_PASSWORD=${POSTGRES_PASSWORD}'
+            - 'POSTGRES_DB=${POSTGRES_DB}'
+
+        ports:
+            - '${POSTGRES_PORT}:5432'
+        volumes:
+            - stackx_task_mgmt_test_postgres_fastify_trpc:/var/lib/postgresql
+        networks:
+            - stackx-task-mgmt-test
+
+networks:
+    stackx-task-mgmt-test:

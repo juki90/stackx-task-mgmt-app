@@ -38,7 +38,7 @@ This app is written to manage tasks and users by administrators (users with 'adm
 
 ## Table of technologies, libraries and other things used in the project
 
-Generally, the app utilizes Typescript, Postgres, DI container (on the sever side only), some of the tests (not in every server or client) and JWT authentication for login.
+Generally, the app utilizes Typescript, Postgres, DI container (on the sever side only), some of the tests (not in every server or client) and JWT for authentication.
 
 Apart from that, directory names in this repository have explicit structure: <br /><br />For Node servers: <br />**server**-**\<rest-api-or-alternative\>**-**\<nodejs-framework\>**.
 <br /><br />For React clients: <br />**client**-**\<rest-api-or-alternative\>**-**\<react\>**-**\<react-state-mgmt\>**.
@@ -47,8 +47,9 @@ Apart from that, directory names in this repository have explicit structure: <br
 
 | Server              | API Design             | Framework  | Test types (basic coverage) | Databases | ORM/ODM   | Dependency inj. |
 | ------------------- | ---------------------- | ---------- | --------------------------- | --------- | --------- | --------------- |
-| server-rest-express | REST API               | Express.js | Functional                  | Postgres  | Sequelize | InverisfyJS     |
-| server-graphql-nest | GraphQL (Schema first) | Nest.js    | Functional                  | Postgres  | TypeORM   | (built-in)      |
+| server-rest-express | REST API               | Express.js | Functional (Jest)           | Postgres  | Sequelize | InverisfyJS     |
+| server-graphql-nest | GraphQL (Schema first) | Nest.js    | Functional (Jest)           | Postgres  | TypeORM   | (built-in)      |
+| server-trpc-fastify | tRPC                   | Fastify.js | Functional (Tap)            | Postgres  | Prisma    | InversifyJS     |
 
 ### Client technologies table
 
@@ -56,6 +57,7 @@ Apart from that, directory names in this repository have explicit structure: <br
 | -------------------------- | ---------- | --------------- | ----------------- | ---------- | ---------------- | --------------- | --------------------------- |
 | client-rest-react-zustand  | REST API   | React v18       | Material UI v5    | Zustand    | React Query      | react-hook-form | -                           |
 | client-graphql-react-jotai | GraphQL    | React v18       | Material UI v5    | Jotai      | Apollo Client    | react-hook-form | -                           |
+| client-trpc-react-mobx     | GraphQL    | React v18       | Material UI v5    | MobX       | React Query      | react-hook-form | -                           |
 
 ## Installation, deploying and running tests
 

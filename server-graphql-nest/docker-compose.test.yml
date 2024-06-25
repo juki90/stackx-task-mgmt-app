@@ -2,6 +2,10 @@ version: '3.8'
 
 name: '${COMPOSE_PROJECT_NAME}'
 
+volumes:
+    stackx_task_mgmt_dev_postgres_nest_graphql_test:
+    stackx_task_mgmt_dev_pgadmin_nest_graphql_test:
+
 services:
     postgres:
         platform: linux/x86_64
@@ -12,7 +16,8 @@ services:
             - 'POSTGRES_USER=${POSTGRES_USER}'
             - 'POSTGRES_PASSWORD=${POSTGRES_PASSWORD}'
             - 'POSTGRES_DB=${POSTGRES_DB}'
-
+        volumes:
+            - stackx_task_mgmt_dev_postgres_nest_graphql_test:/var/lib/postgresql
         ports:
             - '${POSTGRES_PORT}:5432'
         networks:
